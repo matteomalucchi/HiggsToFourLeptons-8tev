@@ -1,6 +1,6 @@
 import ROOT
 
-def eventSelection(rdf, final_state):
+def EventSelection(rdf, final_state):
     """ minimal selection of the events
     """
     ROOT.gInterpreter.ProcessLine('''
@@ -12,6 +12,7 @@ def eventSelection(rdf, final_state):
             return sip;
         };
         ''')    
+
     if final_state == "FourMuons":
         return rdf.Filter("nMuon==4",
                           "Four muons")\
@@ -42,7 +43,6 @@ def eventSelection(rdf, final_state):
 
     elif final_state == "TwoMuonsTwoElectrons":        
         ROOT.gInterpreter.ProcessLine('''
-        using Vec = const ROOT::RVec<float>&;
         auto ptCuts= [] (Vec mu_pt, Vec el_pt){
             if (ROOT::VecOps::Max(mu_pt)>20 && ROOT::VecOps::Min(mu_pt)>10) return true;
             if (ROOT::VecOps::Max(el_pt)>20 && ROOT::VecOps::Min(el_pt)>10) return true;
@@ -73,31 +73,16 @@ def eventSelection(rdf, final_state):
                   .Filter("All(Electron_3d_sip<4) && All(abs(Electron_dxy)<0.5) && All(abs(Electron_dz)<1.0)",
                           "Electrons originate from the same primary vertex")\
 
-        
-        """def ptCuts(mu_pt, el_pt):
-            if (ROOT.ROOT.VecOps.Max(mu_pt) > 20 and ROOT.ROOT.VecOps.Min(mu_pt) > 10): 
-                return True
-            if (ROOT.ROOT.VecOps.Max(el_pt) > 20 and ROOT.ROOT.VecOps.Min(el_pt) > 10): 
-                return True
-            return False
-        
-        def drCuts(mu_eta, mu_phi, el_eta, el_phi):
-            mu_dr = ROOT.ROOT.VecOps.DeltaR(mu_eta[0], mu_eta[1], mu_phi[0], mu_phi[1])
-            el_dr = ROOT.ROOT.VecOps.DeltaR(el_eta[0], el_eta[1], el_phi[0], el_phi[1])
-            if (mu_dr < 0.02 or el_dr < 0.02): 
-                return False
-            return True
-                          .Filter(ptCuts, {"Muon_pt", "Electron_pt"},
-                          "Pt cuts")\
-                  .Filter(drCuts, {"Muon_eta", "Muon_phi", "Electron_eta", "Electron_phi"},
-                          "Delta R cuts")\
-        """
     else: raise RuntimeError("Unknown final state --> {}".format(final_state))
 
-def fourVec(rdf, final_state):
-    z_mass = 91.2
+def FourVec(rdf, final_state):
+    """reconstruct four vector for leptons z and higgs
+    """
     ROOT.gInterpreter.ProcessLine('''
-    using Vec = const ROOT::RVec<float>&;
+    const auto z_mass = 91.2;
+    using VecI = const ROOT::RVec<int>&;
+    using FourVec = const ROOT::RVec<TLorentzVector>&;
+    using Idx = const ROOT::RVec<ROOT::RVec<int>>&; 
     auto lepFourVec = [] (Vec lep_pt, Vec lep_eta, Vec lep_phi, Vec lep_mass){
         ROOT::RVec<TLorentzVector> lep_fourvecs(lep_pt.size());
         for (size_t i = 0; i < lep_pt.size(); i++) {
@@ -107,17 +92,181 @@ def fourVec(rdf, final_state):
         }
         return lep_fourvecs;
     };
+    auto zIdxSamekind = [&z_mass](FourVec fourvec, VecI charge){
+        ROOT::RVec<ROOT::RVec<int>> idx(2);
+        idx[0].reserve(2); 
+        idx[1].reserve(2);
+        auto idx_cmb = Combinations(fourvec, 2);
+        auto best_mass = -1;
+        size_t best_i1 = 0; 
+        size_t best_i2 = 0;
+        for (size_t i = 0; i < idx_cmb[0].size(); i++) {
+            const auto i1 = idx_cmb[0][i];
+            const auto i2 = idx_cmb[1][i];
+            if (charge[i1] != charge[i2]) {
+                const auto this_mass = (fourvec[i1] + fourvec[i2]).M();
+                if (std::abs(z_mass - this_mass) < std::abs(z_mass - best_mass)) {
+                    best_mass = this_mass;
+                    best_i1 = i1;
+                    best_i2 = i2;
+                }
+            }
+        }
+        idx[0].emplace_back(best_i1);
+        idx[0].emplace_back(best_i2);
+        for (size_t i = 0; i < 4; i++) {
+            if (i != best_i1 && i != best_i2) {
+                idx[1].emplace_back(i);
+            }
+        }
+        return idx;
+    };
+    auto zFourvecSamekind = [&z_mass](Idx idx, FourVec fourvec) {
+        ROOT::RVec<TLorentzVector> z_fourvecs(2);
+        for (size_t i = 0; i < 2; i++) {
+            const auto i1 = idx[i][0];
+            const auto i2 = idx[i][1];
+            z_fourvecs[i] = fourvec[i1]+fourvec[i2];
+        }
+        if (std::abs(z_fourvecs[0].M() - z_mass) < std::abs(z_fourvecs[1].M() - z_mass)) {
+            return z_fourvecs;
+        } else {
+            return ROOT::VecOps::Reverse(z_fourvecs);
+        }
+    };
+    auto zFourvec2mu2el = [&z_mass](FourVec mu_fourvec, FourVec el_fourvec) {
+        ROOT::RVec<TLorentzVector> z_fourvecs = {mu_fourvec[0] + mu_fourvec[1], el_fourvec[0] + el_fourvec[1]};
+        if (std::abs(z_fourvecs[0].M() - z_mass) < std::abs(z_fourvecs[1].M() - z_mass)) {
+            return z_fourvecs;
+        } else {
+            return ROOT::VecOps::Reverse(z_fourvecs);
+        }
+    };
+    auto filterDeltaR = [](Idx idx, Vec eta, Vec phi) {
+        for (size_t i = 0; i < 2; i++) {
+            const auto i1 = idx[i][0];
+            const auto i2 = idx[i][1];
+            const auto dr = ROOT::VecOps::DeltaR(eta[i1], eta[i2], phi[i1], phi[i2]);
+            if (dr < 0.02) return false;
+        }
+        return true;
+    };
     ''')
+
     if final_state == "FourMuons":
         rdf_fv = rdf.Define("Muon_fourvec",
-                            "lepFourVec(Muon_pt, Muon_eta, Muon_phi, Muon_mass)")
-    if final_state == "FourElectrons":
+                            "lepFourVec(Muon_pt, Muon_eta, Muon_phi, Muon_mass)")\
+                    .Define("Z_idx",
+                            "zIdxSamekind(Muon_fourvec, Muon_charge)")\
+                    .Filter("filterDeltaR(Z_idx, Muon_eta, Muon_phi)",
+                            "Delta R separation of particles building the Z systems")\
+                    .Define("Z_fourvecs",
+                            "zFourvecSamekind(Z_idx, Muon_fourvec)")
+
+    elif final_state == "FourElectrons":
         rdf_fv = rdf.Define("Electron_fourvec",
-                            "lepFourVec(Electron_pt, Electron_eta, Electron_phi, Electron_mass)")
-    if final_state == "TwoMuonsTwoElectrons":
+                            "lepFourVec(Electron_pt, Electron_eta, Electron_phi, Electron_mass)")\
+                    .Define("Z_idx",
+                            "zIdxSamekind(Electron_fourvec, Electron_charge)")\
+                    .Filter("filterDeltaR(Z_idx, Electron_eta, Electron_phi)",
+                            "Delta R separation of particles building the Z systems")\
+                    .Define("Z_fourvecs",
+                            "zFourvecSamekind(Z_idx, Electron_fourvec)")
+
+    elif final_state == "TwoMuonsTwoElectrons":
         rdf_fv = rdf.Define("Muon_fourvec",
                             "lepFourVec(Muon_pt, Muon_eta, Muon_phi, Muon_mass)")\
                     .Define("Electron_fourvec",
-                            "lepFourVec(Electron_pt, Electron_eta, Electron_phi, Electron_mass)")
+                            "lepFourVec(Electron_pt, Electron_eta, Electron_phi, Electron_mass)")\
+                    .Define("Z_fourvecs",
+                            "zFourvec2mu2el(Muon_fourvec, Electron_fourvec)")
 
-    return rdf_fv
+    else: raise RuntimeError("Unknown final state --> {}".format(final_state))
+
+    df_cut = rdf_fv.Filter("Z_fourvecs[0].M() > 40 && Z_fourvecs[0].M() < 120",
+                                 "Mass of first Z candidate in [40, 120]")\
+                         .Filter("Z_fourvecs[1].M() > 12 && Z_fourvecs[1].M() < 120",
+                                 "Mass of second Z candidate in [12, 120]")
+    return df_cut.Define("Higgs_fourvec", "Z_fourvecs[0] + Z_fourvecs[1]")
+
+def OrderFourVec(rdf, final_state):
+    ROOT.gInterpreter.ProcessLine('''    
+    const auto z_mass = 91.2;
+    auto splitLepSamekind = [](const ROOT::RVec<int>& idx_pair, FourVec fourvec, VecI charge) {
+        if (charge[idx_pair[0]] == -1)  return fourvec[idx_pair[0]];
+        return fourvec[idx_pair[1]];
+    };
+    auto lep1 = [&z_mass](FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI charge_el) {
+        if (std::abs((fourvec_mu[0]+fourvec_mu[1]).M() - z_mass) < std::abs((fourvec_el[0]+fourvec_el[1]).M() - z_mass)) {
+            if (charge_mu[0] == -1) return fourvec_mu[0];
+            else return fourvec_mu[1];
+        } else {
+            if (charge_el[0] == -1) return fourvec_el[0];
+            else return fourvec_el[1];  
+        }
+    };
+    auto lep2 = [&z_mass](FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI charge_el) {
+        if (std::abs((fourvec_mu[0]+fourvec_mu[1]).M() - z_mass) > std::abs((fourvec_el[0]+fourvec_el[1]).M() - z_mass)) {
+            if (charge_mu[0] == -1) return fourvec_mu[0];
+            else return fourvec_mu[1];
+        } else {
+            if (charge_el[0] == -1) return fourvec_el[0];
+            else return fourvec_el[1];  
+        }
+    };
+    ''')
+
+    if final_state == "FourMuons":
+        return rdf.Define("Lep_fourvec11",
+                          "splitLepSamekind(Z_idx[0], Muon_fourvec, Muon_charge)" )\
+                  .Define("Lep_fourvec12",
+                          "splitLepSamekind(Z_idx[0], Muon_fourvec, -Muon_charge)" )\
+                  .Define("Lep_fourvec21",
+                          "splitLepSamekind(Z_idx[1], Muon_fourvec, Muon_charge)" )\
+                  .Define("Lep_fourvec22",
+                          "splitLepSamekind(Z_idx[1], Muon_fourvec, -Muon_charge)" )\
+                  .Define("Z_fourvec1", "Z_fourvecs[0]")\
+                  .Define("Z_fourvec2", "Z_fourvecs[1]")                      
+    
+    elif final_state == "FourElectrons":
+        return rdf.Define("Lep_fourvec11",
+                          "splitLepSamekind(Z_idx[0], Electron_fourvec, Electron_charge)" )\
+                  .Define("Lep_fourvec12",
+                          "splitLepSamekind(Z_idx[0], Electron_fourvec, -Electron_charge)" )\
+                  .Define("Lep_fourvec21",
+                          "splitLepSamekind(Z_idx[1], Electron_fourvec, Electron_charge)" )\
+                  .Define("Lep_fourvec22",
+                          "splitLepSamekind(Z_idx[1], Electron_fourvec, -Electron_charge)" )\
+                  .Define("Z_fourvec1", "Z_fourvecs[0]")\
+                  .Define("Z_fourvec2", "Z_fourvecs[1]")                           
+    
+    elif final_state == "TwoMuonsTwoElectrons":
+        return rdf.Define("Lep_fourvec11",
+                          "lep1(Muon_fourvec, Electron_fourvec, Muon_charge, Electron_charge)" )\
+                  .Define("Lep_fourvec12",
+                          "lep1(Muon_fourvec, Electron_fourvec, -Muon_charge, -Electron_charge)" )\
+                  .Define("Lep_fourvec21",
+                          "lep2(Muon_fourvec, Electron_fourvec, Muon_charge, Electron_charge)" )\
+                  .Define("Lep_fourvec22",
+                          "lep2(Muon_fourvec, Electron_fourvec, -Muon_charge, -Electron_charge)" )\
+                  .Define("Z_fourvec1", "Z_fourvecs[0]")\
+                  .Define("Z_fourvec2", "Z_fourvecs[1]") 
+    
+    else: raise RuntimeError("Unknown final state --> {}".format(final_state))
+
+def AddEventWeight(rdf, sample_name):
+    """add weights for the normalisation of the simulated samples
+    """
+    if sample_name == "SMHiggsToZZTo4L":
+        return rdf.Define("Weight", "0.0065 / 299973.0 * (11.58 * 1000.0)")
+
+    elif sample_name == "ZZTo4mu":
+        return rdf.Define("Weight", "0.077 / 1499064.0 * (11.58 * 1000.0) * 1.386")
+
+    elif sample_name == "ZZTo4e":
+        return rdf.Define("Weight", "0.077 / 1499093.0 * (11.58 * 1000.0) * 1.386")
+
+    elif sample_name == "ZZTo2e2mu":
+        return rdf.Define("Weight", "0.18 / 1497445.0 * (11.58 * 1000.0) * 1.386")
+
+    else: return rdf.Define("Weight", "1.0")
