@@ -187,9 +187,12 @@ def FourVec(rdf, final_state):
                                  "Mass of first Z candidate in [40, 120]")\
                          .Filter("Z_fourvecs[1].M() > 12 && Z_fourvecs[1].M() < 120",
                                  "Mass of second Z candidate in [12, 120]")
-    return df_cut.Define("Higgs_fourvec", "Z_fourvecs[0] + Z_fourvecs[1]")
+    return df_cut.Define("Higgs_fourvec",
+                         "Z_fourvecs[0] + Z_fourvecs[1]")
 
 def OrderFourVec(rdf, final_state):
+    """put the four vectors in order
+    """
     ROOT.gInterpreter.ProcessLine('''    
     const auto z_mass = 91.2;
     auto splitLepSamekind = [](const ROOT::RVec<int>& idx_pair, FourVec fourvec, VecI charge) {
@@ -217,40 +220,46 @@ def OrderFourVec(rdf, final_state):
     ''')
 
     if final_state == "FourMuons":
-        return rdf.Define("Lep_fourvec11",
+        return rdf.Define("Lep11_fourvec",
                           "splitLepSamekind(Z_idx[0], Muon_fourvec, Muon_charge)" )\
-                  .Define("Lep_fourvec12",
+                  .Define("Lep12_fourvec",
                           "splitLepSamekind(Z_idx[0], Muon_fourvec, -Muon_charge)" )\
-                  .Define("Lep_fourvec21",
+                  .Define("Lep21_fourvec",
                           "splitLepSamekind(Z_idx[1], Muon_fourvec, Muon_charge)" )\
-                  .Define("Lep_fourvec22",
+                  .Define("Lep22_fourvec",
                           "splitLepSamekind(Z_idx[1], Muon_fourvec, -Muon_charge)" )\
-                  .Define("Z_fourvec1", "Z_fourvecs[0]")\
-                  .Define("Z_fourvec2", "Z_fourvecs[1]")                      
+                  .Define("Z1_fourvec",
+                          "Z_fourvecs[0]")\
+                  .Define("Z2_fourvec", 
+                          "Z_fourvecs[1]")                      
     
     elif final_state == "FourElectrons":
-        return rdf.Define("Lep_fourvec11",
+        return rdf.Define("Lep11_fourvec",
                           "splitLepSamekind(Z_idx[0], Electron_fourvec, Electron_charge)" )\
-                  .Define("Lep_fourvec12",
+                  .Define("Lep12_fourvec",
                           "splitLepSamekind(Z_idx[0], Electron_fourvec, -Electron_charge)" )\
-                  .Define("Lep_fourvec21",
+                  .Define("Lep21_fourvec",
                           "splitLepSamekind(Z_idx[1], Electron_fourvec, Electron_charge)" )\
-                  .Define("Lep_fourvec22",
+                  .Define("Lep22_fourvec",
                           "splitLepSamekind(Z_idx[1], Electron_fourvec, -Electron_charge)" )\
-                  .Define("Z_fourvec1", "Z_fourvecs[0]")\
-                  .Define("Z_fourvec2", "Z_fourvecs[1]")                           
+                  .Define("Z1_fourvec",
+                          "Z_fourvecs[0]")\
+                  .Define("Z2_fourvec",
+                          "Z_fourvecs[1]")                           
     
     elif final_state == "TwoMuonsTwoElectrons":
-        return rdf.Define("Lep_fourvec11",
+        return rdf.Define("Lep11_fourvec",
                           "lep1(Muon_fourvec, Electron_fourvec, Muon_charge, Electron_charge)" )\
-                  .Define("Lep_fourvec12",
+                  .Define("Lep12_fourvec",
                           "lep1(Muon_fourvec, Electron_fourvec, -Muon_charge, -Electron_charge)" )\
-                  .Define("Lep_fourvec21",
+                  .Define("Lep21_fourvec",
                           "lep2(Muon_fourvec, Electron_fourvec, Muon_charge, Electron_charge)" )\
-                  .Define("Lep_fourvec22",
+                  .Define("Lep22_fourvec",
                           "lep2(Muon_fourvec, Electron_fourvec, -Muon_charge, -Electron_charge)" )\
-                  .Define("Z_fourvec1", "Z_fourvecs[0]")\
-                  .Define("Z_fourvec2", "Z_fourvecs[1]") 
+                  .Define("Z1_fourvec",
+                          "Z_fourvecs[0]")\
+                  .Define("Z2_fourvec",
+                          "Z_fourvecs[1]") 
     
     else: raise RuntimeError("Unknown final state --> {}".format(final_state))
 

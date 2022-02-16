@@ -29,22 +29,22 @@ finalVariables = ROOT.vector("std::string")()
 finalVariables.push_back("run")
 finalVariables.push_back("Weight")
 finalVariables.push_back("Higgs_fourvec")
-finalVariables.push_back("Z_fourvec1")
-finalVariables.push_back("Z_fourvec2")
-finalVariables.push_back("Lep_fourvec11")
-finalVariables.push_back("Lep_fourvec12")
-finalVariables.push_back("Lep_fourvec21")
-finalVariables.push_back("Lep_fourvec22")
+finalVariables.push_back("Z1_fourvec")
+finalVariables.push_back("Z2_fourvec")
+finalVariables.push_back("Lep11_fourvec")
+finalVariables.push_back("Lep12_fourvec")
+finalVariables.push_back("Lep21_fourvec")
+finalVariables.push_back("Lep22_fourvec")
 
 if __name__ == "__main__":
-    """	ROOT.ROOT.EnableImplicitMT()
+    ROOT.ROOT.EnableImplicitMT()
     thread_size = ROOT.ROOT.GetThreadPoolSize()
-    print(">>> Thread pool size for parallel processing: {}".format(thread_size))"""
+    print(">>> Thread pool size for parallel processing: {}".format(thread_size))
 
     for sample_name, final_states in samples.items():
-        rdf = ROOT.RDataFrame("Events",base_path + sample_name +".root").Range(1000)
+        rdf = ROOT.RDataFrame("Events",base_path + sample_name +".root")
         for final_state in final_states:
-            if sample_name== "SMHiggsToZZTo4L" : print(">>> Process sample: {} and final state {}".format(sample_name, final_state))
+            print(">>> Process sample: {} and final state {}".format(sample_name, final_state))
             start_time = time.time()
 
             rdf2 = func.EventSelection(rdf, final_state)
@@ -53,7 +53,7 @@ if __name__ == "__main__":
             rdf_final = func.AddEventWeight(rdf4, sample_name)
             
             report = rdf_final.Report()
-            rdf_final.Snapshot("Events", sample_name + final_state + "Skim.root", finalVariables)
-            #report.Print()
-            #print("Execution time: %s s" %(time.time() - start_time))
+            rdf_final.Snapshot("Events", "skim_data/" + sample_name + final_state + "Skim.root", finalVariables)
+            report.Print()
+            print("Execution time: %s s" %(time.time() - start_time))
             #print(rdf_final.GetColumnNames())
