@@ -37,13 +37,12 @@ def DefAngles(rdf):
         return vec1.Cross(vec2) * pow((vec1.Cross(vec2)).Mag(),-1);
     };
     auto defAzimuthal = [](TVector3 momentum, TVector3 vec1, TVector3 vec2) {
-        return momentum*vec1.Cross(vec2) * pow(std::abs(momentum*vec1.Cross(vec2)),-1) * acos(-vec1*vec2);
+        return momentum.Dot(vec1.Cross(vec2)) * pow(std::abs(momentum.Dot(vec1.Cross(vec2))),-1) * acos(vec1.Dot(vec2));
     }; 
     auto defTheta = [](TVector3 vec1, TVector3 vec2) {
-        return acos(-vec1 * vec2 * pow(vec1.Mag()*vec2.Mag(),-1));
+        return acos(-vec1.Dot(vec2) * pow(vec1.Mag()*vec2.Mag(),-1));
     };   
     ''')
-
 
     return rdf.Define("theta_star", 
                       "acos(Z1_HRest.Pz() * pow(Z1_HRest.P(),-1))")\
@@ -54,7 +53,7 @@ def DefAngles(rdf):
               .Define("n_coll",
                       "crossNorm(TVector3(0,0,1), Z1_HRest.Vect())")\
               .Define("Phi",
-                      "defAzimuthal(Z1_HRest.Vect(), n1, n2)")\
+                      "defAzimuthal(Z1_HRest.Vect(), n2, -n1)")\
               .Define("Phi1",
                       "defAzimuthal(Z1_HRest.Vect(), n1, n_coll)")\
               .Define("theta1",
@@ -63,8 +62,8 @@ def DefAngles(rdf):
                       "defTheta(Z1_Z2Rest.Vect(), Lep21_Z2Rest.Vect())")
 
 finalVariables = ROOT.vector("std::string")()
-finalVariables.push_back("run")
-finalVariables.push_back("Weight")
+#finalVariables.push_back("run")
+#finalVariables.push_back("Weight")
 finalVariables.push_back("theta_star")
 finalVariables.push_back("Phi")
 finalVariables.push_back("Phi1")
@@ -82,6 +81,7 @@ if __name__ == "__main__":
         for final_state in final_states:
             print(">>> Process skimmed sample {} and final state {}".format(sample_name, final_state))
             rdf = ROOT.ROOT.RDataFrame("Events", "skim_data/" + sample_name + final_state + "Skim.root")
+            
             rdf2 = FourvecBoost(rdf)
             rdf3 = DefAngles(rdf2)
             
@@ -89,8 +89,6 @@ if __name__ == "__main__":
             start_time = time.time()
             #print(rdf3.GetColumnNames())
             #print(rdf3.GetColumnType("theta1"))
-
-
 
             rdf3.Snapshot("Events", "angles/" + sample_name + final_state + "Angles.root")
 
