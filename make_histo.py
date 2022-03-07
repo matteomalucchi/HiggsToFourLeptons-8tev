@@ -58,20 +58,6 @@ def WriteHistogram(h, name):
     h.SetName(name)
     h.Write()
 
-def DefVariables(rdf):
-    return rdf.Define("Higgs_mass",
-                      "Higgs_fourvec.M()")\
-              .Define("Z1_mass",
-                      "Z1_fourvec.M()")\
-              .Define("Z2_mass",
-                      "Z2_fourvec.M()")\
-              .Define("Higgs_pt",
-                      "Higgs_fourvec.Pt()")\
-              .Define("Z1_pt",
-                      "Z1_fourvec.Pt()")\
-              .Define("Z2_pt",
-                      "Z2_fourvec.Pt()")
-
 # Main function of the histogramming step
 #
 # The function loops over the outputs from the skimming step and produces the
@@ -92,12 +78,11 @@ def main():
             print(">>> Process skimmed sample {} and final state {}".format(sample, final_state))
 
             # Make dataframe of the skimmed dataset
-            rdf = ROOT.ROOT.RDataFrame("Events", "angles/" + sample + final_state + "Angles.root")
-            rdf1 = DefVariables(rdf)
+            rdf = ROOT.ROOT.RDataFrame("Events", "skim_data/" + sample + final_state + "Skim.root")
             # Book histograms
             hists = {}
             for variable in variables:
-                hists[variable] = BookHistogram(rdf1, variable, ranges[variable])
+                hists[variable] = BookHistogram(rdf, variable, ranges[variable])
 
             # Write histograms to output file
             for variable in variables:

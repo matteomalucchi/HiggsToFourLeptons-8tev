@@ -212,7 +212,7 @@ if __name__ == "__main__":
                 latex.DrawLatex(0.6, 0.935, "11.6 fb^{-1} (2012, 8 TeV)")
                 latex.DrawLatex(0.16, 0.935, "#bf{CMS Open Data}")
 
-                dir_name = "new_plots"
+                dir_name = "plots"
                 if not os.path.exists(dir_name):
                     os.makedirs(dir_name)
                     print("Directory " , dir_name ,  " Created ")
