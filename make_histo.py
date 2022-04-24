@@ -23,29 +23,22 @@ ranges = {
         "Higgs_mass": (36, 70, 180),
         "Z1_mass": (36, 40, 160),
         "Z2_mass": (36, 12, 160),
+        "Z_close_mass": (36, 40, 160),
+        "Z_far_mass": (36, 12, 160),
         "Higgs_pt": (36, 0, 100),
         "Z1_pt": (36, 0, 100),
         "Z2_pt": (36, 0, 100),
+        "Z_close_pt": (36, 0, 100),
+        "Z_far_pt": (36, 0, 100),
         "theta_star": (36, 0, math.pi),
+        "cos_theta_star": (36, -1, 1),
         "Phi": (36, -math.pi, math.pi),
         "Phi1": (36, -math.pi, math.pi),
         "theta1": (36, 0, math.pi),
+        "cos_theta1": (36, -1,1),
         "theta2": (36, 0, math.pi),
+        "cos_theta2": (36, -1,1),
         }
-
-"""ranges = {
-        "Higgs_mass": (36, 70, 180),
-        "Z1_mass": (36, 40, 160),
-        "Z2_mass": (36, 12, 160),
-        "Higgs_pt": (36, 0, 100),
-        "Z1_pt": (36, 0, 100),
-        "Z2_pt": (36, 0, 100),
-        "theta_star": (64, -4, 4),
-        "Phi": (64, -4, 4),
-        "Phi1": (64, -4, 4),
-        "theta1": (64, -4, 4),
-        "theta2": (64, -4, 4),
-        }"""
 
 # Book a histogram for a specific variable
 def BookHistogram(df, variable, range_):
@@ -73,7 +66,7 @@ def main():
     variables = ranges.keys()
 
     # Loop through skimmed datasets and final states to produce histograms of all variables
-    for sample, final_states in skim.samples.items():
+    for sample, final_states in skim.SAMPLES.items():
         for final_state in final_states:
             print(">>> Process skimmed sample {} and final state {}".format(sample, final_state))
 

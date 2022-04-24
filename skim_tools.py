@@ -1,14 +1,18 @@
 import ROOT
 
 def EventSelection(rdf, final_state):
-    """ minimal selection of the events
+    """ Minimal selection of the events
     """
+	# Definition of the significance of the impact parameter sip 
+	# as the ratio between the impact parameter 
+	# at the point of closest approach to the vertex and its uncertainty
     ROOT.gInterpreter.ProcessLine('''
         using Vec = const ROOT::RVec<float>&;
         auto sipDef= [] (Vec dxy, Vec dz, Vec sigma_dxy, Vec sigma_dz){
             auto ip=sqrt(dxy*dxy + dz*dz);
-            auto sigma_ip=sqrt((sigma_dxy*dxy/ip)*(sigma_dxy*dxy/ip) + (sigma_dz*dz/ip)*(sigma_dz*dz/ip));
-            auto sip=ip/sigma_ip;
+            auto sigma_ip=sqrt((sigma_dxy)*(sigma_dxy) + (sigma_dz)*(sigma_dz));
+            //auto sigma_ip=sqrt((sigma_dxy*dxy/ip)*(sigma_dxy*dxy/ip) + (sigma_dz*dz/ip)*(sigma_dz*dz/ip));
+			auto sip=ip/sigma_ip;
             return sip;
         };
         ''')    
@@ -43,11 +47,11 @@ def EventSelection(rdf, final_state):
 
     elif final_state == "TwoMuonsTwoElectrons":        
         ROOT.gInterpreter.ProcessLine('''
-        auto ptCuts= [] (Vec mu_pt, Vec el_pt){
-            if (ROOT::VecOps::Max(mu_pt)>20 && ROOT::VecOps::Min(mu_pt)>10) return true;
-            if (ROOT::VecOps::Max(el_pt)>20 && ROOT::VecOps::Min(el_pt)>10) return true;
-            return false;
-        };
+			auto ptCuts= [] (Vec mu_pt, Vec el_pt){
+				if (ROOT::VecOps::Max(mu_pt)>20 && ROOT::VecOps::Min(mu_pt)>10) return true;
+				if (ROOT::VecOps::Max(el_pt)>20 && ROOT::VecOps::Min(el_pt)>10) return true;
+				return false;
+			};
         ''')
         return rdf.Filter("nMuon==2 && nElectron==2",
                           "Two muons and two electrons")\
@@ -76,81 +80,100 @@ def EventSelection(rdf, final_state):
     else: raise RuntimeError("Unknown final state --> {}".format(final_state))
 
 def FourVec(rdf, final_state):
-    """reconstruct four vector for leptons z and higgs
+    """Reconstruct four-vector for leptons z and higgs
     """
+	# Reconstruct the four-vector of the leptons
     ROOT.gInterpreter.ProcessLine('''
-    const auto z_mass = 91.2;
-    using VecI = const ROOT::RVec<int>&;
-    using FourVec = const ROOT::RVec<TLorentzVector>&;
-    using Idx = const ROOT::RVec<ROOT::RVec<int>>&; 
-    auto lepFourVec = [] (Vec lep_pt, Vec lep_eta, Vec lep_phi, Vec lep_mass){
-        ROOT::RVec<TLorentzVector> lep_fourvecs(lep_pt.size());
-        for (size_t i = 0; i < lep_pt.size(); i++) {
-            TLorentzVector p;
-            p.SetPtEtaPhiM(lep_pt[i], lep_eta[i], lep_phi[i], lep_mass[i]);
-            lep_fourvecs[i] = p ;
-        }
-        return lep_fourvecs;
-    };
-    auto zIdxSamekind = [&z_mass](FourVec fourvec, VecI charge){
-        ROOT::RVec<ROOT::RVec<int>> idx(2);
-        idx[0].reserve(2); 
-        idx[1].reserve(2);
-        auto idx_cmb = Combinations(fourvec, 2);
-        auto best_mass = -1;
-        size_t best_i1 = 0; 
-        size_t best_i2 = 0;
-        for (size_t i = 0; i < idx_cmb[0].size(); i++) {
-            const auto i1 = idx_cmb[0][i];
-            const auto i2 = idx_cmb[1][i];
-            if (charge[i1] != charge[i2]) {
-                const auto this_mass = (fourvec[i1] + fourvec[i2]).M();
-                if (std::abs(z_mass - this_mass) < std::abs(z_mass - best_mass)) {
-                    best_mass = this_mass;
-                    best_i1 = i1;
-                    best_i2 = i2;
-                }
-            }
-        }
-        idx[0].emplace_back(best_i1);
-        idx[0].emplace_back(best_i2);
-        for (size_t i = 0; i < 4; i++) {
-            if (i != best_i1 && i != best_i2) {
-                idx[1].emplace_back(i);
-            }
-        }
-        return idx;
-    };
-    auto zFourvecSamekind = [&z_mass](Idx idx, FourVec fourvec) {
-        ROOT::RVec<TLorentzVector> z_fourvecs(2);
-        for (size_t i = 0; i < 2; i++) {
-            const auto i1 = idx[i][0];
-            const auto i2 = idx[i][1];
-            z_fourvecs[i] = fourvec[i1]+fourvec[i2];
-        }
-        if (std::abs(z_fourvecs[0].M() - z_mass) < std::abs(z_fourvecs[1].M() - z_mass)) {
-            return z_fourvecs;
-        } else {
-            return ROOT::VecOps::Reverse(z_fourvecs);
-        }
-    };
-    auto zFourvec2mu2el = [&z_mass](FourVec mu_fourvec, FourVec el_fourvec) {
-        ROOT::RVec<TLorentzVector> z_fourvecs = {mu_fourvec[0] + mu_fourvec[1], el_fourvec[0] + el_fourvec[1]};
-        if (std::abs(z_fourvecs[0].M() - z_mass) < std::abs(z_fourvecs[1].M() - z_mass)) {
-            return z_fourvecs;
-        } else {
-            return ROOT::VecOps::Reverse(z_fourvecs);
-        }
-    };
-    auto filterDeltaR = [](Idx idx, Vec eta, Vec phi) {
-        for (size_t i = 0; i < 2; i++) {
-            const auto i1 = idx[i][0];
-            const auto i2 = idx[i][1];
-            const auto dr = ROOT::VecOps::DeltaR(eta[i1], eta[i2], phi[i1], phi[i2]);
-            if (dr < 0.02) return false;
-        }
-        return true;
-    };
+		const auto z_mass = 91.2;
+		using VecI = const ROOT::RVec<int>&;
+		using FourVec = const ROOT::RVec<TLorentzVector>&;
+		using Idx = const ROOT::RVec<ROOT::RVec<int>>&; 
+		auto lepFourVec = [] (Vec lep_pt, Vec lep_eta, Vec lep_phi, Vec lep_mass){
+			ROOT::RVec<TLorentzVector> lep_fourvecs(lep_pt.size());
+			for (size_t i = 0; i < lep_pt.size(); i++) {
+				TLorentzVector p;
+				p.SetPtEtaPhiM(lep_pt[i], lep_eta[i], lep_phi[i], lep_mass[i]);
+				lep_fourvecs[i] = p ;
+			}
+			return lep_fourvecs;
+		};
+	''')
+	# Find the pair of leptons of the same kind whose invariant mass is closest to z_mass
+    ROOT.gInterpreter.ProcessLine('''
+		const auto z_mass = 91.2;
+		auto zIdxSamekind = [&z_mass](FourVec fourvec, VecI charge){
+			ROOT::RVec<ROOT::RVec<int>> idx(2);
+			idx[0].reserve(2); 
+			idx[1].reserve(2);
+			// return the indices that represent all unique pair combinations of the elements of fourvec
+			auto idx_cmb = Combinations(fourvec, 2);
+			auto best_mass = -1;
+			size_t best_i1 = 0; 
+			size_t best_i2 = 0;
+			for (size_t i = 0; i < idx_cmb[0].size(); i++) {
+				const auto i1 = idx_cmb[0][i];
+				const auto i2 = idx_cmb[1][i];
+				if (charge[i1] != charge[i2]) {
+					const auto this_mass = (fourvec[i1] + fourvec[i2]).M();
+					if (std::abs(z_mass - this_mass) < std::abs(z_mass - best_mass)) {
+						best_mass = this_mass;
+						best_i1 = i1;
+						best_i2 = i2;
+					}
+				}
+			}
+			idx[0].emplace_back(best_i1);
+			idx[0].emplace_back(best_i2);
+			for (size_t i = 0; i < fourvec.size(); i++) {
+				if (i != best_i1 && i != best_i2) {
+					idx[1].emplace_back(i);
+				}
+			}
+			return idx;
+		};
+	''')
+	# Reconstruct the two Z four-vectors in the case of leptons of the same kind
+	# and order them according to the proximity of their masses to z_mass 
+    ROOT.gInterpreter.ProcessLine('''
+		const auto z_mass = 91.2;
+		auto zFourvecSamekind = [&z_mass](Idx idx, FourVec fourvec) {
+			ROOT::RVec<TLorentzVector> z_fourvecs(2);
+			for (size_t i = 0; i < 2; i++) {
+				const auto i1 = idx[i][0];
+				const auto i2 = idx[i][1];
+				z_fourvecs[i] = fourvec[i1]+fourvec[i2];
+			}
+			if (std::abs(z_fourvecs[0].M() - z_mass) < std::abs(z_fourvecs[1].M() - z_mass)) {
+				return z_fourvecs;
+			} else {
+				return ROOT::VecOps::Reverse(z_fourvecs);
+			}
+		};
+	''')
+	# Reconstruct the two Z four-vectors in the case of leptons of different kind
+	# and order them according to the proximity of their masses to z_mass 
+    ROOT.gInterpreter.ProcessLine('''
+		const auto z_mass = 91.2;
+		auto zFourvec2mu2el = [&z_mass](FourVec mu_fourvec, FourVec el_fourvec) {
+			ROOT::RVec<TLorentzVector> z_fourvecs = {mu_fourvec[0] + mu_fourvec[1], el_fourvec[0] + el_fourvec[1]};
+			if (std::abs(z_fourvecs[0].M() - z_mass) < std::abs(z_fourvecs[1].M() - z_mass)) {
+				return z_fourvecs;
+			} else {
+				return ROOT::VecOps::Reverse(z_fourvecs);
+			}
+		};
+	''')
+	# Angular separation of particles building the Z systems
+    ROOT.gInterpreter.ProcessLine('''
+		auto filterDeltaR = [](Idx idx, Vec eta, Vec phi) {
+			for (size_t i = 0; i < 2; i++) {
+				const auto i1 = idx[i][0];
+				const auto i2 = idx[i][1];
+				const auto dr = ROOT::VecOps::DeltaR(eta[i1], eta[i2], phi[i1], phi[i2]);
+				if (dr < 0.02) return false;
+			}
+			return true;
+		};
     ''')
 
     if final_state == "FourMuons":
@@ -184,68 +207,105 @@ def FourVec(rdf, final_state):
     else: raise RuntimeError("Unknown final state --> {}".format(final_state))
 
     df_cut = rdf_fv.Filter("Z_fourvecs[0].M() > 40 && Z_fourvecs[0].M() < 120",
-                                 "Mass of first Z candidate in [40, 120]")\
-                         .Filter("Z_fourvecs[1].M() > 12 && Z_fourvecs[1].M() < 120",
-                                 "Mass of second Z candidate in [12, 120]")
+                           "Mass of first Z candidate in [40, 120]")\
+				   .Filter("Z_fourvecs[1].M() > 12 && Z_fourvecs[1].M() < 120",
+						   "Mass of second Z candidate in [12, 120]")
     return df_cut.Define("Higgs_fourvec",
                          "Z_fourvecs[0] + Z_fourvecs[1]")
 
 def OrderFourVec(rdf, final_state):
-    """put the four vectors in order
+    """Put the four vectors in order according to the following criteria:
+			-Z1: heavier boson
+			-Z2: lighter boson
+			-Lep11: lepton belonging to the heavier boson Z1
+			-Lep12: anti-lepton belonging to the heavier boson Z1
+			-Lep21: lepton belonging to the lighter boson Z2
+			-Lep22: anti-lepton belonging to the lighter boson Z2
     """
+	# Order idx so that the first Z is the heavier one
     ROOT.gInterpreter.ProcessLine('''    
-    const auto z_mass = 91.2;
-    auto splitLepSamekind = [](const ROOT::RVec<int>& idx_pair, FourVec fourvec, VecI charge) {
-        if (charge[idx_pair[0]] == -1)  return fourvec[idx_pair[0]];
-        return fourvec[idx_pair[1]];
-    };
-    auto lep1 = [&z_mass](FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI charge_el) {
-        if (std::abs((fourvec_mu[0]+fourvec_mu[1]).M() - z_mass) < std::abs((fourvec_el[0]+fourvec_el[1]).M() - z_mass)) {
-            if (charge_mu[0] == -1) return fourvec_mu[0];
-            else return fourvec_mu[1];
-        } else {
-            if (charge_el[0] == -1) return fourvec_el[0];
-            else return fourvec_el[1];  
-        }
-    };
-    auto lep2 = [&z_mass](FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI charge_el) {
-        if (std::abs((fourvec_mu[0]+fourvec_mu[1]).M() - z_mass) > std::abs((fourvec_el[0]+fourvec_el[1]).M() - z_mass)) {
-            if (charge_mu[0] == -1) return fourvec_mu[0];
-            else return fourvec_mu[1];
-        } else {
-            if (charge_el[0] == -1) return fourvec_el[0];
-            else return fourvec_el[1];  
-        }
-    };
+		auto order_idx_Z = [](Idx idx, FourVec fourvec) {
+			if (fourvec[0].M()>fourvec[1].M()) return idx;
+			return ROOT::VecOps::Reverse(idx);
+		};
+	''')
+	# Order the leptons according to the criteria listed above 
+	# in the case of 4 leptons of the same kind
+    ROOT.gInterpreter.ProcessLine('''
+		auto splitLepSamekind = [](VecI idx_pair, FourVec fourvec, VecI charge) {
+			if (charge[idx_pair[0]] == -1)  return fourvec[idx_pair[0]];
+			return fourvec[idx_pair[1]];
+		};
+	''')
+	# Order the leptons according to the criteria listed above 
+	# in the case of lepton pairs of different kind
+    ROOT.gInterpreter.ProcessLine('''
+		const auto z_mass = 91.2;		
+		auto lep1 = [&z_mass](FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI charge_el) {
+			if ((fourvec_mu[0]+fourvec_mu[1]).M() > (fourvec_el[0]+fourvec_el[1]).M()){
+				if (charge_mu[0] == -1) return fourvec_mu[0];
+				else return fourvec_mu[1];
+			} else {
+				if (charge_el[0] == -1) return fourvec_el[0];
+				else return fourvec_el[1];  
+			}
+		};
+		auto lep2 = [&z_mass](FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI charge_el) {
+			if ((fourvec_mu[0]+fourvec_mu[1]).M() < (fourvec_el[0]+fourvec_el[1]).M()){
+				if (charge_mu[0] == -1) return fourvec_mu[0];
+				else return fourvec_mu[1];
+			} else {
+				if (charge_el[0] == -1) return fourvec_el[0];
+				else return fourvec_el[1];  
+			}
+		};
+    ''')
+	# Return the heavier reconstructed boson
+    ROOT.gInterpreter.ProcessLine('''
+		auto Z_heavy = [](FourVec fourvec) {
+			if (fourvec[0].M()>fourvec[1].M()) return fourvec[0];
+			return fourvec[1];
+		};
+    ''')
+	# Return the lighter reconstructed boson
+    ROOT.gInterpreter.ProcessLine('''
+		auto Z_light = [](FourVec fourvec) {
+			if (fourvec[0].M()<fourvec[1].M()) return fourvec[0];
+			return fourvec[1];
+		};
     ''')
 
     if final_state == "FourMuons":
-        return rdf.Define("Lep11_fourvec",
-                          "splitLepSamekind(Z_idx[0], Muon_fourvec, Muon_charge)" )\
+        return rdf.Define("Z_idx_order",
+                          "order_idx_Z(Z_idx, Z_fourvecs)" )\
+				  .Define("Lep11_fourvec",
+                          "splitLepSamekind(Z_idx_order[0], Muon_fourvec, Muon_charge)" )\
                   .Define("Lep12_fourvec",
-                          "splitLepSamekind(Z_idx[0], Muon_fourvec, -Muon_charge)" )\
+                          "splitLepSamekind(Z_idx_order[0], Muon_fourvec, -Muon_charge)" )\
                   .Define("Lep21_fourvec",
-                          "splitLepSamekind(Z_idx[1], Muon_fourvec, Muon_charge)" )\
+                          "splitLepSamekind(Z_idx_order[1], Muon_fourvec, Muon_charge)" )\
                   .Define("Lep22_fourvec",
-                          "splitLepSamekind(Z_idx[1], Muon_fourvec, -Muon_charge)" )\
+                          "splitLepSamekind(Z_idx_order[1], Muon_fourvec, -Muon_charge)" )\
                   .Define("Z1_fourvec",
-                          "Z_fourvecs[0]")\
-                  .Define("Z2_fourvec", 
-                          "Z_fourvecs[1]")                      
+                          "Z_heavy(Z_fourvecs)")\
+                  .Define("Z2_fourvec",
+                          "Z_light(Z_fourvecs)")                  
     
     elif final_state == "FourElectrons":
-        return rdf.Define("Lep11_fourvec",
-                          "splitLepSamekind(Z_idx[0], Electron_fourvec, Electron_charge)" )\
+        return rdf.Define("Z_idx_order",
+                          "order_idx_Z(Z_idx, Z_fourvecs)" )\
+				  .Define("Lep11_fourvec",
+                          "splitLepSamekind(Z_idx_order[0], Electron_fourvec, Electron_charge)" )\
                   .Define("Lep12_fourvec",
-                          "splitLepSamekind(Z_idx[0], Electron_fourvec, -Electron_charge)" )\
+                          "splitLepSamekind(Z_idx_order[0], Electron_fourvec, -Electron_charge)" )\
                   .Define("Lep21_fourvec",
-                          "splitLepSamekind(Z_idx[1], Electron_fourvec, Electron_charge)" )\
+                          "splitLepSamekind(Z_idx_order[1], Electron_fourvec, Electron_charge)" )\
                   .Define("Lep22_fourvec",
-                          "splitLepSamekind(Z_idx[1], Electron_fourvec, -Electron_charge)" )\
+                          "splitLepSamekind(Z_idx_order[1], Electron_fourvec, -Electron_charge)" )\
                   .Define("Z1_fourvec",
-                          "Z_fourvecs[0]")\
+                          "Z_heavy(Z_fourvecs)")\
                   .Define("Z2_fourvec",
-                          "Z_fourvecs[1]")                           
+                          "Z_light(Z_fourvecs)")                             
     
     elif final_state == "TwoMuonsTwoElectrons":
         return rdf.Define("Lep11_fourvec",
@@ -257,34 +317,46 @@ def OrderFourVec(rdf, final_state):
                   .Define("Lep22_fourvec",
                           "lep2(Muon_fourvec, Electron_fourvec, -Muon_charge, -Electron_charge)" )\
                   .Define("Z1_fourvec",
-                          "Z_fourvecs[0]")\
+                          "Z_heavy(Z_fourvecs)")\
                   .Define("Z2_fourvec",
-                          "Z_fourvecs[1]") 
-    
+                          "Z_light(Z_fourvecs)")   
+
     else: raise RuntimeError("Unknown final state --> {}".format(final_state))
 
 def DefMassPt(rdf):
-    return rdf.Define("Higgs_mass",
+	""" Define mass and pt of Higgs boson and Z 
+	"""
+	return rdf.Define("Higgs_mass",
                       "Higgs_fourvec.M()")\
               .Define("Z1_mass",
                       "Z1_fourvec.M()")\
               .Define("Z2_mass",
                       "Z2_fourvec.M()")\
+              .Define("Z_close_mass",
+                      "Z_fourvecs[0].M()")\
+              .Define("Z_far_mass",
+                      "Z_fourvecs[1].M()")\
               .Define("Higgs_pt",
                       "Higgs_fourvec.Pt()")\
               .Define("Z1_pt",
                       "Z1_fourvec.Pt()")\
               .Define("Z2_pt",
-                      "Z2_fourvec.Pt()")
+                      "Z2_fourvec.Pt()")\
+              .Define("Z_close_pt",
+                      "Z_fourvecs[0].Pt()")\
+              .Define("Z_far_pt",
+                      "Z_fourvecs[1].Pt()")
 
 def FourvecBoost(rdf):
-    ROOT.gInterpreter.ProcessLine('''   
-    auto boostFourvec = [](TLorentzVector fourvec, TVector3 boost) {
-        fourvec.Boost(-boost);
-        return fourvec;
-    };
+	""" Boost the various four-vectors in different frames
+	"""
+	ROOT.gInterpreter.ProcessLine('''   
+		auto boostFourvec = [](TLorentzVector fourvec, TVector3 boost) {
+			fourvec.Boost(-boost);
+			return fourvec;
+		};
     ''')
-    return rdf.Define("Z1_HRest", 
+	return rdf.Define("Z1_HRest", 
                       "boostFourvec(Z1_fourvec,Higgs_fourvec.BoostVector())")\
               .Define("Z2_HRest", 
                       "boostFourvec(Z2_fourvec,Higgs_fourvec.BoostVector())")\
@@ -306,20 +378,27 @@ def FourvecBoost(rdf):
                       "boostFourvec(Z1_fourvec,Z2_fourvec.BoostVector())")\
 
 def DefAngles(rdf):
-    ROOT.gInterpreter.ProcessLine('''   
-    auto crossNorm = [](TVector3 vec1, TVector3 vec2) {
-        return vec1.Cross(vec2) * pow((vec1.Cross(vec2)).Mag(),-1);
-    };
-    auto defAzimuthal = [](TVector3 momentum, TVector3 vec1, TVector3 vec2) {
-        return momentum.Dot(vec1.Cross(vec2)) * pow(std::abs(momentum.Dot(vec1.Cross(vec2))),-1) * acos(vec1.Dot(vec2));
-    }; 
-    auto defTheta = [](TVector3 vec1, TVector3 vec2) {
-        return acos(-vec1.Dot(vec2) * pow(vec1.Mag()*vec2.Mag(),-1));
-    };   
+	""" Define the five angles that allow discrimination between signal and background
+	"""
+	ROOT.gInterpreter.ProcessLine('''   
+		auto crossNorm = [](TVector3 vec1, TVector3 vec2) {
+			return vec1.Cross(vec2) * pow((vec1.Cross(vec2)).Mag(),-1);
+		};
+		auto defAzimuthal = [](TVector3 momentum, TVector3 vec1, TVector3 vec2) {
+			return momentum.Dot(vec1.Cross(vec2)) * pow(std::abs(momentum.Dot(vec1.Cross(vec2))),-1) * acos(vec1.Dot(vec2));
+		}; 
+		auto defTheta = [](TVector3 vec1, TVector3 vec2) {
+			return acos(-vec1.Dot(vec2) * pow(vec1.Mag()*vec2.Mag(),-1));
+		}; 
+		auto defCosTheta = [](TVector3 vec1, TVector3 vec2) {
+			return -vec1.Dot(vec2) * pow(vec1.Mag()*vec2.Mag(),-1);
+		};   
     ''')
-
-    return rdf.Define("theta_star", 
+	
+	return rdf.Define("theta_star", 
                       "acos(Z1_HRest.Pz() * pow(Z1_HRest.P(),-1))")\
+              .Define("cos_theta_star", 
+                      "Z1_HRest.Pz() * pow(Z1_HRest.P(),-1)")\
               .Define("n1",
                       "crossNorm(Lep11_HRest.Vect(), Lep12_HRest.Vect())")\
               .Define("n2",
@@ -332,9 +411,13 @@ def DefAngles(rdf):
                       "defAzimuthal(Z1_HRest.Vect(), n1, n_coll)")\
               .Define("theta1",
                       "defTheta(Z2_Z1Rest.Vect(), Lep11_Z1Rest.Vect())")\
+              .Define("cos_theta1",
+                      "defCosTheta(Z2_Z1Rest.Vect(), Lep11_Z1Rest.Vect())")\
               .Define("theta2",
-                      "defTheta(Z1_Z2Rest.Vect(), Lep21_Z2Rest.Vect())")
-                      
+                      "defTheta(Z1_Z2Rest.Vect(), Lep21_Z2Rest.Vect())")\
+              .Define("cos_theta2",
+                      "defCosTheta(Z1_Z2Rest.Vect(), Lep21_Z2Rest.Vect())")  
+
 def AddEventWeight(rdf, sample_name):
     """add weights for the normalisation of the simulated samples
     """

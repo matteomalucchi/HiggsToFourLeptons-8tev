@@ -13,14 +13,21 @@ variable_labels = {
         "Higgs_mass": "Mass 4 leptons / GeV",
         "Z1_mass": "Mass Z_{1} / GeV",
         "Z2_mass": "Mass Z_{2} / GeV",
+        "Z_close_mass": "Mass Z_{close} / GeV",
+        "Z_far_mass": "Mass Z_{far} / GeV",
         "Higgs_pt": "Pt 4 leptons / GeV",
         "Z1_pt": "Pt Z_{1} / GeV",
         "Z2_pt": "Pt Z_{2} / GeV",
+        "Z_close_pt": "Pt Z_{close} / GeV",
+        "Z_far_pt": "Pt Z_{far} / GeV",
         "theta_star": "#theta*",
+        "cos_theta_star": "cos #theta*",
         "Phi": "#Phi",
         "Phi1": "#Phi_{1}",
         "theta1": "#theta_{1}",
+        "cos_theta1": "cos #theta_{1}",
         "theta2": "#theta_{2}",
+        "cos_theta2": "cos #theta_{2}",
         }
 
 # Retrieve a histogram from the input file based on the sample, the final state
@@ -38,7 +45,7 @@ def CombineFinalStates(d):
     d["combined"].Add(d["TwoMuonsTwoElectrons"])
 
 def SetStyle():
-     # Styles
+    # Styles
     ROOT.gStyle.SetOptStat(0)
 
     ROOT.gStyle.SetCanvasBorderMode(0)
@@ -212,7 +219,7 @@ if __name__ == "__main__":
                 latex.DrawLatex(0.6, 0.935, "11.6 fb^{-1} (2012, 8 TeV)")
                 latex.DrawLatex(0.16, 0.935, "#bf{CMS Open Data}")
 
-                dir_name = "plots"
+                dir_name = os.path.join("plots", input_type)
                 if not os.path.exists(dir_name):
                     os.makedirs(dir_name)
                     print("Directory " , dir_name ,  " Created ")
