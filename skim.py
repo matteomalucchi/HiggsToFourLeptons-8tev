@@ -1,61 +1,45 @@
-#skimming process
+""" 
+Implementation of the skimming process 
+ 
+This consists in reducing the initial samples to a dataset 
+specific for this analysis. The skimming removes all events 
+which are not of interest for the reconstruction of Z bosons
+from combinations of leptons, which may originate from the 
+decay of a Higgs boson. Furthermore, all the variables used 
+later on are defined. This includes mass and Pt of Z and Higgs 
+bosons, as well as five dacay angles defined in [Phys.Rev.D86:095031,2012] 
+which are later used for a machine learning algorithm.
+"""
 
 import time
+import os
 
 import ROOT
 
-
 import skim_tools
+from variables_def import  BASE_PATH, SAMPLES, VARIABLES_FEATURES
 
-#base path
+def main():
+    """Main function of the skimming step
+    
+    The function loops over the datasets and distinguishes the possible
+    final states. It creates for each one of them a RDataFrame which allows 
+    to apply cuts and define new useful abservables.
+    """
 
-#BASE_PATH = "root://eospublic.cern.ch//eos/opendata/cms/derived-data/AOD2NanoAODOutreachTool/ForHiggsTo4Leptons/"
-
-BASE_PATH = "data/"
-
-#various datasets
-
-SAMPLES={
-    "SMHiggsToZZTo4L": ["FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"],
-    "ZZTo4mu": ["FourMuons"],
-    "ZZTo4e": ["FourElectrons"],
-    "ZZTo2e2mu": ["TwoMuonsTwoElectrons"],
-    "Run2012B_DoubleMuParked": ["FourMuons", "TwoMuonsTwoElectrons"],
-    "Run2012C_DoubleMuParked": ["FourMuons", "TwoMuonsTwoElectrons"],
-    "Run2012B_DoubleElectron": ["FourElectrons", "TwoMuonsTwoElectrons"],
-    "Run2012C_DoubleElectron": ["FourElectrons", "TwoMuonsTwoElectrons"]
-}
-
-FINAL_VARIABLES = ROOT.vector("std::string")()
-FINAL_VARIABLES.push_back("run")
-FINAL_VARIABLES.push_back("Weight")
-FINAL_VARIABLES.push_back("Higgs_mass")
-FINAL_VARIABLES.push_back("Z1_mass")
-FINAL_VARIABLES.push_back("Z2_mass")
-FINAL_VARIABLES.push_back("Z_close_mass")
-FINAL_VARIABLES.push_back("Z_far_mass")
-FINAL_VARIABLES.push_back("Higgs_pt")
-FINAL_VARIABLES.push_back("Z1_pt")
-FINAL_VARIABLES.push_back("Z2_pt")
-FINAL_VARIABLES.push_back("Z_close_pt")
-FINAL_VARIABLES.push_back("Z_far_pt")
-FINAL_VARIABLES.push_back("theta_star")
-FINAL_VARIABLES.push_back("cos_theta_star")
-FINAL_VARIABLES.push_back("Phi")
-FINAL_VARIABLES.push_back("Phi1")
-FINAL_VARIABLES.push_back("theta1")
-FINAL_VARIABLES.push_back("cos_theta1")
-FINAL_VARIABLES.push_back("theta2")
-FINAL_VARIABLES.push_back("cos_theta2")
-
-
-if __name__ == "__main__":
+    """Enamble multi-threading
+    """
     ROOT.ROOT.EnableImplicitMT()
     thread_size = ROOT.ROOT.GetThreadPoolSize()
     print(">>> Thread pool size for parallel processing: {}".format(thread_size))
 
+    """Loop over the various samples
+    """
     for sample_name, final_states in SAMPLES.items():
         rdf = ROOT.RDataFrame("Events", BASE_PATH + sample_name +".root")
+
+        """Loop over the possible final states
+        """
         for final_state in final_states:
             print(">>> Process sample: {} and final state {}".format(sample_name, final_state))
             start_time = time.time()
@@ -70,7 +54,11 @@ if __name__ == "__main__":
             
             report = rdf_final.Report()
             rdf_final.Snapshot("Events", "skim_data/" + sample_name +\
-                               final_state + "Skim.root", FINAL_VARIABLES)
-            report.Print()
+                               final_state + "Skim.root", VARIABLES_FEATURES.keys())
+            #report.Print()
             print("Execution time: %s s" %(time.time() - start_time))
             #print(rdf_final.GetColumnNames())
+
+        
+if __name__ == "__main__":
+    main()
