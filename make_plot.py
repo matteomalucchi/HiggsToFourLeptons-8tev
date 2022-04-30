@@ -6,9 +6,10 @@ inital dataset based on observables motivated through physics.
 
 import os
 import ROOT
-ROOT.gROOT.SetBatch(True)
-from variables_def import VARIABLES_FEATURES
 
+from definitions.variables_def import VARIABLES_FEATURES
+
+ROOT.gROOT.SetBatch(True)
 
 def GetHistogram(tfile, sample, final_state, variable):
     """Retrieve a histogram from the input file based on the sample, the final state

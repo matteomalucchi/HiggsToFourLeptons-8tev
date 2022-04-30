@@ -9,7 +9,8 @@ step, which combines them so that the physics of the decay can be studied.
 
 import ROOT
 
-from variables_def import VARIABLES_FEATURES, SAMPLES
+from definitions.variables_def import VARIABLES_FEATURES 
+from definitions.samples_def import  SAMPLES
 
 ROOT.gROOT.SetBatch(True)
 

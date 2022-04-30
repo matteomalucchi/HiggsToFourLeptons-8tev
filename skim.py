@@ -12,12 +12,13 @@ which are later used for a machine learning algorithm.
 """
 
 import time
-import os
 
 import ROOT
 
 import skim_tools
-from variables_def import  BASE_PATH, SAMPLES, VARIABLES_FEATURES
+from definitions.base_path_def import  BASE_PATH
+from definitions.samples_def import  SAMPLES
+from definitions.variables_def import  VARIABLES_FEATURES
 
 def main():
     """Main function of the skimming step
@@ -55,9 +56,10 @@ def main():
             report = rdf_final.Report()
             rdf_final.Snapshot("Events", "skim_data/" + sample_name +\
                                final_state + "Skim.root", VARIABLES_FEATURES.keys())
-            #report.Print()
+            report.Print()
             print("Execution time: %s s" %(time.time() - start_time))
             #print(rdf_final.GetColumnNames())
+            print("")
 
         
 if __name__ == "__main__":
