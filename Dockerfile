@@ -1,12 +1,10 @@
-FROM busybox:latest
-
-RUN echo cacheclear
-
 FROM rootproject/root:latest
 
 RUN mkdir /app
 
 WORKDIR /app
+
+COPY cachecontrol .
 
 RUN apt-get install python3-pip -y
 
