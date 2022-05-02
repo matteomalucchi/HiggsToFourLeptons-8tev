@@ -10,7 +10,7 @@ class TestSkim(unittest.TestCase):
         """Test the definition of sip
         """
         self.assertAlmostEqual(ROOT.sipDef(
-            ROOT.dxy, ROOT.dz, ROOT.sigma_dxy, ROOT.sigma_dz)[0], ROOT.sip[0]+1, 5)
+            ROOT.dxy, ROOT.dz, ROOT.sigma_dxy, ROOT.sigma_dz)[0], ROOT.sip[0], 5)
 
     def test_pt_cuts(self):
         """Test the lepton pt cuts 
