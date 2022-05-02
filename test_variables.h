@@ -10,7 +10,7 @@ using namespace ROOT::VecOps;
 // Electron mass [GeV]
 const float EL_MASS=0.511/1000;
 
-// Muon mass [GeV]
+// Muon mass [GeV] 
 const float MU_MASS=106/1000;
 
 // Sip definition
