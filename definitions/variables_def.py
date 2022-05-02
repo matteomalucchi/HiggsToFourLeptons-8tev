@@ -28,3 +28,17 @@ VARIABLES_FEATURES = {
         "theta2": (36, 0, math.pi, "#theta_{2}"),
         "cos_theta2": (36, -1, 1, "cos #theta_{2}"),
 }
+
+"""
+VARIABLES_FEATURES = {
+        "Weight": (),
+        "theta_star": (36, -1, math.pi+1, "#theta*"),
+        "cos_theta_star": (36, -2, 2, "cos #theta*"),
+        "Phi": (36, -math.pi-1, math.pi+1, "#Phi"),
+        "Phi1": (36, -math.pi-1, math.pi+1, "#Phi_{1}"),
+        "theta1": (36, -1,math.pi+1, "#theta_{1}"),
+        "cos_theta1": (36, -2, 2, "cos #theta_{1}"),
+        "theta2": (36, -1, math.pi+1, "#theta_{2}"),
+        "cos_theta2": (36, -2, 2, "cos #theta_{2}"),
+}
+"""

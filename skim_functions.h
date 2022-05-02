@@ -1,14 +1,12 @@
-#ifndef SkimLambdasHfile_
-#define SkimLambdasHfile_
-
-#include <cmath>
+#ifndef SkimFunctionsHfile_
+#define SkimFunctionsHfile_
 
 #include "ROOT/RVec.hxx"
 
 using namespace ROOT::VecOps;
 
 using VecF = const RVec<float>&;
-using VecI = const ROOT::RVec<int>&;
+using VecI = const RVec<int>&;
 using FourVec = const RVec<TLorentzVector>&;
 using Idx = const RVec<RVec<int>>&; 
 
@@ -124,6 +122,7 @@ RVec<TLorentzVector> zFourvec2mu2el(FourVec mu_fourvec, FourVec el_fourvec) {
 
 /*
  * Angular separation of particles building the Z systems.
+ * DeltaR(eta1, eta2, phi1, phi2)= sqrt((eta1-eta2)^2+(phi1-phi2)^2)
 */
 bool filterDeltaR(Idx idx, VecF eta, VecF phi) {
     for (size_t i = 0; i < 2; i++) {
@@ -152,7 +151,8 @@ TLorentzVector splitLepSamekind(VecI idx_pair, FourVec fourvec, VecI charge) {
 };
 
 /*
- * Select the lepton/anti-lepton belonging to the heavier boson Z1.
+ * Select the lepton/anti-lepton belonging to the heavier boson Z1
+ * in case of leptons of different kinds.
 */
 TLorentzVector lep1(FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI charge_el) {
     if ((fourvec_mu[0]+fourvec_mu[1]).M() > (fourvec_el[0]+fourvec_el[1]).M()){
@@ -165,7 +165,8 @@ TLorentzVector lep1(FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI
 };
 
 /*
- * Select the lepton/anti-lepton belonging to the lighter boson Z2.
+ * Select the lepton/anti-lepton belonging to the lighter boson Z2
+ * in case of leptons of different kinds.
 */
 TLorentzVector lep2(FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI charge_el) {
     if ((fourvec_mu[0]+fourvec_mu[1]).M() < (fourvec_el[0]+fourvec_el[1]).M()){
@@ -229,4 +230,5 @@ float defTheta(TVector3 vec1, TVector3 vec2) {
 float defCosTheta(TVector3 vec1, TVector3 vec2) {
     return -vec1.Dot(vec2) * pow(vec1.Mag()*vec2.Mag(),-1);
 };  
+
 #endif
