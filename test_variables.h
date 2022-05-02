@@ -1,8 +1,6 @@
 #ifndef TestVariablesHfile_
 #define TestVariablesHfile_
 
-//#define _USE_MATH_DEFINES
-
 #include <cmath>
 
 #include "ROOT/RVec.hxx"
