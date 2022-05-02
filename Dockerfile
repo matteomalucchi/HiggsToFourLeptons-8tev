@@ -1,4 +1,4 @@
-FROM rootproject/root:latest
+FROM rootproject/root:6.24.06-conda
 
 RUN mkdir /app
 
