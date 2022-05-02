@@ -4,8 +4,6 @@ RUN mkdir /app
 
 WORKDIR /app
 
-COPY cachecontrol .
-
 RUN apt-get install python3-pip -y
 
 COPY requirements.txt .
