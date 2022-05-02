@@ -12,4 +12,4 @@ RUN python -m pip install -r requirements.txt
 
 COPY . .
 
-ENTRYPOINT ["python", "-m", "unittest"]
+RUN python -m unittest
