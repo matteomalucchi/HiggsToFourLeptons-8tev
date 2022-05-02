@@ -1,3 +1,7 @@
+FROM busybox:latest
+
+RUN echo cacheclear
+
 FROM rootproject/root:latest
 
 RUN mkdir /app
