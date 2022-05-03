@@ -16,6 +16,7 @@ import time
 import ROOT
 
 import skim_tools
+
 from definitions.base_path_def import  BASE_PATH
 from definitions.samples_def import  SAMPLES
 from definitions.variables_def import  VARIABLES_FEATURES
@@ -25,7 +26,7 @@ def main():
     
     The function loops over the datasets and distinguishes the possible
     final states. It creates for each one of them a RDataFrame which allows 
-    to apply cuts and define new useful abservables.
+    to apply cuts and define new useful observables.
     """
 
     """Enamble multi-threading

@@ -4,6 +4,6 @@ This repository contains an analysis of the decay of a Higgs boson into two Z bo
 
 # How to run this
 
-The complete analysis can be performed by simply running `python run_scripts.py`. This automatically runs all the code necessary to perform the complete analysis. The single steps can be executed separately as explained in more detail below.
+The complete analysis can be performed by simply running `python main.py`. This automatically runs all the code necessary to perform the complete analysis. The single steps can be executed separately as explained in more detail below.
 
 

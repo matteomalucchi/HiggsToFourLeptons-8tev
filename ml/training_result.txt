@@ -1,0 +1,545 @@
+DataSetInfo              : [dataset] : Added class "Signal"
+                         : Add Tree Events of type Signal with 26708 events
+DataSetInfo              : [dataset] : Added class "Background"
+                         : Add Tree Events of type Background with 191923 events
+                         : Dataset[dataset] : Class index : 0  name : Signal
+                         : Dataset[dataset] : Class index : 1  name : Background
+2022-05-03 09:46:46.675352: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ dense (Dense)               (None, 64)                384
+
+ dense_1 (Dense)             (None, 12)                780
+
+ dense_2 (Dense)             (None, 12)                156
+
+ dense_3 (Dense)             (None, 12)                156
+
+ dense_4 (Dense)             (None, 12)                156
+
+ dense_5 (Dense)             (None, 2)                 26
+
+=================================================================
+Total params: 1,658
+Trainable params: 1,658
+Non-trainable params: 0
+_________________________________________________________________
+Factory                  : Booking method: Fisher
+                         :
+Fisher                   : [dataset] : Create Transformation "D" with events from all classes.
+                         :
+                         : Transformation, Variable selection :
+                         : Input : variable 'cos_theta_star' <---> Output : variable 'cos_theta_star'
+                         : Input : variable 'Phi' <---> Output : variable 'Phi'
+                         : Input : variable 'Phi1' <---> Output : variable 'Phi1'
+                         : Input : variable 'cos_theta1' <---> Output : variable 'cos_theta1'
+                         : Input : variable 'cos_theta2' <---> Output : variable 'cos_theta2'
+Fisher                   : [dataset] : Create Transformation "G" with events from all classes.
+                         :
+                         : Transformation, Variable selection :
+                         : Input : variable 'cos_theta_star' <---> Output : variable 'cos_theta_star'
+                         : Input : variable 'Phi' <---> Output : variable 'Phi'
+                         : Input : variable 'Phi1' <---> Output : variable 'Phi1'
+                         : Input : variable 'cos_theta1' <---> Output : variable 'cos_theta1'
+                         : Input : variable 'cos_theta2' <---> Output : variable 'cos_theta2'
+Factory                  : Booking method: PyKeras
+                         :
+PyKeras                  : [dataset] : Create Transformation "D" with events from all classes.
+                         :
+                         : Transformation, Variable selection :
+                         : Input : variable 'cos_theta_star' <---> Output : variable 'cos_theta_star'
+                         : Input : variable 'Phi' <---> Output : variable 'Phi'
+                         : Input : variable 'Phi1' <---> Output : variable 'Phi1'
+                         : Input : variable 'cos_theta1' <---> Output : variable 'cos_theta1'
+                         : Input : variable 'cos_theta2' <---> Output : variable 'cos_theta2'
+PyKeras                  : [dataset] : Create Transformation "G" with events from all classes.
+                         :
+                         : Transformation, Variable selection :
+                         : Input : variable 'cos_theta_star' <---> Output : variable 'cos_theta_star'
+                         : Input : variable 'Phi' <---> Output : variable 'Phi'
+                         : Input : variable 'Phi1' <---> Output : variable 'Phi1'
+                         : Input : variable 'cos_theta1' <---> Output : variable 'cos_theta1'
+                         : Input : variable 'cos_theta2' <---> Output : variable 'cos_theta2'
+                         : Setting up keras with
+                         :
+                         :
+<WARNING>                :
+                         :
+                         :
+                         :
+Factory                  : Train all methods
+                         : Building event vectors for type 2 Signal
+                         : Dataset[dataset] :  create input formulas for tree Events
+                         : Dataset[dataset] :  create input formulas for tree Events
+                         : Dataset[dataset] :  create input formulas for tree Events
+                         : Dataset[dataset] :  create input formulas for tree Events
+                         : Building event vectors for type 2 Background
+                         : Dataset[dataset] :  create input formulas for tree Events
+                         : Dataset[dataset] :  create input formulas for tree Events
+                         : Dataset[dataset] :  create input formulas for tree Events
+                         : Dataset[dataset] :  create input formulas for tree Events
+DataSetFactory           : [dataset] : Number of events in input trees
+                         :
+                         :
+                         : Number of training and testing events
+                         : ---------------------------------------------------------------------------
+                         : Signal     -- training events            : 13354
+                         : Signal     -- testing events             : 13354
+                         : Signal     -- training and testing events: 26708
+                         : Background -- training events            : 95961
+                         : Background -- testing events             : 95961
+                         : Background -- training and testing events: 191922
+                         :
+DataSetInfo              : Correlation matrix (Signal):
+                         : --------------------------------------------------------------------
+                         :                 cos_theta_star     Phi    Phi1 cos_theta1 cos_theta2
+                         : cos_theta_star:         +1.000  +0.005  -0.004     +0.003     -0.005
+                         :            Phi:         +0.005  +1.000  +0.024     -0.002     +0.001
+                         :           Phi1:         -0.004  +0.024  +1.000     -0.010     -0.000
+                         :     cos_theta1:         +0.003  -0.002  -0.010     +1.000     +0.067
+                         :     cos_theta2:         -0.005  +0.001  -0.000     +0.067     +1.000
+                         : --------------------------------------------------------------------
+DataSetInfo              : Correlation matrix (Background):
+                         : --------------------------------------------------------------------
+                         :                 cos_theta_star     Phi    Phi1 cos_theta1 cos_theta2
+                         : cos_theta_star:         +1.000  +0.003  -0.000     +0.002     +0.000
+                         :            Phi:         +0.003  +1.000  +0.031     +0.001     +0.001
+                         :           Phi1:         -0.000  +0.031  +1.000     +0.000     +0.003
+                         :     cos_theta1:         +0.002  +0.001  +0.000     +1.000     +0.073
+                         :     cos_theta2:         +0.000  +0.001  +0.003     +0.073     +1.000
+                         : --------------------------------------------------------------------
+DataSetFactory           : [dataset] :
+                         :
+Factory                  : [dataset] : Create Transformation "D" with events from all classes.
+                         :
+                         : Transformation, Variable selection :
+                         : Input : variable 'cos_theta_star' <---> Output : variable 'cos_theta_star'
+                         : Input : variable 'Phi' <---> Output : variable 'Phi'
+                         : Input : variable 'Phi1' <---> Output : variable 'Phi1'
+                         : Input : variable 'cos_theta1' <---> Output : variable 'cos_theta1'
+                         : Input : variable 'cos_theta2' <---> Output : variable 'cos_theta2'
+Factory                  : [dataset] : Create Transformation "G" with events from all classes.
+                         :
+                         : Transformation, Variable selection :
+                         : Input : variable 'cos_theta_star' <---> Output : variable 'cos_theta_star'
+                         : Input : variable 'Phi' <---> Output : variable 'Phi'
+                         : Input : variable 'Phi1' <---> Output : variable 'Phi1'
+                         : Input : variable 'cos_theta1' <---> Output : variable 'cos_theta1'
+                         : Input : variable 'cos_theta2' <---> Output : variable 'cos_theta2'
+                         : Preparing the Decorrelation transformation...
+                         : Preparing the Gaussian transformation...
+TFHandler_Factory        :       Variable              Mean              RMS      [        Min              Max ]
+                         : -----------------------------------------------------------------------------------------
+                         : cos_theta_star:       0.0027833         0.99675   [         -3.2983          5.7307 ]
+                         :            Phi:       0.0028181         0.99710   [         -3.3010          5.7307 ]
+                         :           Phi1:       0.0026984         0.99648   [         -3.3014          5.7307 ]
+                         :     cos_theta1:       0.0027739         0.99684   [         -3.3020          5.7307 ]
+                         :     cos_theta2:       0.0027703         0.99671   [         -3.3021          5.7307 ]
+                         : -----------------------------------------------------------------------------------------
+Factory                  : Train method: Fisher for Classification
+                         :
+                         : Preparing the Decorrelation transformation...
+                         : Preparing the Gaussian transformation...
+TFHandler_Fisher         :       Variable              Mean              RMS      [        Min              Max ]
+                         : -----------------------------------------------------------------------------------------
+                         : cos_theta_star:       0.0027833         0.99675   [         -3.2983          5.7307 ]
+                         :            Phi:       0.0028181         0.99710   [         -3.3010          5.7307 ]
+                         :           Phi1:       0.0026984         0.99648   [         -3.3014          5.7307 ]
+                         :     cos_theta1:       0.0027739         0.99684   [         -3.3020          5.7307 ]
+                         :     cos_theta2:       0.0027703         0.99671   [         -3.3021          5.7307 ]
+                         : -----------------------------------------------------------------------------------------
+Fisher                   : Results for Fisher coefficients:
+                         : NOTE: The coefficients must be applied to TRANFORMED variables
+                         :   List of the transformation:
+                         :   -- Deco
+                         :   -- Gauss
+                         : -------------------------------
+                         :       Variable:    Coefficient:
+                         : -------------------------------
+                         : cos_theta_star:         +0.000
+                         :            Phi:         +0.002
+                         :           Phi1:         +0.000
+                         :     cos_theta1:         +0.004
+                         :     cos_theta2:         +0.007
+                         :       (offset):         -0.000
+                         : -------------------------------
+                         : Elapsed time for training with 109315 events: 1.56 sec
+Fisher                   : [dataset] : Evaluation of Fisher on training sample (109315 events)
+                         : Elapsed time for evaluation of 109315 events: 0.949 sec
+                         : Creating xml weight file: dataset/weights/TMVAClassification_Fisher.weights.xml
+                         : Creating standalone class: dataset/weights/TMVAClassification_Fisher.class.C
+Factory                  : Training finished
+                         :
+Factory                  : Train method: PyKeras for Classification
+                         :
+                         :
+                         :
+                         :
+                         :
+                         :
+                         :
+                         :
+                         :
+                         :
+                         :
+                         :
+                         :
+                         :
+                         :
+                         :
+                         : Preparing the Decorrelation transformation...
+                         : Preparing the Gaussian transformation...
+TFHandler_PyKeras        :       Variable              Mean              RMS      [        Min              Max ]
+                         : -----------------------------------------------------------------------------------------
+                         : cos_theta_star:       0.0027833         0.99675   [         -3.2983          5.7307 ]
+                         :            Phi:       0.0028181         0.99710   [         -3.3010          5.7307 ]
+                         :           Phi1:       0.0026984         0.99648   [         -3.3014          5.7307 ]
+                         :     cos_theta1:       0.0027739         0.99684   [         -3.3020          5.7307 ]
+                         :     cos_theta2:       0.0027703         0.99671   [         -3.3021          5.7307 ]
+                         : -----------------------------------------------------------------------------------------
+TFHandler_PyKeras        :       Variable              Mean              RMS      [        Min              Max ]
+                         : -----------------------------------------------------------------------------------------
+                         : cos_theta_star:       0.0027833         0.99675   [         -3.2983          5.7307 ]
+                         :            Phi:       0.0028181         0.99710   [         -3.3010          5.7307 ]
+                         :           Phi1:       0.0026984         0.99648   [         -3.3014          5.7307 ]
+                         :     cos_theta1:       0.0027739         0.99684   [         -3.3020          5.7307 ]
+                         :     cos_theta2:       0.0027703         0.99671   [         -3.3021          5.7307 ]
+                         : -----------------------------------------------------------------------------------------
+                         :
+                         :
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ dense (Dense)               (None, 64)                384
+
+ dense_1 (Dense)             (None, 12)                780
+
+ dense_2 (Dense)             (None, 12)                156
+
+ dense_3 (Dense)             (None, 12)                156
+
+ dense_4 (Dense)             (None, 12)                156
+
+ dense_5 (Dense)             (None, 2)                 26
+
+=================================================================
+Total params: 1,658
+Trainable params: 1,658
+Non-trainable params: 0
+_________________________________________________________________
+                         :
+Epoch 1/50
+678/684 [============================>.] - ETA: 0s - loss: 0.3859 - accuracy: 0.8692
+Epoch 1: val_loss improved from inf to 0.36157, saving model to dataset/weights/TrainedModel_PyKeras.h5
+684/684 [==============================] - 13s 17ms/step - loss: 0.3859 - accuracy: 0.8693 - val_loss: 0.3616 - val_accuracy: 0.8766
+Epoch 2/50
+680/684 [============================>.] - ETA: 0s - loss: 0.3558 - accuracy: 0.8782
+Epoch 2: val_loss improved from 0.36157 to 0.36101, saving model to dataset/weights/TrainedModel_PyKeras.h5
+684/684 [==============================] - 3s 4ms/step - loss: 0.3559 - accuracy: 0.8782 - val_loss: 0.3610 - val_accuracy: 0.8766
+Epoch 3/50
+671/684 [============================>.] - ETA: 0s - loss: 0.3551 - accuracy: 0.8781
+Epoch 3: val_loss did not improve from 0.36101
+684/684 [==============================] - 3s 4ms/step - loss: 0.3550 - accuracy: 0.8782 - val_loss: 0.3617 - val_accuracy: 0.8766
+Epoch 4/50
+679/684 [============================>.] - ETA: 0s - loss: 0.3549 - accuracy: 0.8781
+Epoch 4: val_loss improved from 0.36101 to 0.36094, saving model to dataset/weights/TrainedModel_PyKeras.h5
+684/684 [==============================] - 3s 4ms/step - loss: 0.3548 - accuracy: 0.8782 - val_loss: 0.3609 - val_accuracy: 0.8766
+Epoch 5/50
+681/684 [============================>.] - ETA: 0s - loss: 0.3544 - accuracy: 0.8782
+Epoch 5: val_loss did not improve from 0.36094
+684/684 [==============================] - 3s 4ms/step - loss: 0.3545 - accuracy: 0.8782 - val_loss: 0.3616 - val_accuracy: 0.8766
+Epoch 6/50
+676/684 [============================>.] - ETA: 0s - loss: 0.3544 - accuracy: 0.8781
+Epoch 6: val_loss improved from 0.36094 to 0.36018, saving model to dataset/weights/TrainedModel_PyKeras.h5
+684/684 [==============================] - 3s 4ms/step - loss: 0.3542 - accuracy: 0.8782 - val_loss: 0.3602 - val_accuracy: 0.8766
+Epoch 7/50
+682/684 [============================>.] - ETA: 0s - loss: 0.3540 - accuracy: 0.8782
+Epoch 7: val_loss did not improve from 0.36018
+684/684 [==============================] - 3s 4ms/step - loss: 0.3541 - accuracy: 0.8782 - val_loss: 0.3611 - val_accuracy: 0.8766
+Epoch 8/50
+680/684 [============================>.] - ETA: 0s - loss: 0.3539 - accuracy: 0.8781
+Epoch 8: val_loss improved from 0.36018 to 0.36013, saving model to dataset/weights/TrainedModel_PyKeras.h5
+684/684 [==============================] - 3s 4ms/step - loss: 0.3538 - accuracy: 0.8782 - val_loss: 0.3601 - val_accuracy: 0.8766
+Epoch 9/50
+671/684 [============================>.] - ETA: 0s - loss: 0.3533 - accuracy: 0.8783
+Epoch 9: val_loss improved from 0.36013 to 0.35970, saving model to dataset/weights/TrainedModel_PyKeras.h5
+684/684 [==============================] - 3s 4ms/step - loss: 0.3536 - accuracy: 0.8782 - val_loss: 0.3597 - val_accuracy: 0.8766
+Epoch 10/50
+679/684 [============================>.] - ETA: 0s - loss: 0.3538 - accuracy: 0.8780
+Epoch 10: val_loss did not improve from 0.35970
+684/684 [==============================] - 3s 4ms/step - loss: 0.3535 - accuracy: 0.8782 - val_loss: 0.3599 - val_accuracy: 0.8766
+Epoch 11/50
+679/684 [============================>.] - ETA: 0s - loss: 0.3535 - accuracy: 0.8782
+Epoch 11: val_loss did not improve from 0.35970
+684/684 [==============================] - 3s 4ms/step - loss: 0.3534 - accuracy: 0.8782 - val_loss: 0.3607 - val_accuracy: 0.8766
+Epoch 12/50
+673/684 [============================>.] - ETA: 0s - loss: 0.3531 - accuracy: 0.8781
+Epoch 12: val_loss improved from 0.35970 to 0.35921, saving model to dataset/weights/TrainedModel_PyKeras.h5
+684/684 [==============================] - 2s 4ms/step - loss: 0.3531 - accuracy: 0.8782 - val_loss: 0.3592 - val_accuracy: 0.8766
+Epoch 13/50
+674/684 [============================>.] - ETA: 0s - loss: 0.3532 - accuracy: 0.8781
+Epoch 13: val_loss did not improve from 0.35921
+684/684 [==============================] - 3s 4ms/step - loss: 0.3531 - accuracy: 0.8782 - val_loss: 0.3594 - val_accuracy: 0.8766
+Epoch 14/50
+674/684 [============================>.] - ETA: 0s - loss: 0.3528 - accuracy: 0.8782
+Epoch 14: val_loss did not improve from 0.35921
+684/684 [==============================] - 3s 4ms/step - loss: 0.3530 - accuracy: 0.8782 - val_loss: 0.3598 - val_accuracy: 0.8766
+Epoch 15/50
+681/684 [============================>.] - ETA: 0s - loss: 0.3526 - accuracy: 0.8782
+Epoch 15: val_loss did not improve from 0.35921
+684/684 [==============================] - 3s 4ms/step - loss: 0.3528 - accuracy: 0.8782 - val_loss: 0.3602 - val_accuracy: 0.8766
+Epoch 16/50
+680/684 [============================>.] - ETA: 0s - loss: 0.3527 - accuracy: 0.8781
+Epoch 16: val_loss improved from 0.35921 to 0.35894, saving model to dataset/weights/TrainedModel_PyKeras.h5
+684/684 [==============================] - 3s 4ms/step - loss: 0.3527 - accuracy: 0.8782 - val_loss: 0.3589 - val_accuracy: 0.8766
+Epoch 17/50
+681/684 [============================>.] - ETA: 0s - loss: 0.3524 - accuracy: 0.8782
+Epoch 17: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3525 - accuracy: 0.8782 - val_loss: 0.3597 - val_accuracy: 0.8766
+Epoch 18/50
+680/684 [============================>.] - ETA: 0s - loss: 0.3525 - accuracy: 0.8781
+Epoch 18: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3526 - accuracy: 0.8782 - val_loss: 0.3593 - val_accuracy: 0.8766
+Epoch 19/50
+678/684 [============================>.] - ETA: 0s - loss: 0.3520 - accuracy: 0.8783
+Epoch 19: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3523 - accuracy: 0.8782 - val_loss: 0.3603 - val_accuracy: 0.8766
+Epoch 20/50
+681/684 [============================>.] - ETA: 0s - loss: 0.3523 - accuracy: 0.8782
+Epoch 20: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3523 - accuracy: 0.8782 - val_loss: 0.3592 - val_accuracy: 0.8766
+Epoch 21/50
+681/684 [============================>.] - ETA: 0s - loss: 0.3523 - accuracy: 0.8781
+Epoch 21: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3522 - accuracy: 0.8782 - val_loss: 0.3605 - val_accuracy: 0.8766
+Epoch 22/50
+670/684 [============================>.] - ETA: 0s - loss: 0.3522 - accuracy: 0.8782
+Epoch 22: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3523 - accuracy: 0.8782 - val_loss: 0.3596 - val_accuracy: 0.8766
+Epoch 23/50
+679/684 [============================>.] - ETA: 0s - loss: 0.3524 - accuracy: 0.8780
+Epoch 23: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3522 - accuracy: 0.8782 - val_loss: 0.3605 - val_accuracy: 0.8766
+Epoch 24/50
+669/684 [============================>.] - ETA: 0s - loss: 0.3519 - accuracy: 0.8782
+Epoch 24: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3521 - accuracy: 0.8782 - val_loss: 0.3590 - val_accuracy: 0.8766
+Epoch 25/50
+671/684 [============================>.] - ETA: 0s - loss: 0.3524 - accuracy: 0.8779
+Epoch 25: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3520 - accuracy: 0.8782 - val_loss: 0.3597 - val_accuracy: 0.8766
+Epoch 26/50
+675/684 [============================>.] - ETA: 0s - loss: 0.3521 - accuracy: 0.8780
+Epoch 26: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 5ms/step - loss: 0.3520 - accuracy: 0.8782 - val_loss: 0.3598 - val_accuracy: 0.8766
+Epoch 27/50
+672/684 [============================>.] - ETA: 0s - loss: 0.3514 - accuracy: 0.8785
+Epoch 27: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3520 - accuracy: 0.8782 - val_loss: 0.3597 - val_accuracy: 0.8766
+Epoch 28/50
+682/684 [============================>.] - ETA: 0s - loss: 0.3519 - accuracy: 0.8782
+Epoch 28: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3519 - accuracy: 0.8782 - val_loss: 0.3592 - val_accuracy: 0.8766
+Epoch 29/50
+669/684 [============================>.] - ETA: 0s - loss: 0.3518 - accuracy: 0.8782
+Epoch 29: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3519 - accuracy: 0.8782 - val_loss: 0.3597 - val_accuracy: 0.8766
+Epoch 30/50
+681/684 [============================>.] - ETA: 0s - loss: 0.3519 - accuracy: 0.8781
+Epoch 30: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3519 - accuracy: 0.8782 - val_loss: 0.3593 - val_accuracy: 0.8766
+Epoch 31/50
+679/684 [============================>.] - ETA: 0s - loss: 0.3516 - accuracy: 0.8783
+Epoch 31: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3518 - accuracy: 0.8782 - val_loss: 0.3603 - val_accuracy: 0.8766
+Epoch 32/50
+681/684 [============================>.] - ETA: 0s - loss: 0.3519 - accuracy: 0.8781
+Epoch 32: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3517 - accuracy: 0.8782 - val_loss: 0.3593 - val_accuracy: 0.8766
+Epoch 33/50
+676/684 [============================>.] - ETA: 0s - loss: 0.3518 - accuracy: 0.8780
+Epoch 33: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3516 - accuracy: 0.8782 - val_loss: 0.3601 - val_accuracy: 0.8766
+Epoch 34/50
+674/684 [============================>.] - ETA: 0s - loss: 0.3515 - accuracy: 0.8782
+Epoch 34: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3517 - accuracy: 0.8782 - val_loss: 0.3596 - val_accuracy: 0.8766
+Epoch 35/50
+684/684 [==============================] - ETA: 0s - loss: 0.3518 - accuracy: 0.8782
+Epoch 35: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3518 - accuracy: 0.8782 - val_loss: 0.3599 - val_accuracy: 0.8766
+Epoch 36/50
+677/684 [============================>.] - ETA: 0s - loss: 0.3514 - accuracy: 0.8781
+Epoch 36: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3515 - accuracy: 0.8782 - val_loss: 0.3598 - val_accuracy: 0.8766
+Epoch 37/50
+676/684 [============================>.] - ETA: 0s - loss: 0.3516 - accuracy: 0.8781
+Epoch 37: val_loss did not improve from 0.35894
+684/684 [==============================] - 2s 4ms/step - loss: 0.3514 - accuracy: 0.8782 - val_loss: 0.3596 - val_accuracy: 0.8766
+Epoch 38/50
+673/684 [============================>.] - ETA: 0s - loss: 0.3516 - accuracy: 0.8781
+Epoch 38: val_loss did not improve from 0.35894
+684/684 [==============================] - 3s 4ms/step - loss: 0.3516 - accuracy: 0.8782 - val_loss: 0.3597 - val_accuracy: 0.8766
+Epoch 39/50
+676/684 [============================>.] - ETA: 0s - loss: 0.3515 - accuracy: 0.8782
+Epoch 39: val_loss did not improve from 0.35894
+684/684 [==============================] - 2s 3ms/step - loss: 0.3517 - accuracy: 0.8782 - val_loss: 0.3597 - val_accuracy: 0.8766
+Epoch 40/50
+671/684 [============================>.] - ETA: 0s - loss: 0.3513 - accuracy: 0.8782
+Epoch 40: val_loss did not improve from 0.35894
+684/684 [==============================] - 2s 3ms/step - loss: 0.3514 - accuracy: 0.8782 - val_loss: 0.3598 - val_accuracy: 0.8766
+Epoch 41/50
+677/684 [============================>.] - ETA: 0s - loss: 0.3515 - accuracy: 0.8782
+Epoch 41: val_loss did not improve from 0.35894
+684/684 [==============================] - 2s 3ms/step - loss: 0.3515 - accuracy: 0.8782 - val_loss: 0.3596 - val_accuracy: 0.8766
+Epoch 42/50
+666/684 [============================>.] - ETA: 0s - loss: 0.3519 - accuracy: 0.8778
+Epoch 42: val_loss did not improve from 0.35894
+684/684 [==============================] - 2s 3ms/step - loss: 0.3513 - accuracy: 0.8782 - val_loss: 0.3606 - val_accuracy: 0.8766
+Epoch 43/50
+676/684 [============================>.] - ETA: 0s - loss: 0.3517 - accuracy: 0.8780
+Epoch 43: val_loss did not improve from 0.35894
+684/684 [==============================] - 2s 3ms/step - loss: 0.3512 - accuracy: 0.8782 - val_loss: 0.3605 - val_accuracy: 0.8766
+Epoch 44/50
+680/684 [============================>.] - ETA: 0s - loss: 0.3513 - accuracy: 0.8782
+Epoch 44: val_loss did not improve from 0.35894
+684/684 [==============================] - 2s 3ms/step - loss: 0.3513 - accuracy: 0.8782 - val_loss: 0.3599 - val_accuracy: 0.8766
+Epoch 45/50
+671/684 [============================>.] - ETA: 0s - loss: 0.3517 - accuracy: 0.8780
+Epoch 45: val_loss did not improve from 0.35894
+684/684 [==============================] - 2s 3ms/step - loss: 0.3513 - accuracy: 0.8782 - val_loss: 0.3600 - val_accuracy: 0.8766
+Epoch 46/50
+684/684 [==============================] - ETA: 0s - loss: 0.3513 - accuracy: 0.8782
+Epoch 46: val_loss did not improve from 0.35894
+684/684 [==============================] - 2s 3ms/step - loss: 0.3513 - accuracy: 0.8782 - val_loss: 0.3597 - val_accuracy: 0.8766
+Epoch 47/50
+682/684 [============================>.] - ETA: 0s - loss: 0.3515 - accuracy: 0.8781
+Epoch 47: val_loss did not improve from 0.35894
+684/684 [==============================] - 2s 3ms/step - loss: 0.3513 - accuracy: 0.8782 - val_loss: 0.3595 - val_accuracy: 0.8766
+Epoch 48/50
+671/684 [============================>.] - ETA: 0s - loss: 0.3512 - accuracy: 0.8781
+Epoch 48: val_loss did not improve from 0.35894
+684/684 [==============================] - 2s 3ms/step - loss: 0.3511 - accuracy: 0.8782 - val_loss: 0.3598 - val_accuracy: 0.8766
+Epoch 49/50
+667/684 [============================>.] - ETA: 0s - loss: 0.3507 - accuracy: 0.8785
+Epoch 49: val_loss did not improve from 0.35894
+684/684 [==============================] - 2s 3ms/step - loss: 0.3512 - accuracy: 0.8782 - val_loss: 0.3598 - val_accuracy: 0.8766
+Epoch 50/50
+668/684 [============================>.] - ETA: 0s - loss: 0.3506 - accuracy: 0.8784
+Epoch 50: val_loss did not improve from 0.35894
+684/684 [==============================] - 2s 3ms/step - loss: 0.3512 - accuracy: 0.8782 - val_loss: 0.3597 - val_accuracy: 0.8766
+                         :
+                         :
+                         :
+                         :
+                         :
+PyKeras                  :
+                         :
+                         :
+                         :
+Factory                  : Training finished
+                         :
+                         : Ranking input variables (method specific)...
+Fisher                   : Ranking result (top variable is best ranked)
+                         : -----------------------------------------
+                         : Rank : Variable       : Discr. power
+                         : -----------------------------------------
+                         :    1 : cos_theta2     : 8.796e-05
+                         :    2 : cos_theta1     : 2.897e-05
+                         :    3 : Phi            : 6.322e-06
+                         :    4 : cos_theta_star : 3.158e-07
+                         :    5 : Phi1           : 2.629e-07
+                         : -----------------------------------------
+                         : No variable ranking supplied by classifier: PyKeras
+TH1.Print Name  = TrainingHistory_PyKeras_'accuracy', Entries= 0, Total sum= 43.8986
+TH1.Print Name  = TrainingHistory_PyKeras_'loss', Entries= 0, Total sum= 17.6524
+TH1.Print Name  = TrainingHistory_PyKeras_'val_accuracy', Entries= 0, Total sum= 43.8298
+TH1.Print Name  = TrainingHistory_PyKeras_'val_loss', Entries= 0, Total sum= 17.9983
+Factory                  : === Destroy and recreate all methods via weight files for testing ===
+                         :
+                         : Reading weight file: dataset/weights/TMVAClassification_Fisher.weights.xml
+                         : Reading weight file: dataset/weights/TMVAClassification_PyKeras.weights.xml
+Factory                  : Test all methods
+Factory                  : Test method: Fisher for Classification performance
+                         :
+Fisher                   : [dataset] : Evaluation of Fisher on testing sample (109315 events)
+                         : Elapsed time for evaluation of 109315 events: 0.826 sec
+Factory                  : Test method: PyKeras for Classification performance
+                         :
+                         : Setting up tf.keras
+                         : Using TensorFlow version 2
+                         : Use Keras version from TensorFlow : tf.keras
+                         :  Loading Keras Model
+                         : Loaded model from file: dataset/weights/TrainedModel_PyKeras.h5
+PyKeras                  : [dataset] : Evaluation of PyKeras on testing sample (109315 events)
+                         : Elapsed time for evaluation of 109315 events: 6.44 sec
+Factory                  : Evaluate all methods
+Factory                  : Evaluate classifier: Fisher
+                         :
+TFHandler_Fisher         :       Variable              Mean              RMS      [        Min              Max ]
+                         : -----------------------------------------------------------------------------------------
+                         : cos_theta_star:      0.00013769         0.99685   [         -3.1565          5.7307 ]
+                         :            Phi:       0.0072399         0.99987   [         -3.2810          5.7307 ]
+                         :           Phi1:       0.0058698         0.99377   [         -3.1796          5.7307 ]
+                         :     cos_theta1:      -0.0020502         0.99887   [         -3.3675          5.7307 ]
+                         :     cos_theta2:      -0.0011035         0.99729   [         -3.2829          5.7307 ]
+                         : -----------------------------------------------------------------------------------------
+Fisher                   : [dataset] : Loop over test events and fill histograms with classifier response...
+                         :
+TFHandler_Fisher         :       Variable              Mean              RMS      [        Min              Max ]
+                         : -----------------------------------------------------------------------------------------
+                         : cos_theta_star:      0.00013769         0.99685   [         -3.1565          5.7307 ]
+                         :            Phi:       0.0072399         0.99987   [         -3.2810          5.7307 ]
+                         :           Phi1:       0.0058698         0.99377   [         -3.1796          5.7307 ]
+                         :     cos_theta1:      -0.0020502         0.99887   [         -3.3675          5.7307 ]
+                         :     cos_theta2:      -0.0011035         0.99729   [         -3.2829          5.7307 ]
+                         : -----------------------------------------------------------------------------------------
+Factory                  : Evaluate classifier: PyKeras
+                         :
+TFHandler_PyKeras        :       Variable              Mean              RMS      [        Min              Max ]
+                         : -----------------------------------------------------------------------------------------
+                         : cos_theta_star:      0.00013769         0.99685   [         -3.1565          5.7307 ]
+                         :            Phi:       0.0072399         0.99987   [         -3.2810          5.7307 ]
+                         :           Phi1:       0.0058698         0.99377   [         -3.1796          5.7307 ]
+                         :     cos_theta1:      -0.0020502         0.99887   [         -3.3675          5.7307 ]
+                         :     cos_theta2:      -0.0011035         0.99729   [         -3.2829          5.7307 ]
+                         : -----------------------------------------------------------------------------------------
+PyKeras                  : [dataset] : Loop over test events and fill histograms with classifier response...
+                         :
+TFHandler_PyKeras        :       Variable              Mean              RMS      [        Min              Max ]
+                         : -----------------------------------------------------------------------------------------
+                         : cos_theta_star:      0.00013769         0.99685   [         -3.1565          5.7307 ]
+                         :            Phi:       0.0072399         0.99987   [         -3.2810          5.7307 ]
+                         :           Phi1:       0.0058698         0.99377   [         -3.1796          5.7307 ]
+                         :     cos_theta1:      -0.0020502         0.99887   [         -3.3675          5.7307 ]
+                         :     cos_theta2:      -0.0011035         0.99729   [         -3.2829          5.7307 ]
+                         : -----------------------------------------------------------------------------------------
+                         :
+                         : Evaluation results ranked by best signal efficiency and purity (area)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet       MVA
+                         : Name:         Method:          ROC-integ
+                         : dataset       PyKeras        : 0.657
+                         : dataset       Fisher         : 0.512
+                         : -------------------------------------------------------------------------------------------------------------------
+                         :
+                         : Testing efficiency compared to training efficiency (overtraining check)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet              MVA              Signal efficiency: from test sample (from training sample)
+                         : Name:                Method:          @B=0.01             @B=0.10            @B=0.30
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : dataset              PyKeras        : 0.027 (0.027)       0.221 (0.225)      0.525 (0.524)
+                         : dataset              Fisher         : 0.006 (0.006)       0.063 (0.063)      0.256 (0.254)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         :
+Dataset:dataset          : Created tree 'TestTree' with 109315 events
+                         :
+Dataset:dataset          : Created tree 'TrainTree' with 109315 events
+                         :
+Factory                  : Thank you for using TMVA!
+                         : For citation information, please visit: http://tmva.sf.net/citeTMVA.html
+Info in <TCanvas::Print>: file ml_roc.png has been created
