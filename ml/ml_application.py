@@ -48,11 +48,11 @@ if __name__ == "__main__":
 
     # Print some example classifications
     print("Some signal example classifications:")
-    for i in range(50000):
+    for i in range(10000):
         signal_chain.GetEntry(i)
         histo_s.Fill(reader.EvaluateMVA("PyKeras"))
         #print(signal_chain.Higgs_mass)
-        if i%1000 == 0:
+        if i%100 == 0:
             print(reader.EvaluateMVA("PyKeras"))
     
     print("")
@@ -61,11 +61,11 @@ if __name__ == "__main__":
     histo_s.Draw() 
 
     print("Some background example classifications:")
-    for i in range(50000):
+    for i in range(10000):
         bkg_chain.GetEntry(i)
         histo_b.Fill(reader.EvaluateMVA("PyKeras"))
         #print(bkg_chain.Higgs_mass)
-        if i%1000 == 0:
+        if i%100 == 0:
             print(reader.EvaluateMVA("PyKeras"))
 
 
