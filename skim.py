@@ -12,7 +12,7 @@ which are later used for a machine learning algorithm.
 """
 
 import time
-
+import os
 import ROOT
 
 import skim_tools
@@ -54,13 +54,23 @@ def main():
             rdf7 = skim_tools.DefAngles(rdf6)
             rdf_final = skim_tools.AddEventWeight(rdf7, sample_name)
             
-            report = rdf_final.Report()
-            rdf_final.Snapshot("Events", "skim_data/" + sample_name +\
-                               final_state + "Skim.root", VARIABLES_FEATURES.keys())
-            report.Print()
-            print("Execution time: %s s" %(time.time() - start_time))
+            #report = rdf_final.Report()
+            #report.Print()
             #print(rdf_final.GetColumnNames())
-            print("")
+            #print("")   
+                     
+            """Create the directory and save the skimmed samples.
+            """
+            file_name =f"{sample_name}{final_state}Skim.root"
+            dir_name = "skim_data"
+            if not os.path.exists(dir_name):
+                os.makedirs(dir_name)
+                print("Directory " , dir_name ,  " Created ")
+            complete_name = os.path.join(dir_name, file_name)
+            rdf_final.Snapshot("Events", complete_name, VARIABLES_FEATURES.keys())
+
+            print("Execution time: %s s" %(time.time() - start_time))
+
 
         
 if __name__ == "__main__":

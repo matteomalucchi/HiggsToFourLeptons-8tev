@@ -142,15 +142,22 @@ def main ():
     SetStyle()
 
     for variable in VARIABLES_FEATURES.keys():
-        if len(VARIABLES_FEATURES[variable])>0:
+        if variable != "Weight":
                 
             """Get histograms for the signal
             """
             signals = {}
             for final_state in ["FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]:
                 signals[final_state] = GetHistogram(tfile, "SMHiggsToZZTo4L", final_state, variable)
-
             CombineFinalStates(signals)
+
+            """Get the normalized histograms for the signal
+            """
+            signals_norm = {}
+            for final_state in signals.keys():
+                histo = signals[final_state]
+                histo.Scale(1/histo.Integral())
+                signals_norm[final_state] = histo
 
             """Get histograms for the background
             """
@@ -158,8 +165,15 @@ def main ():
             backgrounds["FourMuons"] = GetHistogram(tfile, "ZZTo4mu", "FourMuons", variable)
             backgrounds["FourElectrons"] = GetHistogram(tfile, "ZZTo4e", "FourElectrons", variable)
             backgrounds["TwoMuonsTwoElectrons"] = GetHistogram(tfile, "ZZTo2e2mu", "TwoMuonsTwoElectrons", variable)
-
             CombineFinalStates(backgrounds)
+
+            """Get the normalized histograms for the background
+            """
+            backgrounds_norm = {}
+            for final_state in backgrounds.keys():
+                histo = backgrounds[final_state]
+                histo.Scale(1/histo.Integral())
+                backgrounds_norm[final_state] = histo
 
             """Get histograms for the data
             """
@@ -185,6 +199,7 @@ def main ():
                 "data" : data,
                 "background" : backgrounds,
                 "signal" : signals,
+                "sig_bkg_normalized" : [backgrounds_norm, signals_norm],
                 "total" : ["data", "background", "signal"]
             }
             
@@ -193,9 +208,9 @@ def main ():
             for input_type, inputs in inputs_dict.items():        
                 for final_state in ["FourMuons", "FourElectrons", "TwoMuonsTwoElectrons", "combined"]: 
                     c = ROOT.TCanvas("", "", 600, 600)
-                    legend = ROOT.TLegend(0.6, 0.66, 0.90, 0.86)
+                    legend = ROOT.TLegend(0.66, 0.7, 0.9, 0.9)
 
-                    if input_type != "total":                 
+                    if input_type in ["data", "background", "signal"]:                 
                         input = inputs[final_state]       
                         InputStyle(input_type, input)
                         AddTitle(input, variable)
@@ -207,7 +222,23 @@ def main ():
                         legend=AddLegend(legend, input_type, input)
                         legend.Draw()
 
-                    else:
+                    elif input_type == "sig_bkg_normalized":                 
+                        bkg_norm = inputs[0][final_state]       
+                        InputStyle("background", bkg_norm)
+                        AddTitle(bkg_norm, variable)
+                        bkg_norm.SetMaximum(bkg_norm.GetMaximum() * 1.5)
+                        bkg_norm.Draw("HIST")
+                        legend=AddLegend(legend, "background", bkg_norm)
+
+                        sig_norm = inputs[1][final_state]       
+                        InputStyle("signal", sig_norm)
+                        sig_norm.Draw("HIST SAME")
+                        legend=AddLegend(legend, "signal", sig_norm)
+
+                        legend.Draw()
+
+
+                    elif input_type == "total":
                         """Add the background to the signal in order to compare it with the data.
                         """
                         signals[final_state].Add(backgrounds[final_state])
@@ -232,7 +263,9 @@ def main ():
                     if not os.path.exists(dir_name):
                         os.makedirs(dir_name)
                         print("Directory " , dir_name ,  " Created ")
-                    c.SaveAs("{}/{}_{}_{}.png".format(dir_name, input_type, final_state, variable))
+                    file_name = f"{input_type}_{final_state}_{variable}.png"
+                    complete_name = os.path.join(dir_name, file_name)
+                    c.SaveAs(complete_name)
 
 
 if __name__ == "__main__":

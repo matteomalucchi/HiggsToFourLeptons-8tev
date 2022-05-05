@@ -79,14 +79,14 @@ if __name__ == "__main__":
     c.Draw()
     c.Print("ml_roc.png")
 
-    for i in range(10):
+    """for i in range(10):
         signal_chain.GetEntry(i)
-        #print(signal_chain.Higgs_mass)
+        print(signal_chain.Higgs_mass)
 
     print("")
 
     for i in range(10):
         bkg_chain.GetEntry(i)
-        #print(bkg_chain.Higgs_mass)
-
+        print(bkg_chain.Higgs_mass)
+"""
 #root[] TMVA::TMVAGui("TMVA.root")
