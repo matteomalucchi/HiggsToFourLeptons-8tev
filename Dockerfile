@@ -14,9 +14,4 @@ RUN python3 -m pip install -r requirements.txt
 
 COPY . .
 
-RUN cd test/
-
-RUN python3 -m unittest test_skim.py
-
-RUN cd ..
-
+RUN python -m unittest test/test_skim.py
