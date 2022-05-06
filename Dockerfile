@@ -16,7 +16,7 @@ COPY . .
 
 RUN cd test/
 
-RUN python3 -m unittest
+RUN python3 -m unittest test_skim.py
 
 RUN cd ..
 
