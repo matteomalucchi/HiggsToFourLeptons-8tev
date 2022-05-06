@@ -6,7 +6,6 @@ Then, the resulting histograms are passed to the plotting
 step, which combines them so that the physics of the decay can be studied.
 """
 
-
 import ROOT
 
 from definitions.variables_def import VARIABLES_FEATURES 
@@ -53,7 +52,7 @@ def main():
 
             """Create dataframe of the skimmed dataset.
             """
-            rdf = ROOT.ROOT.RDataFrame("Events", "skim_data/" + sample + final_state + "Skim.root")
+            rdf = ROOT.ROOT.RDataFrame("Events", "skim_data1/" + sample + final_state + "Skim.root")
 
             """Book histograms and write them to output file.
             """

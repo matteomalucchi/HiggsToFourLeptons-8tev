@@ -2,7 +2,8 @@ import ROOT
 
 from definitions.weights_def import  WEIGHTS
 
-ROOT.gInterpreter.ProcessLine('#include "skim_functions.h"' )
+ROOT.gSystem.Load("skim_functions_lib.so")
+ROOT.gInterpreter.ProcessLine('#include "skim_functions_lib.h"' )
 
 def EventSelection(rdf, final_state):
     """ Minimal selection of the events

@@ -17,6 +17,7 @@ const auto Z_MASS = 91.2;
  * as the ratio between the impact parameter 
  * at the point of closest approach to the vertex and its uncertainty.
 */
+
 RVec<float> sipDef(VecF dxy, VecF dz, VecF sigma_dxy, VecF sigma_dz){
     auto ip=sqrt(dxy*dxy + dz*dz);
     auto sigma_ip=sqrt((sigma_dxy)*(sigma_dxy) + (sigma_dz)*(sigma_dz));

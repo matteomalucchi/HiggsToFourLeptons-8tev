@@ -155,7 +155,7 @@ def main ():
             """
             signals_norm = {}
             for final_state in signals.keys():
-                histo = signals[final_state]
+                histo = signals[final_state].Clone()
                 histo.Scale(1/histo.Integral())
                 signals_norm[final_state] = histo
 
@@ -171,7 +171,7 @@ def main ():
             """
             backgrounds_norm = {}
             for final_state in backgrounds.keys():
-                histo = backgrounds[final_state]
+                histo = backgrounds[final_state].Clone()
                 histo.Scale(1/histo.Integral())
                 backgrounds_norm[final_state] = histo
 
@@ -224,19 +224,16 @@ def main ():
 
                     elif input_type == "sig_bkg_normalized":                 
                         bkg_norm = inputs[0][final_state]       
-                        InputStyle("background", bkg_norm)
-                        AddTitle(bkg_norm, variable)
-                        bkg_norm.SetMaximum(bkg_norm.GetMaximum() * 1.5)
-                        bkg_norm.Draw("HIST")
-                        legend=AddLegend(legend, "background", bkg_norm)
-
                         sig_norm = inputs[1][final_state]       
+                        InputStyle("background", bkg_norm)
                         InputStyle("signal", sig_norm)
+                        AddTitle(bkg_norm, variable)
+                        bkg_norm.SetMaximum(max(bkg_norm.GetMaximum(), sig_norm.GetMaximum()) * 1.5)
+                        bkg_norm.Draw("HIST")
                         sig_norm.Draw("HIST SAME")
+                        legend=AddLegend(legend, "background", bkg_norm)
                         legend=AddLegend(legend, "signal", sig_norm)
-
                         legend.Draw()
-
 
                     elif input_type == "total":
                         """Add the background to the signal in order to compare it with the data.

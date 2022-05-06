@@ -14,4 +14,9 @@ RUN python3 -m pip install -r requirements.txt
 
 COPY . .
 
+RUN cd test/
+
 RUN python3 -m unittest
+
+RUN cd ..
+
