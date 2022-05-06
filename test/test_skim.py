@@ -1,9 +1,9 @@
 import unittest
 import ROOT
 
-ROOT.gSystem.Load("skim_functions_lib.so")
-ROOT.gInterpreter.ProcessLine('#include "skim_functions_lib.h"' )
-ROOT.gInterpreter.ProcessLine('#include "test/test_variables.h"' )
+ROOT.gSystem.Load("../skim_functions_lib.so")
+ROOT.gInterpreter.ProcessLine('#include "../skim_functions_lib.h"' )
+ROOT.gInterpreter.ProcessLine('#include "test_variables.h"' )
 
 class TestSkim(unittest.TestCase):
 
