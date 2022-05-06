@@ -52,7 +52,7 @@ def main():
 
             """Create dataframe of the skimmed dataset.
             """
-            rdf = ROOT.ROOT.RDataFrame("Events", "skim_data1/" + sample + final_state + "Skim.root")
+            rdf = ROOT.ROOT.RDataFrame("Events", "skim_data/" + sample + final_state + "Skim.root")
 
             """Book histograms and write them to output file.
             """
