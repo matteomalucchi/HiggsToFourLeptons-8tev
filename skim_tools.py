@@ -253,6 +253,6 @@ def DefAngles(rdf):
 def AddEventWeight(rdf, sample_name):
     """ Add weights for the normalisation of the simulated samples in the histograms.
     """
-    return rdf.Define("Weight", f'{WEIGHTS[sample_name]}')
+    return rdf.Define("Weight", f"{WEIGHTS[sample_name]}")
 
 

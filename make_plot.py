@@ -3,19 +3,19 @@
 The plotting combines the histograms to plots which allow to study the
 inital dataset based on observables motivated through physics.
 """
-
 import os
 import ROOT
 
-from definitions.variables_def import VARIABLES_FEATURES
+from definitions.variables_def import VARIABLES
+from definitions.selections_def import  SELECTIONS
 
 ROOT.gROOT.SetBatch(True)
 
-def GetHistogram(tfile, sample, final_state, variable):
+def GetHistogram(tfile, sample, final_state, variable, selection):
     """Retrieve a histogram from the input file based on the sample, the final state
     and the variable name
     """
-    name = "{}_{}_{}".format(sample, final_state, variable)
+    name = f"{sample}_{final_state}_{variable}_{selection}"
     h = tfile.Get(name)
     if not h:
         raise Exception("Failed to load histogram {}.".format(name))
@@ -85,6 +85,8 @@ def SetStyle():
 def InputStyle(input_type, input):
     """Set style of the histograms for each type of dataset.
     """
+    input.SetTitleSize(0.04, "XYZ")
+    input.SetTitleOffset(1.3, "XYZ") 
     if input_type == "data": 
         input.SetMarkerStyle(20)
         input.SetLineColor(ROOT.kBlack)
@@ -95,14 +97,14 @@ def InputStyle(input_type, input):
     elif input_type == "signal": 
         input.SetLineColor(ROOT.kRed)
         input.SetLineWidth(3)
-        input.SetTitleSize(0.04, "XYZ")
-        input.SetTitleOffset(1.2, "XYZ")
+
 
 def AddTitle(input, variable):
     """Add the title to the plot.
     """
-    input.GetXaxis().SetTitle(VARIABLES_FEATURES[variable][3])
-    input.GetYaxis().SetTitle("N_{Events}")
+    input.GetXaxis().SetTitle(f"{VARIABLES[variable][3]}{VARIABLES[variable][4]}")
+    bin_width=(VARIABLES[variable][2]-VARIABLES[variable][1])/VARIABLES[variable][0]
+    input.GetYaxis().SetTitle(f"N_{{Events}} / {float(f'{bin_width:.1g}'):g}{VARIABLES[variable][4]}")
 
 def AddLegend(legend, input_type, input):
     """Add the legend to the plot.
@@ -141,128 +143,130 @@ def main ():
 
     SetStyle()
 
-    for variable in VARIABLES_FEATURES.keys():
-        if variable != "Weight":
+    for selection in SELECTIONS.keys():
+
+        for variable in VARIABLES.keys():
+            if variable != "Weight":
+                    
+                """Get histograms for the signal
+                """
+                signals = {}
+                for final_state in ["FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]:
+                    signals[final_state] = GetHistogram(tfile, "SMHiggsToZZTo4L", final_state, variable, selection)
+                CombineFinalStates(signals)
+
+                """Get the normalized histograms for the signal
+                """
+                signals_norm = {}
+                for final_state in signals.keys():
+                    histo = signals[final_state].Clone()
+                    histo.Scale(1/histo.Integral())
+                    signals_norm[final_state] = histo
+
+                """Get histograms for the background
+                """
+                backgrounds = {}
+                backgrounds["FourMuons"] = GetHistogram(tfile, "ZZTo4mu", "FourMuons", variable, selection)
+                backgrounds["FourElectrons"] = GetHistogram(tfile, "ZZTo4e", "FourElectrons", variable, selection)
+                backgrounds["TwoMuonsTwoElectrons"] = GetHistogram(tfile, "ZZTo2e2mu", "TwoMuonsTwoElectrons", variable, selection)
+                CombineFinalStates(backgrounds)
+
+                """Get the normalized histograms for the background
+                """
+                backgrounds_norm = {}
+                for final_state in backgrounds.keys():
+                    histo = backgrounds[final_state].Clone()
+                    histo.Scale(1/histo.Integral())
+                    backgrounds_norm[final_state] = histo
+
+                """Get histograms for the data
+                """
+                data = {}
+                for final_state, samples in [
+                            ["FourMuons", ["Run2012B_DoubleMuParked", "Run2012C_DoubleMuParked"]],
+                            ["FourElectrons", ["Run2012B_DoubleElectron", "Run2012C_DoubleElectron"]],
+                            ["TwoMuonsTwoElectrons", ["Run2012B_DoubleMuParked", "Run2012C_DoubleMuParked",
+                                                    "Run2012B_DoubleElectron", "Run2012C_DoubleElectron"]]
+                        ]:
+                    for sample in samples:
+                        h = GetHistogram(tfile, sample, final_state, variable, selection)
+                        if not final_state in data:
+                            data[final_state] = h
+                        else:
+                            data[final_state].Add(h)
+
+                CombineFinalStates(data)
+
+                """ Dictionary for the different types of datasets
+                """
+                inputs_dict = {
+                    "data" : data,
+                    "background" : backgrounds,
+                    "signal" : signals,
+                    "sig_bkg_normalized" : [backgrounds_norm, signals_norm],
+                    "total" : ["data", "background", "signal"]
+                }
                 
-            """Get histograms for the signal
-            """
-            signals = {}
-            for final_state in ["FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]:
-                signals[final_state] = GetHistogram(tfile, "SMHiggsToZZTo4L", final_state, variable)
-            CombineFinalStates(signals)
+                """Loop over the types of datasets and the final states
+                """
+                for input_type, inputs in inputs_dict.items():        
+                    for final_state in ["FourMuons", "FourElectrons", "TwoMuonsTwoElectrons", "combined"]: 
+                        c = ROOT.TCanvas("", "", 600, 600)
+                        legend = ROOT.TLegend(0.66, 0.7, 0.9, 0.9)
 
-            """Get the normalized histograms for the signal
-            """
-            signals_norm = {}
-            for final_state in signals.keys():
-                histo = signals[final_state].Clone()
-                histo.Scale(1/histo.Integral())
-                signals_norm[final_state] = histo
+                        if input_type in ["data", "background", "signal"]:                 
+                            input = inputs[final_state]       
+                            InputStyle(input_type, input)
+                            AddTitle(input, variable)
+                            input.SetMaximum(input.GetMaximum() * 1.4)
+                            if input_type == "data": 
+                                input.Draw("E1P")
+                            elif input_type in ("background", "signal"): 
+                                input.Draw("HIST")
+                            legend=AddLegend(legend, input_type, input)
+                            legend.Draw()
 
-            """Get histograms for the background
-            """
-            backgrounds = {}
-            backgrounds["FourMuons"] = GetHistogram(tfile, "ZZTo4mu", "FourMuons", variable)
-            backgrounds["FourElectrons"] = GetHistogram(tfile, "ZZTo4e", "FourElectrons", variable)
-            backgrounds["TwoMuonsTwoElectrons"] = GetHistogram(tfile, "ZZTo2e2mu", "TwoMuonsTwoElectrons", variable)
-            CombineFinalStates(backgrounds)
+                        elif input_type == "sig_bkg_normalized":                 
+                            bkg_norm = inputs[0][final_state]       
+                            sig_norm = inputs[1][final_state]       
+                            InputStyle("background", bkg_norm)
+                            InputStyle("signal", sig_norm)
+                            AddTitle(bkg_norm, variable)
+                            bkg_norm.SetMaximum(max(bkg_norm.GetMaximum(), sig_norm.GetMaximum()) * 1.5)
+                            bkg_norm.Draw("HIST")
+                            sig_norm.Draw("HIST SAME")
+                            legend=AddLegend(legend, "background", bkg_norm)
+                            legend=AddLegend(legend, "signal", sig_norm)
+                            legend.Draw()
 
-            """Get the normalized histograms for the background
-            """
-            backgrounds_norm = {}
-            for final_state in backgrounds.keys():
-                histo = backgrounds[final_state].Clone()
-                histo.Scale(1/histo.Integral())
-                backgrounds_norm[final_state] = histo
+                        elif input_type == "total":
+                            """Add the background to the signal in order to compare it with the data.
+                            """
+                            signals[final_state].Add(backgrounds[final_state])
+                            for input_key in inputs:
+                                input=inputs_dict[input_key][final_state]
+                                InputStyle(input_key, input)
+                                legend=AddLegend(legend, input_key, input)
 
-            """Get histograms for the data
-            """
-            data = {}
-            for final_state, samples in [
-                        ["FourMuons", ["Run2012B_DoubleMuParked", "Run2012C_DoubleMuParked"]],
-                        ["FourElectrons", ["Run2012B_DoubleElectron", "Run2012C_DoubleElectron"]],
-                        ["TwoMuonsTwoElectrons", ["Run2012B_DoubleMuParked", "Run2012C_DoubleMuParked",
-                                                "Run2012B_DoubleElectron", "Run2012C_DoubleElectron"]]
-                    ]:
-                for sample in samples:
-                    h = GetHistogram(tfile, sample, final_state, variable)
-                    if not final_state in data:
-                        data[final_state] = h
-                    else:
-                        data[final_state].Add(h)
+                            AddTitle(signals[final_state], variable)
+                            signals[final_state].SetMaximum(max(backgrounds[final_state].GetMaximum(),\
+                                                            data[final_state].GetMaximum()) * 1.4)
+                            signals[final_state].Draw("HIST")
+                            backgrounds[final_state].Draw("HIST SAME")
+                            data[final_state].Draw("E1P SAME")
+                            legend.Draw()
 
-            CombineFinalStates(data)
+                        AddLatex()
 
-            """ Dictionary for the different types of datasets
-            """
-            inputs_dict = {
-                "data" : data,
-                "background" : backgrounds,
-                "signal" : signals,
-                "sig_bkg_normalized" : [backgrounds_norm, signals_norm],
-                "total" : ["data", "background", "signal"]
-            }
-            
-            """Loop over the types of datasets and the final states
-            """
-            for input_type, inputs in inputs_dict.items():        
-                for final_state in ["FourMuons", "FourElectrons", "TwoMuonsTwoElectrons", "combined"]: 
-                    c = ROOT.TCanvas("", "", 600, 600)
-                    legend = ROOT.TLegend(0.66, 0.7, 0.9, 0.9)
-
-                    if input_type in ["data", "background", "signal"]:                 
-                        input = inputs[final_state]       
-                        InputStyle(input_type, input)
-                        AddTitle(input, variable)
-                        input.SetMaximum(input.GetMaximum() * 1.4)
-                        if input_type == "data": 
-                            input.Draw("E1P")
-                        elif input_type in ("background", "signal"): 
-                            input.Draw("HIST")
-                        legend=AddLegend(legend, input_type, input)
-                        legend.Draw()
-
-                    elif input_type == "sig_bkg_normalized":                 
-                        bkg_norm = inputs[0][final_state]       
-                        sig_norm = inputs[1][final_state]       
-                        InputStyle("background", bkg_norm)
-                        InputStyle("signal", sig_norm)
-                        AddTitle(bkg_norm, variable)
-                        bkg_norm.SetMaximum(max(bkg_norm.GetMaximum(), sig_norm.GetMaximum()) * 1.5)
-                        bkg_norm.Draw("HIST")
-                        sig_norm.Draw("HIST SAME")
-                        legend=AddLegend(legend, "background", bkg_norm)
-                        legend=AddLegend(legend, "signal", sig_norm)
-                        legend.Draw()
-
-                    elif input_type == "total":
-                        """Add the background to the signal in order to compare it with the data.
+                        """Create the directory and save the images.
                         """
-                        signals[final_state].Add(backgrounds[final_state])
-                        for input_key in inputs:
-                            input=inputs_dict[input_key][final_state]
-                            InputStyle(input_key, input)
-                            legend=AddLegend(legend, input_key, input)
-
-                        AddTitle(signals[final_state], variable)
-                        signals[final_state].SetMaximum(max(backgrounds[final_state].GetMaximum(),\
-                                                        data[final_state].GetMaximum()) * 1.4)
-                        signals[final_state].Draw("HIST")
-                        backgrounds[final_state].Draw("HIST SAME")
-                        data[final_state].Draw("E1P SAME")
-                        legend.Draw()
-
-                    AddLatex()
-
-                    """Create the directory and save the images.
-                    """
-                    dir_name = os.path.join("plots", input_type)
-                    if not os.path.exists(dir_name):
-                        os.makedirs(dir_name)
-                        print("Directory " , dir_name ,  " Created ")
-                    file_name = f"{input_type}_{final_state}_{variable}.png"
-                    complete_name = os.path.join(dir_name, file_name)
-                    c.SaveAs(complete_name)
+                        dir_name = os.path.join("plots", selection, input_type)
+                        if not os.path.exists(dir_name):
+                            os.makedirs(dir_name)
+                            print("Directory " , dir_name ,  " Created ")
+                        file_name = f"{input_type}_{final_state}_{variable}.png"
+                        complete_name = os.path.join(dir_name, file_name)
+                        c.SaveAs(complete_name)
 
 
 if __name__ == "__main__":

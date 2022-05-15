@@ -5,18 +5,19 @@ The histogramming step produces histograms for each variable in each dataset.
 Then, the resulting histograms are passed to the plotting
 step, which combines them so that the physics of the decay can be studied.
 """
-
+import os
 import ROOT
 
-from definitions.variables_def import VARIABLES_FEATURES 
+from definitions.variables_def import VARIABLES 
 from definitions.samples_def import  SAMPLES
+from definitions.selections_def import  SELECTIONS
 
 ROOT.gROOT.SetBatch(True)
 
-def BookHistogram(df, variable, range_):
+def BookHistogram1D(rdf, variable, range_):
     """Book a histogram for a specific variable
     """
-    return df.Histo1D(ROOT.ROOT.RDF.TH1DModel(variable, variable, range_[0], range_[1], range_[2]),\
+    return rdf.Histo1D(ROOT.ROOT.RDF.TH1DModel(variable, variable, range_[0], range_[1], range_[2]),\
                       variable, "Weight")
 
 def WriteHistogram(h, name):
@@ -42,25 +43,27 @@ def main():
     """Create output file.
     """
     tfile = ROOT.TFile("histograms.root", "RECREATE")
-    variables = VARIABLES_FEATURES.keys()
+    variables = VARIABLES.keys()
 
-    """Loop through skimmed datasets and final states to produce histograms of all variables.
-    """
-    for sample, final_states in SAMPLES.items():
-        for final_state in final_states:
-            print(">>> Process skimmed sample {} and final state {}".format(sample, final_state))
+    for selection, names in SELECTIONS.items():
+        """Loop through skimmed datasets and final states to produce histograms of all variables.
+        """
+        for sample, final_states in SAMPLES.items():
+            for final_state in final_states:
+                print(f">>> Process sample {sample} and final state {final_state} with {selection}")
 
-            """Create dataframe of the skimmed dataset.
-            """
-            rdf = ROOT.ROOT.RDataFrame("Events", "skim_data/" + sample + final_state + "Skim.root")
+                """Create dataframe of the skimmed dataset.
+                """
+                complete_name = os.path.join(names[0], f"{sample}{final_state}{names[1]}.root")
+                rdf = ROOT.RDataFrame("Events", complete_name)
 
-            """Book histograms and write them to output file.
-            """
-            hists = {}
-            for variable in variables:
-                if len(VARIABLES_FEATURES[variable])>0:
-                    hists[variable] = BookHistogram(rdf, variable, VARIABLES_FEATURES[variable])
-                    WriteHistogram(hists[variable], "{}_{}_{}".format(sample, final_state, variable))
+                """Book histograms and write them to output file.
+                """
+                histos = {}
+                for variable in variables:
+                    if len(VARIABLES[variable])>0:
+                        histos[variable] = BookHistogram1D(rdf, variable, VARIABLES[variable])
+                        WriteHistogram(histos[variable], f"{sample}_{final_state}_{variable}_{selection}")
 
     tfile.Close()
 

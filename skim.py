@@ -19,7 +19,7 @@ import skim_tools
 
 from definitions.base_path_def import  BASE_PATH
 from definitions.samples_def import  SAMPLES
-from definitions.variables_def import  VARIABLES_FEATURES
+from definitions.variables_def import  VARIABLES
 
 def main():
     """Main function of the skimming step
@@ -62,12 +62,12 @@ def main():
             """Create the directory and save the skimmed samples.
             """
             file_name =f"{sample_name}{final_state}Skim.root"
-            dir_name = "skim_data1"
+            dir_name = "skim_data"
             if not os.path.exists(dir_name):
                 os.makedirs(dir_name)
                 print("Directory " , dir_name ,  " Created ")
             complete_name = os.path.join(dir_name, file_name)
-            rdf_final.Snapshot("Events", complete_name, VARIABLES_FEATURES.keys())
+            rdf_final.Snapshot("Events", complete_name, VARIABLES.keys())
 
             print("Execution time: %s s" %(time.time() - start_time))
 
