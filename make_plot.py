@@ -98,7 +98,6 @@ def InputStyle(input_type, input):
         input.SetLineColor(ROOT.kRed)
         input.SetLineWidth(3)
 
-
 def AddTitle(input, variable):
     """Add the title to the plot.
     """
@@ -127,8 +126,6 @@ def AddLatex():
     latex.SetTextFont(42)
     latex.DrawLatex(0.6, 0.935, "11.6 fb^{-1} (2012, 8 TeV)")
     latex.DrawLatex(0.16, 0.935, "#bf{CMS Open Data}")
-
-
 
 
 def main ():
@@ -271,18 +268,3 @@ def main ():
 
 if __name__ == "__main__":
     main()
-
-                    
-                
-
-                    
-
-
-
-
-
-
-
-
-
-
