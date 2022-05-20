@@ -5,7 +5,7 @@ saved in the output file to be further studied as key and a tuple
 specifying the histogram details as value.
 The tuple sets the number of bins, the lower edge and the upper 
 edge of the histogram, as well as a human-readable label for each 
-variable on the plot axis.
+variable on the plot axis and the units of measurement (if any).
 """
 VARIABLES = {
         "Weight": (),
@@ -28,3 +28,8 @@ VARIABLES = {
         "theta2": (36, 0, math.pi, "#theta_{2}", ""),
         "cos_theta2": (36, -1, 1, "cos #theta_{2}", ""),
 }
+
+VARIABLES_COMPLETE = VARIABLES.copy()
+
+# Define a new column for the DNN discriminant
+VARIABLES_COMPLETE["Discriminant"] = (40, 0, 1, "DNN Discriminant", "")
