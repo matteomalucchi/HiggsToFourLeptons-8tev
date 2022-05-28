@@ -63,8 +63,8 @@ def main():
             rdf_final = skim_tools.AddEventWeight(rdf7, sample_name)
             #print(rdf_final.GetColumnNames())
 
-            #report = rdf_final.Report()
-            #report.Print()
+            report = rdf_final.Report()
+            report.Print()
             #print(rdf_final.GetColumnNames())
             #print("")   
                      
@@ -79,7 +79,6 @@ def main():
 
             rdf_final.Snapshot("Events", complete_name, VARIABLES.keys())
 
-            print("ok")
             print("Execution time: %s s" %(time.time() - start_time))
 
         

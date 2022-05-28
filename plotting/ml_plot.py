@@ -8,7 +8,7 @@ separated in the three possible final states.
 import os
 import ROOT
 
-ROOT.gROOT.SetBatch(True)
+#ROOT.gROOT.SetBatch(True)
 import sys
 
 sys.path.append('../')
@@ -166,6 +166,7 @@ def main ():
             print("Directory " , dir_name ,  " Created ")
         file_name = f"discriminant_{type}.png"
         complete_name = os.path.join(dir_name, file_name)
+        input()
         c.SaveAs(complete_name)
 
 if __name__ == "__main__":
