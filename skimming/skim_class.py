@@ -10,7 +10,7 @@ from definitions.base_path_def import  BASE_PATH
 from definitions.samples_def import  SAMPLES
 from definitions.variables_def import  VARIABLES
 
-class Skimming:
+class skim_class:
     
     def __init__(self, samples):
         self.

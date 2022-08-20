@@ -12,8 +12,8 @@ import os
 
 sys.path.append('../')
 from definitions.samples_def import SAMPLES
-from definitions.variables_ml_def import VARIABLES_TOT_ML as variables
-
+#from definitions.variables_ml_def import VARIABLES_TOT_ML as variables
+import definitions.variables_ml_def
 
 def main():
 
@@ -27,6 +27,8 @@ def main():
     ROOT.TMVA.Tools.Instance()
     ROOT.TMVA.PyMethodBase.PyInitialize()
     reader = ROOT.TMVA.Reader("Color:!Silent")
+
+    
 
     branches = {}
     for branch_name in variables:

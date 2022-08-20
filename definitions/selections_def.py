@@ -4,5 +4,5 @@ while the values specify the name of the tree where the data are stored.
 """
 SELECTIONS = {
     "NoSelection" : "Events",
-    "DNNSelection" : "EventsDNNSelection",
+    #"DNNSelection" : "EventsDNNSelection",
 }

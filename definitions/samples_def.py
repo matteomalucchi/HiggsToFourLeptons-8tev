@@ -17,7 +17,3 @@ SAMPLES={
 
 }
 
-"""SAMPLES={
-
-    "SMHiggsToZZTo4L": ["FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"],
-}"""

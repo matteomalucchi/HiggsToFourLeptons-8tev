@@ -11,6 +11,7 @@ bosons, as well as five dacay angles defined in [Phys.Rev.D86:095031,2012]
 which are later used for a machine learning algorithm.
 """
 
+import argparse
 import time
 import os
 import sys
@@ -25,32 +26,33 @@ from definitions.samples_def import  SAMPLES
 from definitions.variables_def import  VARIABLES
 
 
-'''ROOT.gSystem.Load("skim_functions_lib.so")
-ROOT.gInterpreter.ProcessLine('#include "skim_functions_lib.h"' )'''
-
-def main():
+def main(args, path_sf="skimming", path_sd=""):
     """Main function of the skimming step
     
     The function loops over the datasets and distinguishes the possible
     final states. It creates for each one of them a RDataFrame which allows 
     to apply cuts and define new useful observables.
     """
+    
+    skim_func_path = os.path.join(path_sf, "skim_functions.h")
 
-    """Enamble multi-threading
-    """
-    ROOT.ROOT.EnableImplicitMT()
-    thread_size = ROOT.ROOT.GetThreadPoolSize()
-    print(">>> Thread pool size for parallel processing: {}".format(thread_size))
+    ROOT.gInterpreter.ProcessLine(f'#include "{skim_func_path}"' )
 
-    """Loop over the various samples
-    """
+    #Enamble multi-threading
+    if (args.parallel):
+        
+        ROOT.ROOT.EnableImplicitMT(args.nWorkers)
+        thread_size = ROOT.ROOT.GetThreadPoolSize()
+        print(">>> Thread pool size for parallel processing: {}".format(thread_size))
+
+    #Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
         infile_path = os.path.join( BASE_PATH, f"{sample_name}.root")
         rdf = ROOT.RDataFrame("Events", infile_path)#.Range(10000000)
         """Loop over the possible final states
         """
         for final_state in final_states:
-            print(">>> Process sample: {} and final state {}".format(sample_name, final_state))
+            print("\n>>> Process sample: {} and final state {}".format(sample_name, final_state))
             start_time = time.time()
 
             rdf2 = skim_tools.EventSelection(rdf, final_state)
@@ -71,7 +73,7 @@ def main():
             """Create the directory and save the skimmed samples.
             """
             file_name =f"{sample_name}{final_state}Skim.root"
-            dir_name = os.path.join("..", "skim_data")
+            dir_name = os.path.join(path_sd, "skim_data")
             if not os.path.exists(dir_name):
                 os.makedirs(dir_name)
                 print("Directory " , dir_name ,  " Created ")
@@ -83,4 +85,16 @@ def main():
 
         
 if __name__ == "__main__":
-    main()
+    
+
+    
+    # global configuration
+    parser = argparse.ArgumentParser( description = 'Analysis Tool' )
+    parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
+    parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
+    parser.add_argument('-c', '--configfile', default="Configurations/HZZConfiguration.py", type=str,   help='files to be analysed')
+    parser.add_argument('-s', '--samples',    default=""                               , type=str,   help='string with comma separated list of samples to analyse')
+    parser.add_argument('-o', '--output',     default=""                               , type=str,   help='name of the output directory')
+    args = parser.parse_args()
+    
+    main(args, "", "..")
