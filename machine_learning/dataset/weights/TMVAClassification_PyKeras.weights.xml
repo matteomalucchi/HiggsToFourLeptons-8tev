@@ -4,11 +4,11 @@
     <Info name="TMVA Release" value="4.2.1 [262657]"/>
     <Info name="ROOT Release" value="6.26/06 [399878]"/>
     <Info name="Creator" value="matteo"/>
-    <Info name="Date" value="Sun Aug 21 11:13:30 2022"/>
+    <Info name="Date" value="Sun Aug 21 12:25:18 2022"/>
     <Info name="Host" value="Linux ee26b33a3953 5.15.0-1014-azure #17~20.04.1-Ubuntu SMP Thu Jun 23 20:01:51 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux"/>
     <Info name="Dir" value="/mnt/c/Users/matte/OneDrive - University of Pisa/Desktop/Università/CORSI/IV ANNO/Computing methods/HiggsToFourLeptons-8tev"/>
     <Info name="Training events" value="109315"/>
-    <Info name="TrainingTime" value="2.00453060e+01"/>
+    <Info name="TrainingTime" value="2.30900030e+01"/>
     <Info name="AnalysisType" value="Classification"/>
   </GeneralInfo>
   <Options>

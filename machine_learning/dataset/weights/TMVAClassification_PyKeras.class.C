@@ -10,7 +10,7 @@ Method         : PyKeras::PyKeras
 TMVA Release   : 4.2.1         [262657]
 ROOT Release   : 6.26/06       [399878]
 Creator        : matteo
-Date           : Sun Aug 21 11:13:30 2022
+Date           : Sun Aug 21 12:25:18 2022
 Host           : Linux ee26b33a3953 5.15.0-1014-azure #17~20.04.1-Ubuntu SMP Thu Jun 23 20:01:51 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
 Dir            : /mnt/c/Users/matte/OneDrive - University of Pisa/Desktop/Università/CORSI/IV ANNO/Computing methods/HiggsToFourLeptons-8tev
 Training events: 109315

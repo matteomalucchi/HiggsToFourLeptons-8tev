@@ -47,7 +47,11 @@ def main(args, path_sf="skimming", path_sd=""):
     #Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
         infile_path = os.path.join( BASE_PATH, f"{sample_name}.root")
-        rdf = ROOT.RDataFrame("Events", infile_path)#.Range(10000000)
+        rdf = ROOT.RDataFrame("Events", infile_path)
+        
+        if args.range != 0:
+            rdf=rdf.Range(args.range)
+            
         """Loop over the possible final states
         """
         for final_state in final_states:
