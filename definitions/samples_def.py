@@ -4,8 +4,8 @@ The analysis searches for the decay of the Higgs boson in the
 four leptons final state, which can be arranged in four electrons,
 four muons or two electrons and two muons.
 """
-
-'''SAMPLES={
+'''
+SAMPLES={
     "Run2012B_DoubleMuParked": ["FourMuons", "TwoMuonsTwoElectrons"],
     "Run2012C_DoubleMuParked": ["FourMuons", "TwoMuonsTwoElectrons"],
     "Run2012B_DoubleElectron": ["FourElectrons", "TwoMuonsTwoElectrons"],
@@ -15,9 +15,12 @@ four muons or two electrons and two muons.
     "ZZTo4e": ["FourElectrons"],
     "ZZTo2e2mu": ["TwoMuonsTwoElectrons"],
 
-}'''
-
+}
+'''
 SAMPLES={
-    "Run2012B_DoubleMuParked": ["FourMuons"]
+    "Run2012B_DoubleMuParked": ["FourMuons", "TwoMuonsTwoElectrons"],
+    "Run2012C_DoubleMuParked": ["FourMuons", "TwoMuonsTwoElectrons"],
+    "Run2012B_DoubleElectron": ["FourElectrons", "TwoMuonsTwoElectrons"],
+    "Run2012C_DoubleElectron": ["FourElectrons", "TwoMuonsTwoElectrons"],
 
 }

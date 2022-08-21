@@ -88,14 +88,11 @@ def main(args, path_sf="skimming", path_sd=""):
         
 if __name__ == "__main__":
     
-
-    
     # global configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
-    parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
+    parser.add_argument('-r', '--range',  nargs='?', default=0, const=10000000, type=int, help='run the analysis only on a finite range of events')
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
-    parser.add_argument('-c', '--configfile', default="Configurations/HZZConfiguration.py", type=str,   help='files to be analysed')
-    parser.add_argument('-s', '--samples',    default=""                               , type=str,   help='string with comma separated list of samples to analyse')
+    parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
     parser.add_argument('-o', '--output',     default=""                               , type=str,   help='name of the output directory')
     args = parser.parse_args()
     
