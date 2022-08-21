@@ -10,9 +10,9 @@ Method         : PyKeras::PyKeras
 TMVA Release   : 4.2.1         [262657]
 ROOT Release   : 6.26/06       [399878]
 Creator        : matteo
-Date           : Sat Aug 20 20:20:42 2022
+Date           : Sun Aug 21 11:13:30 2022
 Host           : Linux ee26b33a3953 5.15.0-1014-azure #17~20.04.1-Ubuntu SMP Thu Jun 23 20:01:51 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
-Dir            : /mnt/c/Users/matte/OneDrive - University of Pisa/Desktop/Università/CORSI/IV ANNO/Computing methods/HiggsToFourLeptons-8tev/machine_learning
+Dir            : /mnt/c/Users/matte/OneDrive - University of Pisa/Desktop/Università/CORSI/IV ANNO/Computing methods/HiggsToFourLeptons-8tev
 Training events: 109315
 Analysis type  : [Classification]
 
@@ -23,14 +23,14 @@ Analysis type  : [Classification]
 V: "False" [Verbose output (short form of "VerbosityLevel" below - overrides the latter one)]
 VarTransform: "D,G" [List of variable transformations performed before training, e.g., "D_Background,P_Signal,G,N_AllClasses" for: "Decorrelation, PCA-transformation, Gaussianisation, Normalisation, each for the given class of events ('AllClasses' denotes all events of all classes, if no class indication is given, 'All' is assumed)"]
 H: "True" [Print method-specific help message]
-FilenameModel: "model.h5" [Filename of the initial Keras model]
+FilenameModel: "machine_learning/model.h5" [Filename of the initial Keras model]
 BatchSize: "128" [Training batch size]
-NumEpochs: "20" [Number of training epochs]
+NumEpochs: "2" [Number of training epochs]
 # Default:
 VerbosityLevel: "Default" [Verbosity level]
 CreateMVAPdfs: "False" [Create PDFs for classifier outputs (signal and background)]
 IgnoreNegWeightsInTraining: "False" [Events with negative weights are ignored in the training (but are included for testing and performance evaluation)]
-FilenameTrainedModel: "dataset/weights/TrainedModel_PyKeras.h5" [Filename of the trained output Keras model]
+FilenameTrainedModel: "machine_learning/dataset/weights/TrainedModel_PyKeras.h5" [Filename of the trained output Keras model]
 NumThreads: "0" [Number of CPU threads (only for Tensorflow backend)]
 GpuOptions: "" [GPU options for tensorflow, such as allow_growth]
 tf.keras: "True" [Use tensorflow from Keras]

@@ -39,8 +39,7 @@ def main(args, path_sf="skimming", path_sd=""):
     ROOT.gInterpreter.ProcessLine(f'#include "{skim_func_path}"' )
 
     #Enamble multi-threading
-    if (args.parallel):
-        
+    if args.parallel:
         ROOT.ROOT.EnableImplicitMT(args.nWorkers)
         thread_size = ROOT.ROOT.GetThreadPoolSize()
         print(">>> Thread pool size for parallel processing: {}".format(thread_size))
@@ -56,7 +55,6 @@ def main(args, path_sf="skimming", path_sd=""):
             start_time = time.time()
 
             rdf2 = skim_tools.EventSelection(rdf, final_state)
-
             rdf3 = skim_tools.FourVec(rdf2, final_state)
             rdf4 = skim_tools.OrderFourVec(rdf3, final_state)
             rdf5 = skim_tools.DefMassPt(rdf4)

@@ -13,22 +13,23 @@ import os
 sys.path.append('../')
 from definitions.samples_def import SAMPLES
 #from definitions.variables_ml_def import VARIABLES_TOT_ML as variables
-import definitions.variables_ml_def
+from definitions.variables_ml_def import VARIABLES_ML_DICT
 
-def main():
+def main(args, path_o="machine_learning"):
 
-    """Enamble multi-threading
-    """
-    ROOT.ROOT.EnableImplicitMT()
-    thread_size = ROOT.ROOT.GetThreadPoolSize()
-    print(f">>> Thread pool size for parallel processing: {thread_size}")
+    # Enamble multi-threading
+    if args.parallel:
+        ROOT.ROOT.EnableImplicitMT()
+        thread_size = ROOT.ROOT.GetThreadPoolSize()
+        print(f">>> Thread pool size for parallel processing: {thread_size}")
 
     # Setup TMVA
     ROOT.TMVA.Tools.Instance()
     ROOT.TMVA.PyMethodBase.PyInitialize()
     reader = ROOT.TMVA.Reader("Color:!Silent")
 
-    
+    # Variables used in the ML algorithm
+    variables=VARIABLES_ML_DICT[args.variablesML]
 
     branches = {}
     for branch_name in variables:
@@ -37,13 +38,13 @@ def main():
         reader.AddVariable(branch_name, branches[branch_name])
 
     # Book methods
-    reader.BookMVA("PyKeras", ROOT.TString("dataset/weights/TMVAClassification_PyKeras.weights.xml"))
+    dataset_path=os.path.join(path_o, "dataset", "weights", "TMVAClassification_PyKeras.weights.xml")
+    reader.BookMVA("PyKeras", ROOT.TString(dataset_path))
 
-    """Loop over the various samples
-    """
+    # Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
-        """Loop over the possible final states
-        """
+        
+        # Loop over the possible final states
         for final_state in final_states:
             print(f">>> Process sample: {sample_name} and final state {final_state}")
             start_time = time.time()
