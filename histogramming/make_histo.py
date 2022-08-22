@@ -7,69 +7,68 @@ step, which combines them so that the physics of the decay can be studied.
 """
 import time
 import os
-import ROOT
 import sys
+import argparse
+
+import ROOT
 
 sys.path.append('../')
-from definitions.variables_def import VARIABLES_COMPLETE
+from definitions.variables_def import VARIABLES_DICT
 from definitions.samples_def import  SAMPLES
 from definitions.selections_def import  SELECTIONS
 
 from histogramming import histogramming_functions
 
-ROOT.gROOT.SetBatch(True)
 
-'''def BookHistogram1D(rdf, variable, range_):
-    """Book a histogram for a specific variable
-    """
-    return rdf.Histo1D(ROOT.ROOT.RDF.TH1DModel(variable, variable, range_[0], range_[1], range_[2]),\
-                      variable, "Weight")
-
-def WriteHistogram(h, name):
-    """Write a histogram with a given name in the output file
-    """
-    h.SetName(name)
-    h.Write()'''
-
-
-def main():
+def main(args, path=""):
     """Main function of the histogramming step
     
     The function loops over the outputs from the skimming step and produces the
     required histograms for the final plotting step.
     """
-
-    """Enamble multi-threading
-    """
-    ROOT.ROOT.EnableImplicitMT()
-    poolSize = ROOT.ROOT.GetThreadPoolSize()
-    print(">>> Thread pool size for parallel processing: {}".format(poolSize))
     
-    """Create output file.
-    """
-    outfile_path = os.path.join("..", "histograms.root")
-    outfile = ROOT.TFile(outfile_path, "RECREATE")
-    variables = VARIABLES_COMPLETE.keys()
+    print(f"\n>>> Executing {os.path.basename(__file__)}\n")
 
+    #Enamble multi-threading
+    if args.parallel:
+        ROOT.ROOT.EnableImplicitMT(args.nWorkers)
+        thread_size = ROOT.ROOT.GetThreadPoolSize()
+        print(f">>> Thread pool size for parallel processing: {thread_size}")
+
+    
+    # Create the directory and the output file to store the histograms
+    dir_name = os.path.join(path, "histograms")
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+        print("Directory " , dir_name ,  " Created ")
+    outfile_path = os.path.join(dir_name, "histograms.root")
+    outfile = ROOT.TFile(outfile_path, "RECREATE")
+    
+    if args.ml :
+        var_dict = VARIABLES_DICT["tot"]
+    else : 
+        var_dict = VARIABLES_DICT["part"]
+        
+    variables = var_dict.keys()
+        
+    # Loop over the possible selections
     for selection, tree_name in SELECTIONS.items():
-        """Loop through skimmed datasets and final states to produce histograms of all variables.
-        """
+        
+        # Loop through skimmed datasets and final states to produce histograms of all variables.
         for sample, final_states in SAMPLES.items():
             for final_state in final_states:
                 print(f">>> Process sample {sample} and final state {final_state} with {selection}")
                 start_time = time.time()
 
-                """Create dataframe of the skimmed dataset.
-                """
-                complete_name = os.path.join("..", "skim_data", f"{sample}{final_state}Skim.root")
+                # Create dataframe of the skimmed dataset.
+                complete_name = os.path.join(path, "skim_data", f"{sample}{final_state}Skim.root")
                 rdf = ROOT.RDataFrame(tree_name, complete_name)
 
-                """Book histograms and write them to output file.
-                """
+                # Book histograms and write them to output file.
                 histos = {}
                 for variable in variables:
-                    if len(VARIABLES_COMPLETE[variable])>0:
-                        histos[variable] = histogramming_functions.BookHistogram1D(rdf, variable, VARIABLES_COMPLETE[variable])
+                    if variable != "Weight":
+                        histos[variable] = histogramming_functions.BookHistogram1D(rdf, variable, var_dict[variable])
                         histogramming_functions.WriteHistogram(histos[variable], f"{sample}_{final_state}_{variable}_{selection}")
                         
                 print("Execution time: %s s" %(time.time() - start_time))
@@ -78,4 +77,11 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+
+    # global configuration
+    parser = argparse.ArgumentParser( description = 'Analysis Tool' )
+    parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
+    parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
+    args = parser.parse_args()
+    
+    main(args, "..")

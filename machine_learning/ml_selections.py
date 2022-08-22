@@ -16,7 +16,7 @@ from definitions.samples_def import  SAMPLES
 from definitions.variables_def import VARIABLES_COMPLETE
 
 def DiscriminantSelection(rdf):
-    return rdf.Filter("Discriminant>0.1",
+    return rdf.Filter("Discriminant>0.01",
                       "Select only events with above threshold discriminat")
 
 
@@ -25,6 +25,8 @@ def main(args, path_sd=""):
     the discriminant created by the DNN is above the 0.5 threshold
     """
     
+    print(f"\n>>> Executing {os.path.basename(__file__)}\n")
+
     # Enamble multi-threading
     if args.parallel:
         ROOT.ROOT.EnableImplicitMT()
@@ -45,16 +47,7 @@ def main(args, path_sd=""):
             report.Print()
             #print(rdf_final.GetColumnNames())
             #print("")   
-                     
-            """Create the directory and save the selected samples.
-            """
-            """file_name =f"{sample_name}{final_state}MLSelection.root"
-            dir_name = "ML_selection_data"
-            if not os.path.exists(dir_name):
-                os.makedirs(dir_name)
-                print(f"Directory {dir_name} Created")
-            complete_name = os.path.join(dir_name, file_name)"""
-            
+                                 
             option = ROOT.RDF.RSnapshotOptions("UPDATE", ROOT.kZLIB, 1, 0, 99, False, True)
             rdf_final.Snapshot("EventsDNNSelection", file_name, VARIABLES_COMPLETE.keys(), option)
 
@@ -63,7 +56,7 @@ def main(args, path_sd=""):
         
 if __name__ == "__main__":
     
-        # global configuration
+    # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  

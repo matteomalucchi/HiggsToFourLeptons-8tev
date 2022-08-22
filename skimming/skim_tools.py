@@ -1,4 +1,3 @@
-import ROOT
 
 from definitions.weights_def import  WEIGHTS
 
@@ -64,7 +63,7 @@ def EventSelection(rdf, final_state):
                   .Filter("All(Electron_3d_sip<4) && All(abs(Electron_dxy)<0.5) && All(abs(Electron_dz)<1.0)",
                           "Electrons originate from the same primary vertex")\
 
-    else: raise RuntimeError("Unknown final state --> {}".format(final_state))
+    else: raise RuntimeError(f"Unknown final state --> {final_state}")
 
 def FourVec(rdf, final_state):
     """Reconstruct fourvector for leptons, Z and Higgs.
@@ -104,7 +103,7 @@ def FourVec(rdf, final_state):
                     .Define("Z_fourvecs",
                             "zFourvec2mu2el(Muon_fourvec, Electron_fourvec)")
 
-    else: raise RuntimeError("Unknown final state --> {}".format(final_state))
+    else: raise RuntimeError(f"Unknown final state --> {final_state}")
     
     """Apply cut on the reconstructed Z masses
     """
@@ -174,9 +173,9 @@ def OrderFourVec(rdf, final_state):
                   .Define("Z2_fourvec",
                           "Z_light(Z_fourvecs)")   
 
-    else: raise RuntimeError("Unknown final state --> {}".format(final_state))
+    else: raise RuntimeError(f"Unknown final state --> {final_state}")
 
-def DefMassPt(rdf):
+def DefMassPtEtaPhi(rdf):
     """ Define mass and pt of Higgs boson and Z 
     """
     return rdf.Define("Higgs_mass",
@@ -198,8 +197,28 @@ def DefMassPt(rdf):
               .Define("Z_close_pt",
                       "Z_fourvecs[0].Pt()")\
               .Define("Z_far_pt",
-                      "Z_fourvecs[1].Pt()")
-
+                      "Z_fourvecs[1].Pt()")\
+              .Define("Higgs_eta",
+                      "Higgs_fourvec.Eta()")\
+              .Define("Z1_eta",
+                      "Z1_fourvec.Eta()")\
+              .Define("Z2_eta",
+                      "Z2_fourvec.Eta()")\
+              .Define("Z_close_eta",
+                      "Z_fourvecs[0].Eta()")\
+              .Define("Z_far_eta",
+                      "Z_fourvecs[1].Eta()")\
+              .Define("Higgs_phi",
+                      "Higgs_fourvec.Phi()")\
+              .Define("Z1_phi",
+                      "Z1_fourvec.Phi()")\
+              .Define("Z2_phi",
+                      "Z2_fourvec.Phi()")\
+              .Define("Z_close_phi",
+                      "Z_fourvecs[0].Phi()")\
+              .Define("Z_far_phi",
+                      "Z_fourvecs[1].Phi()")
+                              
 def FourvecBoost(rdf):
     """ Boost the various fourvectors in different frames.
     """

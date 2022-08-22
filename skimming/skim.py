@@ -15,6 +15,7 @@ import argparse
 import time
 import os
 import sys
+
 import ROOT
 
 sys.path.append('../')
@@ -34,15 +35,18 @@ def main(args, path_sf="skimming", path_sd=""):
     to apply cuts and define new useful observables.
     """
     
+    print(f"\n>>> Executing {os.path.basename(__file__)}\n")
+
+    
     skim_func_path = os.path.join(path_sf, "skim_functions.h")
 
     ROOT.gInterpreter.ProcessLine(f'#include "{skim_func_path}"' )
 
-    #Enamble multi-threading
-    if args.parallel:
+    #Enamble multi-threading if range is not active
+    if args.parallel and args.range ==0:
         ROOT.ROOT.EnableImplicitMT(args.nWorkers)
         thread_size = ROOT.ROOT.GetThreadPoolSize()
-        print(">>> Thread pool size for parallel processing: {}".format(thread_size))
+        print(f">>> Thread pool size for parallel processing: {thread_size}")
 
     #Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
@@ -55,13 +59,13 @@ def main(args, path_sf="skimming", path_sd=""):
         """Loop over the possible final states
         """
         for final_state in final_states:
-            print("\n>>> Process sample: {} and final state {}".format(sample_name, final_state))
+            print(f"\n>>> Process sample: {sample_name} and final state {final_state}")
             start_time = time.time()
 
             rdf2 = skim_tools.EventSelection(rdf, final_state)
             rdf3 = skim_tools.FourVec(rdf2, final_state)
             rdf4 = skim_tools.OrderFourVec(rdf3, final_state)
-            rdf5 = skim_tools.DefMassPt(rdf4)
+            rdf5 = skim_tools.DefMassPtEtaPhi(rdf4)
             rdf6 = skim_tools.FourvecBoost(rdf5)
             rdf7 = skim_tools.DefAngles(rdf6)
             rdf_final = skim_tools.AddEventWeight(rdf7, sample_name)
@@ -93,7 +97,6 @@ if __name__ == "__main__":
     parser.add_argument('-r', '--range',  nargs='?', default=0, const=10000000, type=int, help='run the analysis only on a finite range of events')
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
-    parser.add_argument('-o', '--output',     default=""                               , type=str,   help='name of the output directory')
     args = parser.parse_args()
     
     main(args, "", "..")

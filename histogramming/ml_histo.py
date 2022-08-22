@@ -4,29 +4,39 @@ are created, one for the combination of all the simulated background,
 one for all the simulated signal and one for each possible final state
 of the data.
 """
+
 import sys
 import os
+import argparse
+
 import ROOT
 
 sys.path.append('../')
 from definitions.samples_def import SAMPLES
-
 from histogramming import histogramming_functions
 
-ROOT.gROOT.SetBatch(True)
 
-
-def main(base_directory = ""):
-
-    """Enamble multi-threading
+def main(args, path = ""):
+    """Main function of the histogramming step that plots Higgs_mass vs DNNDiscriminant.
+    
+    The function produces the required histogram for the final plotting step.
     """
-    ROOT.ROOT.EnableImplicitMT()
-    poolSize = ROOT.ROOT.GetThreadPoolSize()
-    print(">>> Thread pool size for parallel processing: {}".format(poolSize))
 
-    # Create output file to store the histograms
-    #outfile_path = os.path.join("..", "histograms_discriminant.root")
-    outfile_path = f"{base_directory}histograms_discriminant.root"
+    print(f"\n>>> Executing {os.path.basename(__file__)}\n")
+
+    #Enamble multi-threading
+    if args.parallel:
+        ROOT.ROOT.EnableImplicitMT(args.nWorkers)
+        thread_size = ROOT.ROOT.GetThreadPoolSize()
+        print(f">>> Thread pool size for parallel processing: {thread_size}")
+
+
+    # Create the directory and the output file to store the histograms
+    dir_name = os.path.join(path, "histograms")
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+        print("Directory " , dir_name ,  " Created ")
+    outfile_path = os.path.join(dir_name, "histograms_discriminant.root")
 
     outfile = ROOT.TFile(outfile_path, "RECREATE")
 
@@ -38,12 +48,11 @@ def main(base_directory = ""):
 
     for sample_name, final_states in SAMPLES.items():
         for final_state in final_states:
-            print(">>> Process sample {} and final state {}".format(sample_name, final_state))
+            print(f">>> Process sample {sample_name} and final state {final_state}")
 
             # Get the input file name
             infile_name=f"{sample_name}{final_state}Skim.root"
-            infile_directory = f"{base_directory}skim_data"
-            infile_path = os.path.join(infile_directory, infile_name)
+            infile_path = os.path.join(path, "skim_data", infile_name)
 
             if sample_name.startswith("SM"):
                 sig_chain.Add(infile_path)
@@ -87,5 +96,10 @@ def main(base_directory = ""):
   
 if __name__ == "__main__":
     
-    base_directory = "../"
-    main(base_directory)
+    # General configuration
+    parser = argparse.ArgumentParser( description = 'Analysis Tool' )
+    parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
+    parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
+    args = parser.parse_args()
+    
+    main(args, "..")

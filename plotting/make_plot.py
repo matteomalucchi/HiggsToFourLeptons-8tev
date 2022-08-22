@@ -4,136 +4,21 @@ The plotting combines the histograms to plots which allow to study the
 inital dataset based on observables motivated through physics.
 """
 import os
-import ROOT
 import sys
+import argparse
+
+import ROOT
 
 sys.path.append('../')
 
-from definitions.variables_def import VARIABLES_COMPLETE
+from definitions.variables_def import VARIABLES_DICT
 from definitions.selections_def import  SELECTIONS
 from plotting import plotting_functions
 
 ROOT.gROOT.SetBatch(True)
 
-'''def GetHistogram(infile, sample, final_state, variable, selection):
-    """Retrieve a histogram from the input file based on the sample, the final state
-    and the variable name
-    """
-    name = f"{sample}_{final_state}_{variable}_{selection}"
-    h = infile.Get(name)
-    if not h:
-        raise Exception("Failed to load histogram {}.".format(name))
-    return h
 
-def CombineFinalStates(d):
-    """Combine the various final states
-    """
-    d["combined"] = d["FourMuons"].Clone()
-    d["combined"].Add(d["FourElectrons"])
-    d["combined"].Add(d["TwoMuonsTwoElectrons"])
-
-def SetStyle():
-    """Set the style of the plots.
-    """
-    ROOT.gStyle.SetOptStat(0)
-
-    ROOT.gStyle.SetCanvasBorderMode(0)
-    ROOT.gStyle.SetCanvasColor(ROOT.kWhite)
-    ROOT.gStyle.SetCanvasDefH(600)
-    ROOT.gStyle.SetCanvasDefW(600)
-    ROOT.gStyle.SetCanvasDefX(0)
-    ROOT.gStyle.SetCanvasDefY(0)
-
-    ROOT.gStyle.SetPadTopMargin(0.08)
-    ROOT.gStyle.SetPadBottomMargin(0.13)
-    ROOT.gStyle.SetPadLeftMargin(0.16)
-    ROOT.gStyle.SetPadRightMargin(0.05)
-
-    ROOT.gStyle.SetHistLineColor(1)
-    ROOT.gStyle.SetHistLineStyle(0)
-    ROOT.gStyle.SetHistLineWidth(1)
-    ROOT.gStyle.SetEndErrorSize(2)
-    ROOT.gStyle.SetMarkerStyle(20)
-
-    ROOT.gStyle.SetOptTitle(0)
-    ROOT.gStyle.SetTitleFont(42)
-    ROOT.gStyle.SetTitleColor(1)
-    ROOT.gStyle.SetTitleTextColor(1)
-    ROOT.gStyle.SetTitleFillColor(10)
-    ROOT.gStyle.SetTitleFontSize(0.05)
-
-    ROOT.gStyle.SetTitleColor(1, "XYZ")
-    ROOT.gStyle.SetTitleFont(42, "XYZ")
-    ROOT.gStyle.SetTitleSize(0.05, "XYZ")
-    ROOT.gStyle.SetTitleXOffset(1.00)
-    ROOT.gStyle.SetTitleYOffset(1.60)
-
-    ROOT.gStyle.SetLabelColor(1, "XYZ")
-    ROOT.gStyle.SetLabelFont(42, "XYZ")
-    ROOT.gStyle.SetLabelOffset(0.007, "XYZ")
-    ROOT.gStyle.SetLabelSize(0.04, "XYZ")
-
-    ROOT.gStyle.SetAxisColor(1, "XYZ")
-    ROOT.gStyle.SetStripDecimals(True)
-    ROOT.gStyle.SetTickLength(0.03, "XYZ")
-    ROOT.gStyle.SetNdivisions(510, "XYZ")
-    ROOT.gStyle.SetPadTickX(1)
-    ROOT.gStyle.SetPadTickY(1)
-
-    ROOT.gStyle.SetPaperSize(20., 20.)
-    ROOT.gStyle.SetHatchesLineWidth(5)
-    ROOT.gStyle.SetHatchesSpacing(0.05)
-
-    ROOT.TGaxis.SetExponentOffset(-0.08, 0.01, "Y")
-
-def InputStyle(input_type, input):
-    """Set style of the histograms for each type of dataset.
-    """
-    input.SetTitleSize(0.04, "XYZ")
-    input.SetTitleOffset(1.3, "XYZ") 
-    if input_type == "data": 
-        input.SetMarkerStyle(20)
-        input.SetLineColor(ROOT.kBlack)
-    elif input_type == "background": 
-        input.SetLineWidth(3)
-        input.SetFillColor(ROOT.TColor.GetColor(100, 192, 232))
-        input.SetLineColor(ROOT.TColor.GetColor(100, 192, 232))
-    elif input_type == "signal": 
-        input.SetLineColor(ROOT.kRed)
-        input.SetLineWidth(3)
-
-def AddTitle(input, variable):
-    """Add the title to the plot.
-    """
-    input.GetXaxis().SetTitle(f"{VARIABLES_COMPLETE[variable][3]}{VARIABLES_COMPLETE[variable][4]}")
-    bin_width=(VARIABLES_COMPLETE[variable][2]-VARIABLES_COMPLETE[variable][1])/VARIABLES_COMPLETE[variable][0]
-    input.GetYaxis().SetTitle(f"N_{{Events}} / {float(f'{bin_width:.1g}'):g}{VARIABLES_COMPLETE[variable][4]}")
-
-def AddLegend(legend, input_type, input):
-    """Add the legend to the plot.
-    """
-    if input_type == "data": 
-        legend.AddEntry(input, "Data", "lep")
-    elif input_type == "background": 
-        legend.AddEntry(input, "Z#gamma*, ZZ", "f")   
-    elif input_type == "signal": 
-        legend.AddEntry(input, "m_{H} = 125 GeV", "l")             
-    legend.SetBorderSize(0)
-    return legend
-
-def AddLatex():
-    """Write details on the plot.
-    """
-    latex = ROOT.TLatex()
-    latex.SetNDC()
-    latex.SetTextSize(0.04)
-    latex.SetTextFont(42)
-    latex.DrawLatex(0.6, 0.935, "11.6 fb^{-1} (2012, 8 TeV)")
-    latex.DrawLatex(0.16, 0.935, "#bf{CMS Open Data}")
-
-'''
-
-def main ():
+def main (args, path=""):
     """Main function of the plotting step.
 
     The plotting takes for each variable the histograms for each final state and sample.
@@ -141,14 +26,24 @@ def main ():
     and finally, by combining all signal and background processes, in a stacked manner overlain
     by the data points. This procedure is repeated with all final states combined. 
     """   
-    infile_path = os.path.join("..", "histograms.root")
+    
+    print(f"\n>>> Executing {os.path.basename(__file__)}\n")
+
+    infile_path = os.path.join(path, "histograms", "histograms.root")
     infile = ROOT.TFile(infile_path, "READ")
 
     plotting_functions.SetStyle()
+    
+    if args.ml :
+        var_dict = VARIABLES_DICT["tot"]
+    else : 
+        var_dict = VARIABLES_DICT["part"]
+        
+    variables = var_dict.keys()
 
     for selection in SELECTIONS.keys():
 
-        for variable in VARIABLES_COMPLETE.keys():
+        for variable in variables:
             if variable != "Weight":
                     
                 """Get histograms for the signal
@@ -215,7 +110,7 @@ def main ():
                 for input_type, inputs in inputs_dict.items():        
                     for final_state in ["FourMuons", "FourElectrons", "TwoMuonsTwoElectrons", "combined"]: 
                         c = ROOT.TCanvas("", "", 600, 600)
-                        legend = ROOT.TLegend(0.66, 0.7, 0.9, 0.9)
+                        legend = ROOT.TLegend(0.5, 0.7, 0.8, 0.9)
                         legend.SetBorderSize(0)
 
                         if input_type in ["data", "background", "signal"]:                 
@@ -262,16 +157,21 @@ def main ():
 
                         plotting_functions.AddLatex()
 
-                        """Create the directory and save the images.
-                        """
-                        dir_name = os.path.join("..", "plots", selection, input_type)
+                        # Create the directory and save the images.
+                        dir_name = os.path.join(path, "plots", selection, input_type)
                         if not os.path.exists(dir_name):
                             os.makedirs(dir_name)
                             print("Directory " , dir_name ,  " Created ")
-                        file_name = f"{input_type}_{final_state}_{variable}.png"
+                        file_name = f"{input_type}_{final_state}_{variable}.pdf"
                         complete_name = os.path.join(dir_name, file_name)
                         c.SaveAs(complete_name)
 
 
 if __name__ == "__main__":
-    main()
+    # global configuration
+    parser = argparse.ArgumentParser( description = 'Analysis Tool' )
+    parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
+    parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
+    args = parser.parse_args()
+    
+    main(args, "..")

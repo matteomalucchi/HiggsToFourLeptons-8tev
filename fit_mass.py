@@ -1,13 +1,22 @@
 import os
+import argparse
+
 import ROOT
 
 from definitions.samples_def import SAMPLES
 from definitions.selections_def import  SELECTIONS
 
 
-def main ():
+def main (args):
+    """ Main function for the mass fit.
+    """
 
+    print(f"\n>>> Executing {os.path.basename(__file__)}\n")
+
+    # Loop over the possible selections
     for selection, tree_name in SELECTIONS.items():
+        print(f"\n>>> Process {selection}\n")
+        
 
         sig_chain= ROOT.TChain(tree_name)
         bkg_chain= ROOT.TChain(tree_name)
@@ -15,12 +24,11 @@ def main ():
 
         for sample_name, final_states in SAMPLES.items():
             for final_state in final_states:
-                print(">>> Process sample {} and final state {}".format(sample_name, final_state))
+                print(f">>> Process sample {sample_name} and final state {final_state}")
 
                 # Get the input file name
-                infile_name=f"{sample_name}{final_state}Skim.root"
-                infile_directory = f"skim_data"
-                infile_path = os.path.join(infile_directory, infile_name)
+                infile_name = f"{sample_name}{final_state}Skim.root"
+                infile_path = os.path.join("skim_data", infile_name)
 
                 if sample_name.startswith("SM"):
                     sig_chain.Add(infile_path)
@@ -111,4 +119,9 @@ def main ():
         fOutput.Close()'''
 
 if __name__ == "__main__":
-    main()
+    # General configuration
+    parser = argparse.ArgumentParser( description = 'Analysis Tool' )
+    parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
+    parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
+    args = parser.parse_args()
+    main(args)

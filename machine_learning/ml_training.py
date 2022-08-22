@@ -9,13 +9,16 @@ import ROOT
 sys.path.append('../')
 from definitions.samples_def import SAMPLES
 from definitions.variables_ml_def import VARIABLES_ML_DICT
-#import definitions.variables_ml_def
-#from definitions.variables_ml_def import VARIABLES_TOT_ML as variables
 
-simulated_samples = {k: v for k, v in SAMPLES.items() if not k.startswith("Run")}
 
 def main(args, path_o="machine_learning", path_sd=""):
-    """Main function """
+    """Main function for the training of the DNN.
+    
+    The DNN is trained on the simulated Monte Carlo samples.
+    """
+    
+    print(f"\n>>> Executing {os.path.basename(__file__)}\n")
+
     # Setup TMVA
     ROOT.TMVA.Tools.Instance()
     ROOT.TMVA.PyMethodBase.PyInitialize()
@@ -39,9 +42,11 @@ def main(args, path_o="machine_learning", path_sd=""):
     signal_chain=ROOT.TChain("Events")
     bkg_chain=ROOT.TChain("Events")
 
+    simulated_samples = {k: v for k, v in SAMPLES.items() if not k.startswith("Run")}
+
     for sample_name, final_states in simulated_samples.items():
             for final_state in final_states:
-                print(">>> Process sample {} and final state {}".format(sample_name, final_state))
+                print(f">>> Process sample {sample_name} and final state {final_state}")
                 file_name=os.path.join(path_sd,"skim_data", f"{sample_name}{final_state}Skim.root")
                 if sample_name == "SMHiggsToZZTo4L":
                     signal_chain.Add(file_name)
@@ -62,7 +67,7 @@ def main(args, path_o="machine_learning", path_sd=""):
     model.add(Dense(64, activation="relu", input_dim=len(variables)))
     model.add(Dense(12, activation="relu"))
     model.add(Dense(12, activation="relu"))
-    model.add(Dense(12, activation="relu"))
+    #model.add(Dense(12, activation="relu"))
     #model.add(Dense(12, activation="relu"))
     model.add(Dense(2, activation="sigmoid"))
 
@@ -79,7 +84,7 @@ def main(args, path_o="machine_learning", path_sd=""):
 
     # Book methods
     factory.BookMethod(dataloader, ROOT.TMVA.Types.kPyKeras, "PyKeras",
-                    f"H:!V:VarTransform=D,G:FilenameModel={mod_path}:NumEpochs=2:BatchSize=128")
+                    f"H:!V:VarTransform=D,G:FilenameModel={mod_path}:NumEpochs=10:BatchSize=128")
                     
     # Run training, test and evaluation
     factory.TrainAllMethods()

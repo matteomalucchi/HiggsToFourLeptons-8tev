@@ -17,8 +17,10 @@ from definitions.samples_def import SAMPLES
 from definitions.variables_ml_def import VARIABLES_ML_DICT
 
 def main(args, path_d="machine_learning", path_i=""):
-    """ Main function that avaluates the DNN on the whole dataset
+    """ Main function that avaluates the DNN on the whole dataset.
     """
+    
+    print(f"\n>>> Executing {os.path.basename(__file__)}\n")
 
     # Enamble multi-threading
     if args.parallel:
@@ -56,29 +58,25 @@ def main(args, path_d="machine_learning", path_i=""):
 
             tree = in_file.Get("Events")
             
-            print(tree.GetNbranches())
             br = tree.GetListOfBranches().FindObject("Discriminant")
             if br != None:
                tree.SetBranchStatus("Discriminant", 0)   
 
-            new_tree = tree.CloneTree()
-            print(new_tree.GetNbranches())
-            
-            if args.variablesML == "tot":
-                eval_variables = [new_tree.Z1_mass, new_tree.Z2_mass, new_tree.cos_theta_star,
-                                          new_tree.Phi, new_tree.Phi1, new_tree.cos_theta1, new_tree.cos_theta2]
-            elif args.variablesML == "part":
-                eval_variables = [new_tree.cos_theta_star, new_tree.Phi, 
-                                  new_tree.Phi1, new_tree.cos_theta1, new_tree.cos_theta2]
-            elif args.variablesML == "higgs":
-                eval_variables = [new_tree.Higgs_mass]
+            new_tree = tree.CloneTree()            
 
             discr_array = array("f", [-999])
             branch = new_tree.Branch("Discriminant", discr_array, "Discriminant/F")
             rand = ROOT.TRandom2()
             for i in range(tree.GetEntries()):
-                    new_tree.GetEntry(i)                    
-                    #discr_array[0] = reader.EvaluateMVA(eval_variables, "PyKeras")
+                    new_tree.GetEntry(i)  
+                    '''if args.variablesML == "tot":                  
+                        discr_array[0] = reader.EvaluateMVA([new_tree.Z1_mass, new_tree.Z2_mass, new_tree.cos_theta_star,
+                                          new_tree.Phi, new_tree.Phi1, new_tree.cos_theta1, new_tree.cos_theta2], "PyKeras")
+                    elif args.variablesML == "part":
+                        discr_array[0] = reader.EvaluateMVA([new_tree.cos_theta_star, new_tree.Phi, new_tree.Phi1, 
+                                                             new_tree.cos_theta1, new_tree.cos_theta2], "PyKeras")
+                    elif args.variablesML == "higgs":
+                        discr_array[0] = reader.EvaluateMVA([new_tree.Higgs_mass], "PyKeras")'''
                     discr_array[0]= rand.Rndm()
                     branch.Fill()
 

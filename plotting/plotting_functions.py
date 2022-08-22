@@ -106,11 +106,11 @@ def AddTitle(histo, variable=""):
         bin_width=(VARIABLES_COMPLETE[variable][2]-VARIABLES_COMPLETE[variable][1])/VARIABLES_COMPLETE[variable][0]
         histo.GetYaxis().SetTitle(f"N_{{Events}} / {float(f'{bin_width:.1g}'):g}{VARIABLES_COMPLETE[variable][4]}")
 
-def AddLegend(legend, histo, input_type="Discriminant"):
+def AddLegend(legend, input_type, histo):
     """Add the legend to the plot.
     """
 
-    if input_type == "Discriminant": 
+    if input_type == "discriminant": 
         legend.AddEntry(histo["data_el"], "4e", "p")
         legend.AddEntry(histo["data_mu"], "4#mu", "p")
         legend.AddEntry(histo["data_elmu"], "2e2#mu", "p")
