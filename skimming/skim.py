@@ -27,7 +27,7 @@ from definitions.samples_def import  SAMPLES
 from definitions.variables_def import  VARIABLES
 
 
-def main(args, path_sf="skimming", path_sd=""):
+def skim(args, path_sf="skimming", path_sd=""):
     """Main function of the skimming step
     
     The function loops over the datasets and distinguishes the possible
@@ -99,4 +99,4 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
     args = parser.parse_args()
     
-    main(args, "", "..")
+    skim(args, "", "..")

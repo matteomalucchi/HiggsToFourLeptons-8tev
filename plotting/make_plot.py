@@ -18,7 +18,7 @@ from plotting import plotting_functions
 ROOT.gROOT.SetBatch(True)
 
 
-def main (args, path=""):
+def make_plot (args, path=""):
     """Main function of the plotting step.
 
     The plotting takes for each variable the histograms for each final state and sample.
@@ -174,4 +174,4 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
     args = parser.parse_args()
     
-    main(args, "..")
+    make_plot(args, "..")

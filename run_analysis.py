@@ -4,14 +4,14 @@ import sys
 import ROOT
 
 from skimming import skim
-from machine_learning import  ml_training, ml_application, ml_selections
+from machine_learning import  ml_training, ml_application, ml_selection
 from plotting import make_plot, ml_plot
 from histogramming import make_histo, ml_histo
 import fit_mass
 
 
 
-def main (argv):
+def run_analysis (argv):
     
     # global configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
@@ -29,23 +29,23 @@ def main (argv):
     args = parser.parse_args()
     
     
-    #skim.main(args)
+    #skim.skim(args)
     
     if args.ml:
-        #ml_training.main(args)
-        ml_application.main(args)
-        ml_selections.main(args)
-        #ml_histo.main(args)
-        #ml_plot.main(args)
+        #ml_training.ml_training(args)
+        ml_application.ml_application(args)
+        ml_selection.ml_selection(args)
+        #ml_histo.ml_histo(args)
+        #ml_plot.ml_plot(args)
         
     if args.fitMass:
-        fit_mass.main(args)
+        fit_mass.fit_mass(args)
         
-    make_histo.main(args)
-    make_plot.main(args)
+    make_histo.make_histo(args)
+    make_plot.make_plot(args)
 
 
 if __name__ == "__main__":
-    main( sys.argv[1:] )
+    run_analysis( sys.argv[1:] )
 
 

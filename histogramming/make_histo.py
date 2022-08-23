@@ -20,7 +20,7 @@ from definitions.selections_def import  SELECTIONS
 from histogramming import histogramming_functions
 
 
-def main(args, path=""):
+def make_histo(args, path=""):
     """Main function of the histogramming step
     
     The function loops over the outputs from the skimming step and produces the
@@ -84,4 +84,4 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
     args = parser.parse_args()
     
-    main(args, "..")
+    make_histo(args, "..")

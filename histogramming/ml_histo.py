@@ -16,7 +16,7 @@ from definitions.samples_def import SAMPLES
 from histogramming import histogramming_functions
 
 
-def main(args, path = ""):
+def ml_histo(args, path = ""):
     """Main function of the histogramming step that plots Higgs_mass vs DNNDiscriminant.
     
     The function produces the required histogram for the final plotting step.
@@ -102,4 +102,4 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
     args = parser.parse_args()
     
-    main(args, "..")
+    ml_histo(args, "..")

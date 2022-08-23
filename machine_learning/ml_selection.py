@@ -20,7 +20,7 @@ def DiscriminantSelection(rdf):
                       "Select only events with above threshold discriminat")
 
 
-def main(args, path_sd=""):
+def ml_selection(args, path_sd=""):
     """Main function for the selection of the events for which
     the discriminant created by the DNN is above the 0.5 threshold
     """
@@ -62,4 +62,4 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
     args = parser.parse_args()
     
-    main(args, "..")
+    ml_selection(args, "..")

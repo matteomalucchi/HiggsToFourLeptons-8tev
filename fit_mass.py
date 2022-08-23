@@ -7,7 +7,7 @@ from definitions.samples_def import SAMPLES
 from definitions.selections_def import  SELECTIONS
 
 
-def main (args):
+def fit_mass (args):
     """ Main function for the mass fit.
     """
 
@@ -124,4 +124,4 @@ if __name__ == "__main__":
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
     args = parser.parse_args()
-    main(args)
+    fit_mass(args)

@@ -11,7 +11,7 @@ from definitions.samples_def import SAMPLES
 from definitions.variables_ml_def import VARIABLES_ML_DICT
 
 
-def main(args, path_o="machine_learning", path_sd=""):
+def ml_training(args, path_o="machine_learning", path_sd=""):
     """Main function for the training of the DNN.
     
     The DNN is trained on the simulated Monte Carlo samples.
@@ -103,6 +103,6 @@ if __name__ == "__main__":
     parser.add_argument('-v', '--variablesML',     default="tot"  , type=str,   help='name of the set of variables to be used in the ML algorithm (tot, part, higgs)')
     args = parser.parse_args()
     
-    main(args, "", "..")
+    ml_training(args, "", "..")
     
 #root[] TMVA::TMVAGui("TMVA.root")

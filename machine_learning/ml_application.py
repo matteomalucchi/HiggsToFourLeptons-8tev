@@ -16,7 +16,7 @@ sys.path.append('../')
 from definitions.samples_def import SAMPLES
 from definitions.variables_ml_def import VARIABLES_ML_DICT
 
-def main(args, path_d="machine_learning", path_i=""):
+def ml_application(args, path_d="machine_learning", path_i=""):
     """ Main function that avaluates the DNN on the whole dataset.
     """
     
@@ -94,4 +94,4 @@ if __name__ == "__main__":
     parser.add_argument('-v', '--variablesML',     default="tot"                               , type=str,   help='name of the set of variables to be used in the ML algorithm (tot, part, higgs)')
     args = parser.parse_args()
     
-    main(args, "", "..")
+    ml_application(args, "", "..")
