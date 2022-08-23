@@ -19,12 +19,17 @@ ROOT.gROOT.SetBatch(True)
 
 
 def make_plot (args, path=""):
-    """Main function of the plotting step.
-
-    The plotting takes for each variable the histograms for each final state and sample.
-    Then, the histograms are plotted with just the background, just the signal, just the data
-    and finally, by combining all signal and background processes, in a stacked manner overlain
-    by the data points. This procedure is repeated with all final states combined. 
+    """Main function of the plotting step. The plotting takes for 
+    each variable the histograms for each final state and sample.
+    Then, the histograms are plotted with just the background, 
+    just the signal, just the data and finally, by combining all 
+    signal and background processes, in a stacked manner overlain by the data points. 
+    This procedure is repeated with all final states combined. 
+    
+    :param args: Global configuration of the analysis.
+    :type args: argparse.Namespace
+    :param path: Optional base path where the directories ``histograms/`` and ``plot/`` can be found.
+    :type path: str
     """   
     
     print(f"\n>>> Executing {os.path.basename(__file__)}\n")
@@ -116,7 +121,7 @@ def make_plot (args, path=""):
                         if input_type in ["data", "background", "signal"]:                 
                             input = inputs[final_state]       
                             plotting_functions.InputStyle(input_type, input)
-                            plotting_functions.AddTitle(input, variable)
+                            plotting_functions.AddTitle(input, var_dict[variable])
                             input.SetMaximum(input.GetMaximum() * 1.4)
                             if input_type == "data": 
                                 input.Draw("E1P")
@@ -130,7 +135,7 @@ def make_plot (args, path=""):
                             sig_norm = inputs[1][final_state]       
                             plotting_functions.InputStyle("background", bkg_norm)
                             plotting_functions.InputStyle("signal", sig_norm)
-                            plotting_functions.AddTitle(bkg_norm, variable)
+                            plotting_functions.AddTitle(bkg_norm, var_dict[variable])
                             bkg_norm.SetMaximum(max(bkg_norm.GetMaximum(), sig_norm.GetMaximum()) * 1.5)
                             bkg_norm.Draw("HIST")
                             sig_norm.Draw("HIST SAME")
@@ -147,7 +152,7 @@ def make_plot (args, path=""):
                                 plotting_functions.InputStyle(input_key, input)
                                 legend=plotting_functions.AddLegend(legend, input_key, input)
 
-                            plotting_functions.AddTitle(signals[final_state], variable)
+                            plotting_functions.AddTitle(signals[final_state], var_dict[variable])
                             signals[final_state].SetMaximum(max(backgrounds[final_state].GetMaximum(),\
                                                             data[final_state].GetMaximum()) * 1.4)
                             signals[final_state].Draw("HIST")
@@ -172,6 +177,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
+    parser.add_argument('-m', '--ml', default=False,   action='store_const', const=True,   help='enables machine learning algorithm')
     args = parser.parse_args()
     
     make_plot(args, "..")

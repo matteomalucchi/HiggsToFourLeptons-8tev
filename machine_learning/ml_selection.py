@@ -22,7 +22,12 @@ def DiscriminantSelection(rdf):
 
 def ml_selection(args, path_sd=""):
     """Main function for the selection of the events for which
-    the discriminant created by the DNN is above the 0.5 threshold
+    the discriminant created by the DNN is above the 0.5 threshold.
+    
+    :param args: Global configuration of the analysis.
+    :type args: argparse.Namespace
+    :param path_sd: Optional base path to find the directory ``skim_data/``.
+    :type path_sd: str    
     """
     
     print(f"\n>>> Executing {os.path.basename(__file__)}\n")

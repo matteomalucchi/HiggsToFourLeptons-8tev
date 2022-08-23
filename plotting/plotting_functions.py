@@ -1,20 +1,30 @@
 import ROOT
 
-from definitions.variables_def import VARIABLES_COMPLETE
-
 
 def GetHistogram(tfile, dataset):
-    """Retrieve a histogram from the histo file based on the sample, the final state
-    and the variable name
+    """Retrieve a histogram from the histo file based on the sample, 
+    the final state and the variable name.
+    
+    :param tfile: File containing the histogram
+    :type tfile: ROOT.TFile
+    :param dataset: Name of the histogram
+    :type dataset: str
+    :return: Retrieved histogram
+    :rtype: ROOT.TH1D
     """
+    
     h = tfile.Get(dataset)
     if not h:
         raise Exception(f"Failed to load histogram {dataset}.")
     return h
 
 def CombineFinalStates(d):
-    """Combine the various final states
+    """Combine the various final states in a unique histogram.
+
+    :param d: Dictionary in which the values are the histograms to be combined
+    :type tfile: dict(str, ROOT.TH1D) 
     """
+    
     d["combined"] = d["FourMuons"].Clone()
     d["combined"].Add(d["FourElectrons"])
     d["combined"].Add(d["TwoMuonsTwoElectrons"])
@@ -22,6 +32,7 @@ def CombineFinalStates(d):
 def SetStyle():
     """Set the style of the plots.
     """
+    
     ROOT.gStyle.SetOptStat(0)
 
     ROOT.gStyle.SetCanvasBorderMode(0)
@@ -75,7 +86,13 @@ def SetStyle():
 
 def InputStyle(input_type, histo):
     """Set style of the histograms for each type of dataset.
+    
+    :param input_type: Type of input dataset
+    :type input_type: str
+    :param histo: Histogram of which the style is set
+    :type histo: ROOT.TH1D    
     """
+    
     histo.SetTitleSize(0.04, "XYZ")
     histo.SetTitleOffset(1.3, "XYZ") 
     if input_type == "data": 
@@ -95,19 +112,33 @@ def InputStyle(input_type, histo):
     elif input_type == "data_elmu": 
         histo.SetMarkerStyle(21)
 
-def AddTitle(histo, variable=""):
-    """Add the title to the plot.
+def AddTitle(histo, variable_specs=None):
+    """Add the title to the plot axes.
+    
+    :param histo: Histogram of which the plot axes need to be titled
+    :type histo: ROOT.TH1D      
+    :param variable_specs: Specifics of the variable to be plotted
+    :type variable_specs: str
     """
-    if variable == "":
+    if variable_specs == None:
         histo.GetYaxis().SetTitle("K_{D}")
         histo.GetXaxis().SetTitle("m_{4l} [GeV]")    
     else:
-        histo.GetXaxis().SetTitle(f"{VARIABLES_COMPLETE[variable][3]}{VARIABLES_COMPLETE[variable][4]}")
-        bin_width=(VARIABLES_COMPLETE[variable][2]-VARIABLES_COMPLETE[variable][1])/VARIABLES_COMPLETE[variable][0]
-        histo.GetYaxis().SetTitle(f"N_{{Events}} / {float(f'{bin_width:.1g}'):g}{VARIABLES_COMPLETE[variable][4]}")
+        histo.GetXaxis().SetTitle(f"{variable_specs[3]}{variable_specs[4]}")
+        bin_width=(variable_specs[2]-variable_specs[1])/variable_specs[0]
+        histo.GetYaxis().SetTitle(f"N_{{Events}} / {float(f'{bin_width:.1g}'):g}{variable_specs[4]}")
 
 def AddLegend(legend, input_type, histo):
     """Add the legend to the plot.
+
+    :param legend: Legend to be added
+    :type legend: ROOT.TLegend
+    :param input_type: Type of input dataset
+    :type input_type: str
+    :param histo: Histogram of which the plot needs to have added te legend
+    :type histo: ROOT.TH1D      
+    :return: Completed legend 
+    :rtype: ROOT.TLegend
     """
 
     if input_type == "discriminant": 

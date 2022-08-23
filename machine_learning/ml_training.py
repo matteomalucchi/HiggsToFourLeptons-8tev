@@ -1,3 +1,10 @@
+"""
+In this step the DNN is trained on the Monte Carlo samples
+of signal and background. The training is done thanks to
+keras API.
+"""
+
+
 import argparse
 import sys
 import os
@@ -12,9 +19,15 @@ from definitions.variables_ml_def import VARIABLES_ML_DICT
 
 
 def ml_training(args, path_o="machine_learning", path_sd=""):
-    """Main function for the training of the DNN.
+    """Main function for the training of the DNN. The DNN is 
+    trained on the simulated Monte Carlo samples.
     
-    The DNN is trained on the simulated Monte Carlo samples.
+    :param args: Global configuration of the analysis.
+    :type args: argparse.Namespace
+    :param path_o: Optional base path to save the output of the training.
+    :type path_o: str
+    :param path_sd: Optional base path to find the directory ``skim_data/``.
+    :type path_sd: str
     """
     
     print(f"\n>>> Executing {os.path.basename(__file__)}\n")

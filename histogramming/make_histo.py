@@ -21,10 +21,14 @@ from histogramming import histogramming_functions
 
 
 def make_histo(args, path=""):
-    """Main function of the histogramming step
-    
+    """ Main function of the histogramming step. 
     The function loops over the outputs from the skimming step and produces the
     required histograms for the final plotting step.
+    
+    :param args: Global configuration of the analysis.
+    :type args: argparse.Namespace
+    :param path: Optional base path where the directories ``skim_data/`` and ``histograms/`` can be found.
+    :type path: str
     """
     
     print(f"\n>>> Executing {os.path.basename(__file__)}\n")
@@ -71,6 +75,7 @@ def make_histo(args, path=""):
                         histos[variable] = histogramming_functions.BookHistogram1D(rdf, variable, var_dict[variable])
                         histogramming_functions.WriteHistogram(histos[variable], f"{sample}_{final_state}_{variable}_{selection}")
                         
+                        #print(type(histos[variable]))
                 print("Execution time: %s s" %(time.time() - start_time))
 
     outfile.Close()
@@ -82,6 +87,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
+    parser.add_argument('-m', '--ml', default=False,   action='store_const', const=True,   help='enables machine learning algorithm')
     args = parser.parse_args()
     
     make_histo(args, "..")

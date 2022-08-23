@@ -1,4 +1,4 @@
-"""
+""" 
 In this step the trained DNN is evaluated on the various datasets
 and the resulting disciminant is saved in a new branch of the "Events" tree.
 """
@@ -16,8 +16,15 @@ sys.path.append('../')
 from definitions.samples_def import SAMPLES
 from definitions.variables_ml_def import VARIABLES_ML_DICT
 
-def ml_application(args, path_d="machine_learning", path_i=""):
+def ml_application(args, path_d="machine_learning", path_sd=""):
     """ Main function that avaluates the DNN on the whole dataset.
+    
+    :param args: Global configuration of the analysis.
+    :type args: argparse.Namespace
+    :param path_d: Optional base path where the ``dataset/`` directory can be found
+    :type path_d: str
+    :param path_sd: Optional base path to find the directory ``skim_data/``.
+    :type path_sd: str
     """
     
     print(f"\n>>> Executing {os.path.basename(__file__)}\n")
@@ -53,7 +60,7 @@ def ml_application(args, path_d="machine_learning", path_i=""):
             
             print(f">>> Process sample: {sample_name} and final state {final_state}")
             start_time = time.time()
-            in_file_path=os.path.join(path_i, "skim_data", f"{sample_name}{final_state}Skim.root")
+            in_file_path=os.path.join(path_sd, "skim_data", f"{sample_name}{final_state}Skim.root")
             in_file = ROOT.TFile(in_file_path,"UPDATE")          
 
             tree = in_file.Get("Events")

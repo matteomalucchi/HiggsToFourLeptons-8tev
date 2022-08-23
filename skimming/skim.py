@@ -28,13 +28,20 @@ from definitions.variables_def import  VARIABLES
 
 
 def skim(args, path_sf="skimming", path_sd=""):
-    """Main function of the skimming step
-    
+    """ Main function of the skimming step.
     The function loops over the datasets and distinguishes the possible
     final states. It creates for each one of them a RDataFrame which allows 
-    to apply cuts and define new useful observables.
-    """
+    to apply cuts and define new useful observables. Finally, it creates files
+    containing the new skimmed data in the directory ``skim_data/``.
+
+    :param args: Global configuration of the analysis.
+    :type args: argparse.Namespace
+    :param path_sf: Optional base path to find the header file ``skim_functions.h``.
+    :type path_sf: str
+    :param path_sd: Optional base path to find the directory ``skim_data/``.
+    :type path_sd: str
     
+    """
     print(f"\n>>> Executing {os.path.basename(__file__)}\n")
 
     
@@ -99,4 +106,4 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
     args = parser.parse_args()
     
-    skim(args, "", "..")
+    main(args, "", "..")

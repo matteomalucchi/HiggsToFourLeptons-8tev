@@ -1,3 +1,5 @@
+""" Definitions of the functions used in the skimming step of the analysis.
+"""
 
 from definitions.weights_def import  WEIGHTS
 
@@ -7,7 +9,15 @@ ROOT.gInterpreter.ProcessLine('#include "skim_functions_lib.h"' )"""
 #ROOT.gInterpreter.ProcessLine('#include "skimming/skim_functions.h"' )
 
 def EventSelection(rdf, final_state):
-    """ Minimal selection of the events
+    """ Minimal selection of the events.
+    
+    :param rdf: Input RDataFrame
+    :type rdf: ROOT.RDataFrame
+    :param final_state: Final state to be analysed
+    :type final_state: str
+    :raises RuntimeError: Raised when an unknown final state is passed
+    :return: Output RDataFrame 
+    :rtype: ROOT.RDataFrame
     """
 
     if final_state == "FourMuons":
@@ -66,11 +76,18 @@ def EventSelection(rdf, final_state):
     else: raise RuntimeError(f"Unknown final state --> {final_state}")
 
 def FourVec(rdf, final_state):
-    """Reconstruct fourvector for leptons, Z and Higgs.
+    """Reconstruct fourvector for leptons, Z and Higgs candidates.
+    
+    :param rdf: Input RDataFrame
+    :type rdf: ROOT.RDataFrame
+    :param final_state: Final state to be analysed
+    :type final_state: str
+    :raises RuntimeError: Raised when an unknown final state is passed
+    :return: Output RDataFrame 
+    :rtype: ROOT.RDataFrame
     """
     
-    """Reconstruct the ZZ system for all final states
-    """
+    # Reconstruct the ZZ system for all final states
     if final_state == "FourMuons":
         rdf_fv = rdf.Define("Muon_fourvec",
                             "lepFourVec(Muon_pt, Muon_eta, Muon_phi, Muon_mass)")\
@@ -93,9 +110,9 @@ def FourVec(rdf, final_state):
 
     elif final_state == "TwoMuonsTwoElectrons":
 
-        """With two muons and two electrons, the reconstruction is trivial 
-        (each Z is built from two of the same kind).
-        """
+        # With two muons and two electrons, the reconstruction is trivial 
+        # (each Z is built from two of the same kind).
+        
         rdf_fv = rdf.Define("Muon_fourvec",
                             "lepFourVec(Muon_pt, Muon_eta, Muon_phi, Muon_mass)")\
                     .Define("Electron_fourvec",
@@ -105,26 +122,33 @@ def FourVec(rdf, final_state):
 
     else: raise RuntimeError(f"Unknown final state --> {final_state}")
     
-    """Apply cut on the reconstructed Z masses
-    """
+    # Apply cut on the reconstructed Z masses
     df_cut = rdf_fv.Filter("Z_fourvecs[0].M() > 40 && Z_fourvecs[0].M() < 120",
                            "Mass of first Z candidate in [40, 120]")\
                    .Filter("Z_fourvecs[1].M() > 12 && Z_fourvecs[1].M() < 120",
                            "Mass of second Z candidate in [12, 120]")
 
-    """Sum the fourvectors of the two Z bosons and reconstruct the fourvector of Higgs boson
-    """
+    # Sum the fourvectors of the two Z bosons and reconstruct the fourvector of Higgs boson
     return df_cut.Define("Higgs_fourvec",
                          "Z_fourvecs[0] + Z_fourvecs[1]")
 
 def OrderFourVec(rdf, final_state):
-    """Put the four vectors in order according to the following criteria:
-            -Z1: heavier boson
-            -Z2: lighter boson
-            -Lep11: lepton belonging to the heavier boson Z1
-            -Lep12: anti-lepton belonging to the heavier boson Z1
-            -Lep21: lepton belonging to the lighter boson Z2
-            -Lep22: anti-lepton belonging to the lighter boson Z2
+    """ Put the four vectors in order according to the following criteria:
+    
+            * Z1 = heavier boson candidate
+            * Z2 = lighter boson candidate
+            * Lep11 = lepton belonging to the heavier boson Z1
+            * Lep12 = anti-lepton belonging to the heavier boson Z1
+            * Lep21 = lepton belonging to the lighter boson Z2
+            * Lep22 = anti-lepton belonging to the lighter boson Z2
+            
+    :param rdf: Input RDataFrame
+    :type rdf: ROOT.RDataFrame
+    :param final_state: Final state to be analysed
+    :type final_state: str
+    :raises RuntimeError: Raised when an unknown final state is passed
+    :return: Output RDataFrame 
+    :rtype: ROOT.RDataFrame
     """
 
     if final_state == "FourMuons":
@@ -176,7 +200,12 @@ def OrderFourVec(rdf, final_state):
     else: raise RuntimeError(f"Unknown final state --> {final_state}")
 
 def DefMassPtEtaPhi(rdf):
-    """ Define mass and pt of Higgs boson and Z 
+    """ Define Mass, Pt, Eta and Phi of Higgs boson and Z candidates.
+    
+    :param rdf: Input RDataFrame
+    :type rdf: ROOT.RDataFrame
+    :return: Output RDataFrame 
+    :rtype: ROOT.RDataFrame
     """
     return rdf.Define("Higgs_mass",
                       "Higgs_fourvec.M()")\
@@ -221,6 +250,12 @@ def DefMassPtEtaPhi(rdf):
                               
 def FourvecBoost(rdf):
     """ Boost the various fourvectors in different frames.
+
+    
+    :param rdf: Input RDataFrame
+    :type rdf: ROOT.RDataFrame
+    :return: Output RDataFrame 
+    :rtype: ROOT.RDataFrame
     """
 
     return rdf.Define("Z1_HRest", 
@@ -245,7 +280,13 @@ def FourvecBoost(rdf):
                       "boostFourvec(Z1_fourvec,Z2_fourvec.BoostVector())")\
 
 def DefAngles(rdf):
-    """ Define the five angles that allow discrimination between signal and background
+    """ Define the five angles that allow discrimination between signal and background.
+   
+    
+    :param rdf: Input RDataFrame
+    :type rdf: ROOT.RDataFrame
+    :return: Output RDataFrame 
+    :rtype: ROOT.RDataFrame 
     """
     
     return rdf.Define("theta_star", 
@@ -273,6 +314,11 @@ def DefAngles(rdf):
 
 def AddEventWeight(rdf, sample_name):
     """ Add weights for the normalisation of the simulated samples in the histograms.
+    
+    :param rdf: Input RDataFrame
+    :type rdf: ROOT.RDataFrame
+    :return: Output RDataFrame 
+    :rtype: ROOT.RDataFrame 
     """
     return rdf.Define("Weight", f"{WEIGHTS[sample_name]}")
 

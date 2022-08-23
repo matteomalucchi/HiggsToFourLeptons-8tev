@@ -17,12 +17,16 @@ from plotting import plotting_functions
 #ROOT.gROOT.SetBatch(True)
 
 def ml_plot (args, path=""):
-    """ Main function of the plotting step.
-
-    The plotting takes for each variable the histograms for each final state and sample.
+    """ Main function of the plotting step. The plotting takes 
+    for each variable the histograms for each final state and sample.
     Then, the histograms are plotted with just the background, just the signal, just the data
     and finally, by combining all signal and background processes, in a stacked manner overlain
     by the data points. This procedure is repeated with all final states combined. 
+    
+    :param args: Global configuration of the analysis.
+    :type args: argparse.Namespace
+    :param path: Optional base path where the directories ``histograms/`` and ``discriminant_plots/`` can be found.
+    :type path: str
     """   
 
     print(f"\n>>> Executing {os.path.basename(__file__)}\n")

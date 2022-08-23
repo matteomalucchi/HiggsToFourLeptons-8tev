@@ -17,9 +17,14 @@ from histogramming import histogramming_functions
 
 
 def ml_histo(args, path = ""):
-    """Main function of the histogramming step that plots Higgs_mass vs DNNDiscriminant.
-    
+    """Main function of the histogramming step that plots Higgs_mass vs DNN Discriminant.
     The function produces the required histogram for the final plotting step.
+
+    :param args: Global configuration of the analysis.
+    :type args: argparse.Namespace
+    :param path: Optional base path where the directories ``skim_data/`` and ``histograms/`` can be found.
+    :type path: str
+    
     """
 
     print(f"\n>>> Executing {os.path.basename(__file__)}\n")
