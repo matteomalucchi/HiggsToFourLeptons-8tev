@@ -7,6 +7,7 @@ separated in the three possible final states.
 
 import os
 import argparse
+import logging
 import sys
 
 import ROOT
@@ -16,7 +17,7 @@ from plotting import plotting_functions
 
 #ROOT.gROOT.SetBatch(True)
 
-def ml_plot (args, path=""):
+def ml_plot (args, logger, path=""):
     """ Main function of the plotting step. The plotting takes 
     for each variable the histograms for each final state and sample.
     Then, the histograms are plotted with just the background, just the signal, just the data
@@ -25,13 +26,15 @@ def ml_plot (args, path=""):
     
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
+    :param logger: Configurated logger for printing messages.
+    :type logger: logging.RootLogger
     :param path: Optional base path where the directories ``histograms/`` and ``discriminant_plots/`` can be found.
     :type path: str
     """   
 
-    print(f"\n>>> Executing {os.path.basename(__file__)}\n")
+    logger.info(f">>> Executing {os.path.basename(__file__)}\n")
 
-    infile_path = os.path.join(path, "histograms", "histograms_discriminant.root")
+    infile_path = os.path.join(path, args.output, "histograms", "histograms_discriminant.root")
     infile = ROOT.TFile(infile_path, "READ")
 
     datasets = ["signal", "background", "data_el", "data_mu", "data_elmu"]
@@ -45,6 +48,12 @@ def ml_plot (args, path=""):
         histos[dataset] = plotting_functions.GetHistogram(infile, dataset)
         plotting_functions.InputStyle(dataset, histos[dataset])
 
+    # Create the directory to save the plots if doesn't already exist
+    dir_name = os.path.join(path, args.output, "discriminant_plots")
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+        logger.debug("Directory " , dir_name ,  " Created ")
+        
     for type in ["signal", "background"]:
 
         c = ROOT.TCanvas("", "", 600, 600)
@@ -62,11 +71,7 @@ def ml_plot (args, path=""):
 
         plotting_functions.AddLatex()
 
-        # Create the directory and save the images.
-        dir_name = os.path.join(path, "discriminant_plots")
-        if not os.path.exists(dir_name):
-            os.makedirs(dir_name)
-            print("Directory " , dir_name ,  " Created ")
+        # Save the plots
         file_name = f"discriminant_{type}.pdf"
         complete_name = os.path.join(dir_name, file_name)
         #input()
@@ -74,13 +79,21 @@ def ml_plot (args, path=""):
 
 if __name__ == "__main__":
     
+    # Create and configure logger 
+    logging.basicConfig( format='\n%(asctime)s %(message)s') 
+    # Create an object 
+    logger=logging.getLogger() 
+    # Set the threshold of logger
+    logger.setLevel(logging.INFO)     
     # General configuration
+    
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
+    parser.add_argument('-o', '--output',     default="Output", type=str,   help='name of the output directory')
     args = parser.parse_args()
     
-    ml_plot(args, "..")
+    ml_plot(args, logger, "..")
 
                     
                 

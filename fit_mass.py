@@ -1,5 +1,9 @@
+""" The mass of the Higgs candidate is fitted with a Crystal Ball.
+"""
+
 import os
 import argparse
+import logging
 
 import ROOT
 
@@ -7,28 +11,41 @@ from definitions.samples_def import SAMPLES
 from definitions.selections_def import  SELECTIONS
 
 
-def fit_mass (args):
-    """ Main function for the mass fit.
+def fit_mass (args, logger):
+    """ Main function for the mass fit of the Higgs candidate
+    using a Crystal Ball.
+    
+    :param args: Global configuration of the analysis.
+    :type args: argparse.Namespace
+    :param logger: Configurated logger for printing messages.
+    :type logger: logging.RootLogger
+
     """
+    ROOT.gErrorIgnoreLevel = ROOT.kWarning
 
-    print(f"\n>>> Executing {os.path.basename(__file__)}\n")
+    logger.info(f">>> Executing {os.path.basename(__file__)}\n")
 
+    # Create the directory to save the outputs of the fit if doesn't already exist
+    dir_name = os.path.join(args.output, "fit_results")
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+        logger.debug("Directory " , dir_name ,  " Created ")
+        
     # Loop over the possible selections
     for selection, tree_name in SELECTIONS.items():
-        print(f"\n>>> Process {selection}\n")
+        logger.info(f">>> Process {selection}\n")
         
-
         sig_chain= ROOT.TChain(tree_name)
         bkg_chain= ROOT.TChain(tree_name)
         data_chain= ROOT.TChain(tree_name)
 
         for sample_name, final_states in SAMPLES.items():
             for final_state in final_states:
-                print(f">>> Process sample {sample_name} and final state {final_state}")
+                logger.info(f">>> Process sample {sample_name} and final state {final_state}")
 
                 # Get the input file name
                 infile_name = f"{sample_name}{final_state}Skim.root"
-                infile_path = os.path.join("skim_data", infile_name)
+                infile_path = os.path.join(args.output, "skim_data", infile_name)
 
                 if sample_name.startswith("SM"):
                     sig_chain.Add(infile_path)
@@ -79,11 +96,8 @@ def fit_mass (args):
         #Unbinned ML fit to data
         fitdata = totPDF.fitTo(data, ROOT.RooFit.Save(True))
         fitdata.Print("v")
-        print("Fraction sig/bkg is:")
-        print( sig_frac_count)
-        print("Fraction bkg/sig is:")
-        print( bkg_frac_count)
-
+        logger.info(f"Fraction sig/bkg is:{sig_frac_count}\n")
+        logger.info(f"Fraction bkg/sig is:{bkg_frac_count}\n")
 
         meanHiggs_sig.Print()
         meanHiggs_data.Print()
@@ -91,7 +105,6 @@ def fit_mass (args):
         alphaHiggs.Print()
         nHiggs.Print()
 
-        
         m4l.setBins(10)
         xframe = m4l.frame()
         data.plotOn(xframe)
@@ -104,7 +117,9 @@ def fit_mass (args):
         c1 = ROOT.TCanvas()
         xframe.Draw()
         #input()
-        c1.SaveAs(f"fit_mass_{selection}.png")
+        
+        output_name = os.path.join(dir_name, f"fit_mass_{selection}.png")
+        c1.SaveAs(output_name)
 
         ''' #Now save the data and the PDF into a Workspace, for later use for statistical analysis
         fOutput = ROOT.TFile(f"Workspace_mumufit_{selection}.root","RECREATE")
@@ -119,9 +134,19 @@ def fit_mass (args):
         fOutput.Close()'''
 
 if __name__ == "__main__":
+    
+    # Create and configure logger 
+    logging.basicConfig( format='\n%(asctime)s %(message)s') 
+    # Create an object 
+    logger=logging.getLogger() 
+    # Set the threshold of logger
+    logger.setLevel(logging.INFO)     
+    
     # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
+    parser.add_argument('-o', '--output',     default="Output", type=str,   help='name of the output directory')
     args = parser.parse_args()
-    fit_mass(args)
+    
+    fit_mass(args, logger)

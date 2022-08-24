@@ -129,9 +129,8 @@ dmypy.json
 .pyre/
 
 #Directories
-data/
+Input/
 documentation/
-#machine_learning/
 
 # workspace
 *.code-workspace

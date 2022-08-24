@@ -20,3 +20,5 @@ API
    plotting.plotting_functions
 
    fit_mass
+
+   test.test_skim

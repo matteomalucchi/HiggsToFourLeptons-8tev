@@ -1,13 +1,22 @@
+"""Tests for the functions used in the file ``skim_tools.py`` during 
+the skimming process defined in the header file ``skim_functions.h``.
+"""
+
 import unittest
 import ROOT
 
 #ROOT.gSystem.Load("skim_functions_lib.so")
 #ROOT.gInterpreter.ProcessLine('#include "skim_functions_lib.h"' )
-ROOT.gInterpreter.ProcessLine('#include "skimming/skim_functions.h"' )
-ROOT.gInterpreter.ProcessLine('#include "test/test_variables.h"' )
+#ROOT.gInterpreter.ProcessLine('#include "skimming/skim_functions.h"' )
+#ROOT.gInterpreter.ProcessLine('#include "test/test_variables.h"' )
 
 class TestSkim(unittest.TestCase):
 
+    def __init__(self, *args, **kwargs):
+        super(TestSkim, self).__init__(*args, **kwargs)
+        ROOT.gInterpreter.ProcessLine('#include "skimming/skim_functions.h"' )
+        ROOT.gInterpreter.ProcessLine('#include "test/test_variables.h"' )
+        
     def test_sip(self):
         """Test the definition of sip
         """

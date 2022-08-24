@@ -1,14 +1,13 @@
 import argparse
+import logging
 import os 
 import sys
-import ROOT
 
 from skimming import skim
 from machine_learning import  ml_training, ml_application, ml_selection
 from plotting import make_plot, ml_plot
 from histogramming import make_histo, ml_histo
 import fit_mass
-
 
 
 def run_analysis (argv):
@@ -23,29 +22,45 @@ def run_analysis (argv):
     parser.add_argument('-v', '--variablesML',     default="tot" , type=str,   
                             help='name of the set of variables to be used in the ML algorithm defined "variables_ml_def.py" (tot, part, higgs)')
     parser.add_argument('-f', '--fitMass', default=False,   action='store_const', const=True,   help='enables fit of the Higgs mass')
+    parser.add_argument('-o', '--output',     default="Output", type=str,   help='name of the output directory')
     parser.add_argument('-c', '--configfile', default="Configurations/HZZConfiguration.py", type=str,   help='files to be analysed')
     parser.add_argument('-s', '--samples',    default="", type=str,   help='string with comma separated list of samples to analyse')
-    parser.add_argument('-o', '--output',     default="", type=str,   help='name of the output directory')
     args = parser.parse_args()
     
+    # Create the directory to save the outputs if doesn't already exist
+    if not os.path.exists(args.output):
+        os.makedirs(args.output)
+        logger.debug("Directory " , args.output ,  " Created ")
     
-    #skim.skim(args)
+    # Create and configure logger     
+    logging.basicConfig( format='\n%(asctime)s %(message)s') 
+    # Create an object 
+    logger=logging.getLogger() 
+    # Set the threshold of logger
+    logger.setLevel(logging.INFO) 
+    
+    skim.skim(args, logger)
     
     if args.ml:
-        #ml_training.ml_training(args)
-        ml_application.ml_application(args)
-        ml_selection.ml_selection(args)
-        #ml_histo.ml_histo(args)
-        #ml_plot.ml_plot(args)
+        ml_training.ml_training(args, logger)
+        ml_application.ml_application(args, logger)
+        ml_selection.ml_selection(args, logger)
+        ml_histo.ml_histo(args, logger)
+        ml_plot.ml_plot(args, logger)
         
     if args.fitMass:
-        fit_mass.fit_mass(args)
+        fit_mass.fit_mass(args, logger)
         
-    make_histo.make_histo(args)
-    make_plot.make_plot(args)
+    make_histo.make_histo(args, logger)
+    make_plot.make_plot(args, logger)
 
 
 if __name__ == "__main__":
-    run_analysis( sys.argv[1:] )
+    # Create and configure logger 
+    logging.basicConfig( format='\n%(asctime)s %(message)s') 
+    # Create an object 
+    logger=logging.getLogger() 
+    # Set the threshold of logger
+    logger.setLevel(logging.INFO)     run_analysis( sys.argv[1:] )
 
 

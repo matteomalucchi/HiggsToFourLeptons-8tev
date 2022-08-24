@@ -22,7 +22,7 @@ def CombineFinalStates(d):
     """Combine the various final states in a unique histogram.
 
     :param d: Dictionary in which the values are the histograms to be combined
-    :type tfile: dict(str, ROOT.TH1D) 
+    :type d: dict(str, ROOT.TH1D) 
     """
     
     d["combined"] = d["FourMuons"].Clone()

@@ -8,6 +8,7 @@ of the data.
 import sys
 import os
 import argparse
+import logging
 
 import ROOT
 
@@ -16,31 +17,33 @@ from definitions.samples_def import SAMPLES
 from histogramming import histogramming_functions
 
 
-def ml_histo(args, path = ""):
+def ml_histo(args, logger, path = ""):
     """Main function of the histogramming step that plots Higgs_mass vs DNN Discriminant.
     The function produces the required histogram for the final plotting step.
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
+    :param logger: Configurated logger for printing messages.
+    :type logger: logging.RootLogger
     :param path: Optional base path where the directories ``skim_data/`` and ``histograms/`` can be found.
     :type path: str
     
     """
 
-    print(f"\n>>> Executing {os.path.basename(__file__)}\n")
+    logger.info(f">>> Executing {os.path.basename(__file__)}\n")
 
     #Enamble multi-threading
     if args.parallel:
         ROOT.ROOT.EnableImplicitMT(args.nWorkers)
         thread_size = ROOT.ROOT.GetThreadPoolSize()
-        print(f">>> Thread pool size for parallel processing: {thread_size}")
+        logger.info(f">>> Thread pool size for parallel processing: {thread_size}")
 
 
     # Create the directory and the output file to store the histograms
-    dir_name = os.path.join(path, "histograms")
+    dir_name = os.path.join(path, args.output, "histograms")
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
-        print("Directory " , dir_name ,  " Created ")
+        logger.debug("Directory " , dir_name ,  " Created ")
     outfile_path = os.path.join(dir_name, "histograms_discriminant.root")
 
     outfile = ROOT.TFile(outfile_path, "RECREATE")
@@ -53,11 +56,11 @@ def ml_histo(args, path = ""):
 
     for sample_name, final_states in SAMPLES.items():
         for final_state in final_states:
-            print(f">>> Process sample {sample_name} and final state {final_state}")
+            logger.info(f">>> Process sample {sample_name} and final state {final_state}")
 
             # Get the input file name
             infile_name=f"{sample_name}{final_state}Skim.root"
-            infile_path = os.path.join(path, "skim_data", infile_name)
+            infile_path = os.path.join(path, args.output, "skim_data", infile_name)
 
             if sample_name.startswith("SM"):
                 sig_chain.Add(infile_path)
@@ -92,7 +95,7 @@ def ml_histo(args, path = ""):
     ranges_x = [40, 100., 180.]
     ranges_y = [40, -0.03, 1]
     for dataset, rdf in rdfs.items():
-        print(f">>> Process sample: {dataset}")
+        logger.info(f">>> Process sample: {dataset}")
         histos[dataset] = histogramming_functions.BookHistogram2D(dataset, rdf, variables, ranges_x, ranges_y)
         histogramming_functions.WriteHistogram(histos[dataset], dataset)
 
@@ -101,10 +104,18 @@ def ml_histo(args, path = ""):
   
 if __name__ == "__main__":
     
+    # Create and configure logger 
+    logging.basicConfig( format='\n%(asctime)s %(message)s') 
+    # Create an object 
+    logger=logging.getLogger() 
+    # Set the threshold of logger
+    logger.setLevel(logging.INFO)     
     # General configuration
+    
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
+    parser.add_argument('-o', '--output',     default="Output", type=str,   help='name of the output directory')
     args = parser.parse_args()
     
-    ml_histo(args, "..")
+    ml_histo(args, logger, "..")

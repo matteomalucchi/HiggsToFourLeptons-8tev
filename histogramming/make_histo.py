@@ -9,6 +9,7 @@ import time
 import os
 import sys
 import argparse
+import logging
 
 import ROOT
 
@@ -20,31 +21,33 @@ from definitions.selections_def import  SELECTIONS
 from histogramming import histogramming_functions
 
 
-def make_histo(args, path=""):
+def make_histo(args, logger, path=""):
     """ Main function of the histogramming step. 
     The function loops over the outputs from the skimming step and produces the
     required histograms for the final plotting step.
     
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
+    :param logger: Configurated logger for printing messages.
+    :type logger: logging.RootLogger
     :param path: Optional base path where the directories ``skim_data/`` and ``histograms/`` can be found.
     :type path: str
     """
     
-    print(f"\n>>> Executing {os.path.basename(__file__)}\n")
+    logger.info(f">>> Executing {os.path.basename(__file__)}\n")
 
     #Enamble multi-threading
     if args.parallel:
         ROOT.ROOT.EnableImplicitMT(args.nWorkers)
         thread_size = ROOT.ROOT.GetThreadPoolSize()
-        print(f">>> Thread pool size for parallel processing: {thread_size}")
+        logger.info(f">>> Thread pool size for parallel processing: {thread_size}")
 
     
     # Create the directory and the output file to store the histograms
-    dir_name = os.path.join(path, "histograms")
+    dir_name = os.path.join(path, args.output, "histograms")
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
-        print("Directory " , dir_name ,  " Created ")
+        logger.debug("Directory " , dir_name ,  " Created ")
     outfile_path = os.path.join(dir_name, "histograms.root")
     outfile = ROOT.TFile(outfile_path, "RECREATE")
     
@@ -61,11 +64,11 @@ def make_histo(args, path=""):
         # Loop through skimmed datasets and final states to produce histograms of all variables.
         for sample, final_states in SAMPLES.items():
             for final_state in final_states:
-                print(f">>> Process sample {sample} and final state {final_state} with {selection}")
+                logger.info(f">>> Process sample {sample} and final state {final_state} with {selection}")
                 start_time = time.time()
 
                 # Create dataframe of the skimmed dataset.
-                complete_name = os.path.join(path, "skim_data", f"{sample}{final_state}Skim.root")
+                complete_name = os.path.join(path, args.output, "skim_data", f"{sample}{final_state}Skim.root")
                 rdf = ROOT.RDataFrame(tree_name, complete_name)
 
                 # Book histograms and write them to output file.
@@ -75,19 +78,27 @@ def make_histo(args, path=""):
                         histos[variable] = histogramming_functions.BookHistogram1D(rdf, variable, var_dict[variable])
                         histogramming_functions.WriteHistogram(histos[variable], f"{sample}_{final_state}_{variable}_{selection}")
                         
-                        #print(type(histos[variable]))
-                print("Execution time: %s s" %(time.time() - start_time))
+                        #logger.info(type(histos[variable]))
+                logger.info("Execution time: %s s" %(time.time() - start_time))
 
     outfile.Close()
 
 
 if __name__ == "__main__":
-
+    
+    # Create and configure logger 
+    logging.basicConfig( format='\n%(asctime)s %(message)s') 
+    # Create an object 
+    logger=logging.getLogger() 
+    # Set the threshold of logger
+    logger.setLevel(logging.INFO) 
     # global configuration
+    
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
     parser.add_argument('-m', '--ml', default=False,   action='store_const', const=True,   help='enables machine learning algorithm')
+    parser.add_argument('-o', '--output',     default="Output", type=str,   help='name of the output directory')
     args = parser.parse_args()
     
-    make_histo(args, "..")
+    make_histo(args, logger, "..")

@@ -6,6 +6,7 @@ keras API.
 
 
 import argparse
+import logging
 import sys
 import os
 from tensorflow.keras.models import Sequential
@@ -18,25 +19,34 @@ from definitions.samples_def import SAMPLES
 from definitions.variables_ml_def import VARIABLES_ML_DICT
 
 
-def ml_training(args, path_o="machine_learning", path_sd=""):
+def ml_training(args, logger, path_o="", path_sd=""):
     """Main function for the training of the DNN. The DNN is 
     trained on the simulated Monte Carlo samples.
     
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
+    :param logger: Configurated logger for printing messages.
+    :type logger: logging.RootLogger
     :param path_o: Optional base path to save the output of the training.
     :type path_o: str
     :param path_sd: Optional base path to find the directory ``skim_data/``.
     :type path_sd: str
     """
     
-    print(f"\n>>> Executing {os.path.basename(__file__)}\n")
+    logger.info(f">>> Executing {os.path.basename(__file__)}\n")
 
     # Setup TMVA
     ROOT.TMVA.Tools.Instance()
     ROOT.TMVA.PyMethodBase.PyInitialize()
 
-    tmva_path=os.path.join(path_o, "TMVA.root")
+    # Create the directory to save the outputs of the ml algorithm if doesn't already exist
+    dir_name = os.path.join(path_o, args.output, "ml_output")
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+        logger.debug("Directory " , dir_name ,  " Created ")
+    
+    # Create file to save the results
+    tmva_path=os.path.join(dir_name, "TMVA.root")
     output = ROOT.TFile.Open(tmva_path, "RECREATE")
     
     factory = ROOT.TMVA.Factory("TMVAClassification", output,
@@ -45,11 +55,11 @@ def ml_training(args, path_o="machine_learning", path_sd=""):
     # Variables used in the ML algorithm
     variables=VARIABLES_ML_DICT[args.variablesML]
     #
-    dataset_path=os.path.join(path_o, "dataset")
+    dataset_path=os.path.join(dir_name, "dataset")
     dataloader = ROOT.TMVA.DataLoader(dataset_path)
     for variable in variables:
         dataloader.AddVariable(variable)
-        print(variable)
+        logger.debug(variable)
 
 
     signal_chain=ROOT.TChain("Events")
@@ -59,8 +69,8 @@ def ml_training(args, path_o="machine_learning", path_sd=""):
 
     for sample_name, final_states in simulated_samples.items():
             for final_state in final_states:
-                print(f">>> Process sample {sample_name} and final state {final_state}")
-                file_name=os.path.join(path_sd,"skim_data", f"{sample_name}{final_state}Skim.root")
+                logger.info(f">>> Process sample {sample_name} and final state {final_state}")
+                file_name=os.path.join(path_sd, args.output, "skim_data", f"{sample_name}{final_state}Skim.root")
                 if sample_name == "SMHiggsToZZTo4L":
                     signal_chain.Add(file_name)
                 else:
@@ -90,7 +100,7 @@ def ml_training(args, path_o="machine_learning", path_sd=""):
                 optimizer="adam", metrics=["accuracy", ], weighted_metrics=[])
 
     # Store model to file
-    mod_path=os.path.join(path_o, "model.h5")
+    mod_path=os.path.join(dir_name, "model.h5")
     model.save(mod_path)
     model.summary()
 
@@ -107,15 +117,23 @@ def ml_training(args, path_o="machine_learning", path_sd=""):
     # Print ROC curve
     c=factory.GetROCCurve(dataloader)
     c.Draw()
-    roc_path=os.path.join(path_o, "ml_roc.png")
+    roc_path=os.path.join(dir_name, "ml_roc.png")
     c.Print(roc_path)
 
 if __name__ == "__main__":
     
+    # Create and configure logger 
+    logging.basicConfig( format='\n%(asctime)s %(message)s') 
+    # Create an object 
+    logger=logging.getLogger() 
+    # Set the threshold of logger
+    logger.setLevel(logging.INFO) 
+        
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-v', '--variablesML',     default="tot"  , type=str,   help='name of the set of variables to be used in the ML algorithm (tot, part, higgs)')
+    parser.add_argument('-o', '--output',     default="Output", type=str,   help='name of the output directory')
     args = parser.parse_args()
     
-    ml_training(args, "", "..")
+    ml_training(args, logger, "..", "..")
     
 #root[] TMVA::TMVAGui("TMVA.root")

@@ -81,6 +81,8 @@ ml_plot
 
 plotting_functions
 ------------------
+
+
 .. autofunction:: plotting.plotting_functions.GetHistogram
 .. autofunction:: plotting.plotting_functions.CombineFinalStates
 .. autofunction:: plotting.plotting_functions.SetStyle
@@ -96,3 +98,33 @@ Higgs mass fit
 fit_mass
 --------
 .. autofunction:: fit_mass.fit_mass
+
+
+Test Skim
+=========
+
+test_skim
+---------
+
+..
+   .. autofunction:: test.test_skim.TestSkim.test_sip
+   .. autofunction:: test.test_skim.TestSkim.test_pt_cuts
+   .. autofunction:: test.test_skim.TestSkim.test_lep_fourvec
+   .. autofunction:: test.test_skim.TestSkim.test_z_idx_samekind
+   .. autofunction:: test.test_skim.TestSkim.test_z_fourvec_samekind
+   .. autofunction:: test.test_skim.TestSkim.test_z_fourvec_2mu2el
+   .. autofunction:: test.test_skim.TestSkim.test_deltar
+   .. autofunction:: test.test_skim.TestSkim.test_order_idx_z
+   .. autofunction:: test.test_skim.TestSkim.test_split_lep_samekind
+   .. autofunction:: test.test_skim.TestSkim.test_lep1
+   .. autofunction:: test.test_skim.TestSkim.test_lep2
+   .. autofunction:: test.test_skim.TestSkim.test_z_heavy
+   .. autofunction:: test.test_skim.TestSkim.test_z_light
+   .. autofunction:: test.test_skim.TestSkim.test_boost
+   .. autofunction:: test.test_skim.TestSkim.test_cross
+   .. autofunction:: test.test_skim.TestSkim.test_phi
+   .. autofunction:: test.test_skim.TestSkim.test_theta
+   .. autofunction:: test.test_skim.TestSkim.test_cos_theta
+
+.. autoclass:: test.test_skim.TestSkim
+   :members:

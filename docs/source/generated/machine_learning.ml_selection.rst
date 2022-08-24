@@ -13,7 +13,6 @@
 
    .. autosummary::
    
-      DiscriminantSelection
       ml_selection
    
    
