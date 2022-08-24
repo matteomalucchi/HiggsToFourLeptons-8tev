@@ -1,3 +1,8 @@
+"""
+Running of the whole analysis. Various possible arguments 
+can be provided in order to customize the process.
+"""
+
 import argparse
 import logging
 import os 
@@ -11,6 +16,11 @@ import fit_mass
 
 
 def run_analysis (argv):
+    """ Main function that runs in order the whole analysis.
+    
+    :param argv: Global configuration of the analysis.
+    :type argv: list(str)
+    """
     
     # global configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
@@ -22,45 +32,45 @@ def run_analysis (argv):
     parser.add_argument('-v', '--variablesML',     default="tot" , type=str,   
                             help='name of the set of variables to be used in the ML algorithm defined "variables_ml_def.py" (tot, part, higgs)')
     parser.add_argument('-f', '--fitMass', default=False,   action='store_const', const=True,   help='enables fit of the Higgs mass')
+    parser.add_argument('-d', '--distribution',   default=False,   action='store_const',     const=True, 
+                            help='enables the histogramming and plotting of the variable distributions')
     parser.add_argument('-o', '--output',     default="Output", type=str,   help='name of the output directory')
+    
     parser.add_argument('-c', '--configfile', default="Configurations/HZZConfiguration.py", type=str,   help='files to be analysed')
     parser.add_argument('-s', '--samples',    default="", type=str,   help='string with comma separated list of samples to analyse')
-    args = parser.parse_args()
-    
-    # Create the directory to save the outputs if doesn't already exist
-    if not os.path.exists(args.output):
-        os.makedirs(args.output)
-        logger.debug("Directory " , args.output ,  " Created ")
+    args_global = parser.parse_args()
     
     # Create and configure logger     
     logging.basicConfig( format='\n%(asctime)s %(message)s') 
     # Create an object 
-    logger=logging.getLogger() 
-    # Set the threshold of logger
-    logger.setLevel(logging.INFO) 
+    logger_global=logging.getLogger() 
+    # Set the threshold of logger_global
+    logger_global.setLevel(logging.INFO)     
     
-    skim.skim(args, logger)
+    # Create the directory to save the outputs if doesn't already exist
+    if not os.path.exists(args_global.output):
+        os.makedirs(args_global.output)
+        logger_global.debug("Directory " , args_global.output ,  " Created ")
     
-    if args.ml:
-        ml_training.ml_training(args, logger)
-        ml_application.ml_application(args, logger)
-        ml_selection.ml_selection(args, logger)
-        ml_histo.ml_histo(args, logger)
-        ml_plot.ml_plot(args, logger)
+    #skim.skim(args_global, logger_global)
+    
+    if args_global.ml:
+        ml_training.ml_training(args_global, logger_global)
+        ml_application.ml_application(args_global, logger_global)
+        ml_selection.ml_selection(args_global, logger_global)
+        ml_histo.ml_histo(args_global, logger_global)
+        ml_plot.ml_plot(args_global, logger_global)
         
-    if args.fitMass:
-        fit_mass.fit_mass(args, logger)
+    if args_global.fitMass:
+        fit_mass.fit_mass(args_global, logger_global)
         
-    make_histo.make_histo(args, logger)
-    make_plot.make_plot(args, logger)
+    if args_global.distribution:
+        make_histo.make_histo(args_global, logger_global)
+        make_plot.make_plot(args_global, logger_global)
 
 
-if __name__ == "__main__":
-    # Create and configure logger 
-    logging.basicConfig( format='\n%(asctime)s %(message)s') 
-    # Create an object 
-    logger=logging.getLogger() 
-    # Set the threshold of logger
-    logger.setLevel(logging.INFO)     run_analysis( sys.argv[1:] )
+if __name__ == "__main__": 
+    
+    run_analysis( sys.argv[1:] )
 
 
