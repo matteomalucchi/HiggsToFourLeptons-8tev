@@ -79,22 +79,21 @@ def ml_application(args, logger, path_d="", path_sd=""):
             rand = ROOT.TRandom2()
             for i in range(tree.GetEntries()):
                     new_tree.GetEntry(i)  
-                    '''if args.variablesML == "tot":                  
+                    if args.variablesML == "tot":                  
                         discr_array[0] = reader.EvaluateMVA([new_tree.Z1_mass, new_tree.Z2_mass, new_tree.cos_theta_star,
                                           new_tree.Phi, new_tree.Phi1, new_tree.cos_theta1, new_tree.cos_theta2], "PyKeras")
                     elif args.variablesML == "part":
                         discr_array[0] = reader.EvaluateMVA([new_tree.cos_theta_star, new_tree.Phi, new_tree.Phi1, 
                                                              new_tree.cos_theta1, new_tree.cos_theta2], "PyKeras")
                     elif args.variablesML == "higgs":
-                        discr_array[0] = reader.EvaluateMVA([new_tree.Higgs_mass], "PyKeras")'''
-                    discr_array[0]= rand.Rndm()
+                        discr_array[0] = reader.EvaluateMVA([new_tree.Higgs_mass], "PyKeras")
+                    #discr_array[0]= rand.Rndm()
                     branch.Fill()
 
             new_tree.Write("", ROOT.TObject.kOverwrite)
             
             #in_file.Close()
-            logger.info("Execution time: %s s" %(time.time() - start_time))
-            
+            logger.info(f">>> Execution time: {(time.time() - start_time)} s \n")            
 if __name__ == "__main__":
     
     # Create and configure logger 

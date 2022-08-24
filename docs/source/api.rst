@@ -4,6 +4,8 @@ API
 .. autosummary::
    :toctree: generated
 
+   run_analysis
+   
    skimming.skim
    skimming.skim_tools
 

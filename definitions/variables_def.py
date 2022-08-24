@@ -35,13 +35,13 @@ VARIABLES = {
         "Z_close_phi": (36, -math.pi, math.pi, "#phi Z_{close}", ""),
         "Z_far_phi": (36, -math.pi, math.pi, "#phi Z_{far}", ""),
                 
-        "theta_star": (36, 0, math.pi, "#theta*", ""),
+        #"theta_star": (36, 0, math.pi, "#theta*", ""),
         "cos_theta_star": (36, -1, 1, "cos #theta*", ""),
         "Phi": (36, -math.pi, math.pi, "#Phi", ""),
         "Phi1": (36, -math.pi, math.pi, "#Phi_{1}", ""),
-        "theta1": (36, 0, math.pi, "#theta_{1}", ""),
+        #"theta1": (36, 0, math.pi, "#theta_{1}", ""),
         "cos_theta1": (36, -1, 1, "cos #theta_{1}", ""),
-        "theta2": (36, 0, math.pi, "#theta_{2}", ""),
+        #"theta2": (36, 0, math.pi, "#theta_{2}", ""),
         "cos_theta2": (36, -1, 1, "cos #theta_{2}", ""),
 }
 

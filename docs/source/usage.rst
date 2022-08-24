@@ -13,8 +13,15 @@ To use HiggsToFourLeptons-8tev, first clone the
 
    $ git clone https://github.com/matteomalucchi/HiggsToFourLeptons-8tev.git
 
+Run the whole analysis
+======================
 
-.. _skimming:
+run_analysis
+------------
+.. autofunction:: run_analysis.run_analysis
+
+
+
 
 Skimming
 ========

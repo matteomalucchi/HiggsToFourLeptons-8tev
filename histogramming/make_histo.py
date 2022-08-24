@@ -79,8 +79,7 @@ def make_histo(args, logger, path=""):
                         histogramming_functions.WriteHistogram(histos[variable], f"{sample}_{final_state}_{variable}_{selection}")
                         
                         #logger.info(type(histos[variable]))
-                logger.info("Execution time: %s s" %(time.time() - start_time))
-
+                logger.info(f">>> Execution time: {(time.time() - start_time)} s \n")
     outfile.Close()
 
 

@@ -7,6 +7,8 @@ import argparse
 import logging
 import os 
 import sys
+import time
+
 
 from skimming import skim
 from machine_learning import  ml_training, ml_application, ml_selection
@@ -21,7 +23,7 @@ def run_analysis (argv):
     :param argv: Global configuration of the analysis.
     :type argv: list(str)
     """
-    
+    start_time = time.time()
     # global configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-r', '--range',  nargs='?', default=0, const=10000000, type=int, 
@@ -67,6 +69,8 @@ def run_analysis (argv):
     if args_global.distribution:
         make_histo.make_histo(args_global, logger_global)
         make_plot.make_plot(args_global, logger_global)
+        
+    logger_global.info(f">>> Execution time: {(time.time() - start_time)} s \n")
 
 
 if __name__ == "__main__": 

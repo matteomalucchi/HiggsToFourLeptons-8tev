@@ -4,7 +4,7 @@ of signal and background. The training is done thanks to
 keras API.
 """
 
-
+import time
 import argparse
 import logging
 import sys
@@ -34,6 +34,8 @@ def ml_training(args, logger, path_o="", path_sd=""):
     """
     
     logger.info(f">>> Executing {os.path.basename(__file__)}\n")
+    
+    start_time = time.time()
 
     # Setup TMVA
     ROOT.TMVA.Tools.Instance()
@@ -119,6 +121,8 @@ def ml_training(args, logger, path_o="", path_sd=""):
     c.Draw()
     roc_path=os.path.join(dir_name, "ml_roc.png")
     c.Print(roc_path)
+    
+    logger.info(f">>> Execution time: {(time.time() - start_time)} s \n")
 
 if __name__ == "__main__":
     

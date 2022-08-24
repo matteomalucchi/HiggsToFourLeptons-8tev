@@ -1,3 +1,6 @@
+""" Definitions of the functions used in the histogramming step of the analysis.
+"""
+
 import ROOT
 
 

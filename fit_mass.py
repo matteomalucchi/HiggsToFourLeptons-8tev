@@ -1,6 +1,7 @@
 """ The mass of the Higgs candidate is fitted with a Crystal Ball.
 """
 
+import time
 import os
 import argparse
 import logging
@@ -24,6 +25,7 @@ def fit_mass (args, logger):
     ROOT.gErrorIgnoreLevel = ROOT.kWarning
 
     logger.info(f">>> Executing {os.path.basename(__file__)}\n")
+    
 
     # Create the directory to save the outputs of the fit if doesn't already exist
     dir_name = os.path.join(args.output, "fit_results")
@@ -34,6 +36,8 @@ def fit_mass (args, logger):
     # Loop over the possible selections
     for selection, tree_name in SELECTIONS.items():
         logger.info(f">>> Process {selection}\n")
+        
+        start_time = time.time()
         
         sig_chain= ROOT.TChain(tree_name)
         bkg_chain= ROOT.TChain(tree_name)
@@ -120,6 +124,8 @@ def fit_mass (args, logger):
         
         output_name = os.path.join(dir_name, f"fit_mass_{selection}.png")
         c1.SaveAs(output_name)
+        
+        logger.info(f">>> Execution time: {(time.time() - start_time)} s \n")        
 
         ''' #Now save the data and the PDF into a Workspace, for later use for statistical analysis
         fOutput = ROOT.TFile(f"Workspace_mumufit_{selection}.root","RECREATE")

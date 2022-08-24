@@ -56,8 +56,7 @@ def ml_selection(args, logger, path_sd=""):
             option = ROOT.RDF.RSnapshotOptions("UPDATE", ROOT.kZLIB, 1, 0, 99, False, True)
             rdf_final.Snapshot("EventsDNNSelection", file_name, VARIABLES_COMPLETE.keys(), option)
 
-            logger.info("Execution time: %s s" %(time.time() - start_time))
-
+            logger.info(f">>> Execution time: {(time.time() - start_time)} s \n")
         
 if __name__ == "__main__":
     
