@@ -63,11 +63,13 @@ def make_histo(args, logger, path=""):
     # Loop over the possible selections
     for selection, tree_name in SELECTIONS.items():
 
-        # Loop through skimmed datasets and final states to produce histograms of all variables.
+        # Loop through skimmed datasets and final states 
+        # to produce histograms of all variables.
         for sample, final_states in SAMPLES.items():
             for final_state in final_states:
                 logger.info(">>> Process sample {sample} and final state  \
                             {final_state} with {selection}")
+                
                 start_time = time.time()
 
                 # Create dataframe of the skimmed dataset.
@@ -86,6 +88,7 @@ def make_histo(args, logger, path=""):
 
                         #logger.info(type(histos[variable]))
                 logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
+                
     outfile.Close()
 
 
@@ -97,8 +100,8 @@ if __name__ == "__main__":
     logger_main=logging.getLogger()
     # Set the threshold of logger
     logger_main.setLevel(logging.INFO)
-    # global configuration
-
+    
+    # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',
                         const=True, help='enables running in parallel')

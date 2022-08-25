@@ -112,8 +112,8 @@ if __name__ == "__main__":
     logger_main=logging.getLogger()
     # Set the threshold of logger
     logger_main.setLevel(logging.INFO)
+    
     # General configuration
-
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',
                         const=True, help='enables running in parallel')

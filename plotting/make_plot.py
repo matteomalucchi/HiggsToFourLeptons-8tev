@@ -197,7 +197,7 @@ if __name__ == "__main__":
     # Set the threshold of logger
     logger_main.setLevel(logging.INFO)
 
-    # global configuration
+    # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',
                         const=True, help='enables running in parallel')

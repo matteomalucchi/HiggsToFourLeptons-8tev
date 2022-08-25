@@ -44,7 +44,6 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
     :type path_sf: str
     :param path_sd: Optional base path to find the directory ``skim_data/``.
     :type path_sd: str
-
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
@@ -103,7 +102,7 @@ if __name__ == "__main__":
     # Set the threshold of logger
     logger_main.setLevel(logging.INFO)
 
-    # global configuration
+    # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-r', '--range',  nargs='?', default=0, const=10000000, type=int,
                             help='run the analysis only on a finite range of events')

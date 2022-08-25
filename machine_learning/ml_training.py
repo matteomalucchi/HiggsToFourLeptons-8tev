@@ -135,6 +135,7 @@ if __name__ == "__main__":
     # Set the threshold of logger
     logger_main.setLevel(logging.INFO)
 
+    # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-v', '--variablesML',     default="tot"  , type=str,
                         help='name of the set of variables to be used \

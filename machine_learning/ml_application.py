@@ -100,6 +100,8 @@ def ml_application(args, logger, path_d="", path_sd=""):
 
             #in_file.Close()
             logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
+            
+            
 if __name__ == "__main__":
 
     # Create and configure logger
@@ -108,8 +110,8 @@ if __name__ == "__main__":
     logger_main=logging.getLogger()
     # Set the threshold of logger
     logger_main.setLevel(logging.INFO)
-    # global configuration
-
+    
+    # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',
                         const=True, help='enables running in parallel')
