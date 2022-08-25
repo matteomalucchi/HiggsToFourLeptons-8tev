@@ -75,8 +75,8 @@ def make_histo(args, logger, path=""):
                 histos = {}
                 for variable in variables:
                     if variable != "Weight":
-                        histos[variable] = histogramming_functions.BookHistogram1D(rdf, variable, var_dict[variable])
-                        histogramming_functions.WriteHistogram(histos[variable], f"{sample}_{final_state}_{variable}_{selection}")
+                        histos[variable] = histogramming_functions.book_histogram_1D(rdf, variable, var_dict[variable])
+                        histogramming_functions.write_histogram(histos[variable], f"{sample}_{final_state}_{variable}_{selection}")
                         
                         #logger.info(type(histos[variable]))
                 logger.info(f">>> Execution time: {(time.time() - start_time)} s \n")

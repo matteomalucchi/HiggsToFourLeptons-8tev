@@ -135,3 +135,9 @@ test_skim
 
 .. autoclass:: Test.test_skim.TestSkim
    :members:
+
+
+..
+   .. doxygenfunction:: sipDef
+
+   .. doxygenfunction:: HiggsToFourLeptons-8tev::ptCuts

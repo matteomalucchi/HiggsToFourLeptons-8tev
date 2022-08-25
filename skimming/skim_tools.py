@@ -3,20 +3,16 @@
 
 from Definitions.weights_def import  WEIGHTS
 
-"""ROOT.gSystem.Load("skim_functions_lib.so")
-ROOT.gInterpreter.ProcessLine('#include "skim_functions_lib.h"' )"""
 
-#ROOT.gInterpreter.ProcessLine('#include "skimming/skim_functions.h"' )
-
-def EventSelection(rdf, final_state):
+def event_selection(rdf, final_state):
     """ Minimal selection of the events.
-    
+
     :param rdf: Input RDataFrame
     :type rdf: ROOT.RDataFrame
     :param final_state: Final state to be analysed
     :type final_state: str
     :raises RuntimeError: Raised when an unknown final state is passed
-    :return: Output RDataFrame 
+    :return: Output RDataFrame
     :rtype: ROOT.RDataFrame
     """
 
@@ -34,7 +30,7 @@ def EventSelection(rdf, final_state):
                   .Filter("All(Muon_3d_sip<4) && All(abs(Muon_dxy)<0.5) && All(abs(Muon_dz)<1.0)",
                           "Muons originate from the same primary vertex")
 
-    elif final_state == "FourElectrons":
+    if final_state == "FourElectrons":
         return rdf.Filter("nElectron==4",
                           "Four electrons")\
                   .Filter("Sum(Electron_charge==1)==2 && Sum(Electron_charge==-1)==2",
@@ -45,23 +41,27 @@ def EventSelection(rdf, final_state):
                           "Good electron kinematics")\
                   .Define("Electron_3d_sip",
                           "sipDef(Electron_dxy, Electron_dz, Electron_dxyErr, Electron_dzErr)")\
-                  .Filter("All(Electron_3d_sip<4) && All(abs(Electron_dxy)<0.5) && All(abs(Electron_dz)<1.0)",
+                  .Filter("All(Electron_3d_sip<4) && All(abs(Electron_dxy)<0.5) \
+                          && All(abs(Electron_dz)<1.0)",
                           "Electrons originate from the same primary vertex")
 
-    elif final_state == "TwoMuonsTwoElectrons":        
+    if final_state == "TwoMuonsTwoElectrons":
         return rdf.Filter("nMuon==2 && nElectron==2",
                           "Two muons and two electrons")\
                   .Filter("Sum(Electron_charge)==0 && Sum(Muon_charge)==0",
                           "Two opposite charged electron and muon pairs")\
                   .Filter("All(abs(Electron_eta)<2.5) && All(abs(Muon_eta)<2.4)",
                           "Eta cuts")\
-                  .Filter("All(abs(Muon_pfRelIso04_all)<0.40) && All(abs(Electron_pfRelIso03_all)<0.40)",
+                  .Filter("All(abs(Muon_pfRelIso04_all)<0.40) && \
+                          All(abs(Electron_pfRelIso03_all)<0.40)",
                           "Require good isolation")\
                   .Filter("ptCuts(Muon_pt, Electron_pt)", "Pt cuts")\
                   .Define("Muon_dr",
-                          "ROOT::VecOps::DeltaR(Muon_eta[0], Muon_eta[1], Muon_phi[0], Muon_phi[1])")\
+                          "ROOT::VecOps::DeltaR(Muon_eta[0], Muon_eta[1], \
+                           Muon_phi[0], Muon_phi[1])")\
                   .Define("Electron_dr",
-                          "ROOT::VecOps::DeltaR(Electron_eta[0], Electron_eta[1], Electron_phi[0], Electron_phi[1])")\
+                          "ROOT::VecOps::DeltaR(Electron_eta[0], Electron_eta[1], \
+                          Electron_phi[0], Electron_phi[1])")\
                   .Filter("Muon_dr>0.02 && Electron_dr>0.02",
                           "Delta R cuts")\
                   .Define("Muon_3d_sip",
@@ -70,23 +70,24 @@ def EventSelection(rdf, final_state):
                           "Muons originate from the same primary vertex")\
                   .Define("Electron_3d_sip",
                           "sipDef(Electron_dxy, Electron_dz, Electron_dxyErr, Electron_dzErr)")\
-                  .Filter("All(Electron_3d_sip<4) && All(abs(Electron_dxy)<0.5) && All(abs(Electron_dz)<1.0)",
+                  .Filter("All(Electron_3d_sip<4) && All(abs(Electron_dxy)<0.5) \
+                          && All(abs(Electron_dz)<1.0)",
                           "Electrons originate from the same primary vertex")\
 
-    else: raise RuntimeError(f"Unknown final state --> {final_state}")
+    raise RuntimeError(f"Unknown final state --> {final_state}")
 
-def FourVec(rdf, final_state):
+def four_vec(rdf, final_state):
     """Reconstruct fourvector for leptons, Z and Higgs candidates.
-    
+
     :param rdf: Input RDataFrame
     :type rdf: ROOT.RDataFrame
     :param final_state: Final state to be analysed
     :type final_state: str
     :raises RuntimeError: Raised when an unknown final state is passed
-    :return: Output RDataFrame 
+    :return: Output RDataFrame
     :rtype: ROOT.RDataFrame
     """
-    
+
     # Reconstruct the ZZ system for all final states
     if final_state == "FourMuons":
         rdf_fv = rdf.Define("Muon_fourvec",
@@ -110,9 +111,9 @@ def FourVec(rdf, final_state):
 
     elif final_state == "TwoMuonsTwoElectrons":
 
-        # With two muons and two electrons, the reconstruction is trivial 
+        # With two muons and two electrons, the reconstruction is trivial
         # (each Z is built from two of the same kind).
-        
+
         rdf_fv = rdf.Define("Muon_fourvec",
                             "lepFourVec(Muon_pt, Muon_eta, Muon_phi, Muon_mass)")\
                     .Define("Electron_fourvec",
@@ -121,7 +122,7 @@ def FourVec(rdf, final_state):
                             "zFourvec2mu2el(Muon_fourvec, Electron_fourvec)")
 
     else: raise RuntimeError(f"Unknown final state --> {final_state}")
-    
+
     # Apply cut on the reconstructed Z masses
     df_cut = rdf_fv.Filter("Z_fourvecs[0].M() > 40 && Z_fourvecs[0].M() < 120",
                            "Mass of first Z candidate in [40, 120]")\
@@ -132,22 +133,22 @@ def FourVec(rdf, final_state):
     return df_cut.Define("Higgs_fourvec",
                          "Z_fourvecs[0] + Z_fourvecs[1]")
 
-def OrderFourVec(rdf, final_state):
+def order_four_vec(rdf, final_state):
     """ Put the four vectors in order according to the following criteria:
-    
+
             * Z1 = heavier boson candidate
             * Z2 = lighter boson candidate
             * Lep11 = lepton belonging to the heavier boson Z1
             * Lep12 = anti-lepton belonging to the heavier boson Z1
             * Lep21 = lepton belonging to the lighter boson Z2
             * Lep22 = anti-lepton belonging to the lighter boson Z2
-            
+
     :param rdf: Input RDataFrame
     :type rdf: ROOT.RDataFrame
     :param final_state: Final state to be analysed
     :type final_state: str
     :raises RuntimeError: Raised when an unknown final state is passed
-    :return: Output RDataFrame 
+    :return: Output RDataFrame
     :rtype: ROOT.RDataFrame
     """
 
@@ -165,9 +166,9 @@ def OrderFourVec(rdf, final_state):
                   .Define("Z1_fourvec",
                           "Z_heavy(Z_fourvecs)")\
                   .Define("Z2_fourvec",
-                          "Z_light(Z_fourvecs)")                  
-    
-    elif final_state == "FourElectrons":
+                          "Z_light(Z_fourvecs)")
+
+    if final_state == "FourElectrons":
         return rdf.Define("Z_idx_order",
                           "order_idx_Z(Z_idx, Z_fourvecs)" )\
                   .Define("Lep11_fourvec",
@@ -181,9 +182,9 @@ def OrderFourVec(rdf, final_state):
                   .Define("Z1_fourvec",
                           "Z_heavy(Z_fourvecs)")\
                   .Define("Z2_fourvec",
-                          "Z_light(Z_fourvecs)")                             
-    
-    elif final_state == "TwoMuonsTwoElectrons":
+                          "Z_light(Z_fourvecs)")
+
+    if final_state == "TwoMuonsTwoElectrons":
         return rdf.Define("Lep11_fourvec",
                           "lep1(Muon_fourvec, Electron_fourvec, Muon_charge, Electron_charge)" )\
                   .Define("Lep12_fourvec",
@@ -195,16 +196,16 @@ def OrderFourVec(rdf, final_state):
                   .Define("Z1_fourvec",
                           "Z_heavy(Z_fourvecs)")\
                   .Define("Z2_fourvec",
-                          "Z_light(Z_fourvecs)")   
+                          "Z_light(Z_fourvecs)")
 
-    else: raise RuntimeError(f"Unknown final state --> {final_state}")
+    raise RuntimeError(f"Unknown final state --> {final_state}")
 
-def DefMassPtEtaPhi(rdf):
+def def_mass_pt_eta_phi(rdf):
     """ Define Mass, Pt, Eta and Phi of Higgs boson and Z candidates.
-    
+
     :param rdf: Input RDataFrame
     :type rdf: ROOT.RDataFrame
-    :return: Output RDataFrame 
+    :return: Output RDataFrame
     :rtype: ROOT.RDataFrame
     """
     return rdf.Define("Higgs_mass",
@@ -247,51 +248,51 @@ def DefMassPtEtaPhi(rdf):
                       "Z_fourvecs[0].Phi()")\
               .Define("Z_far_phi",
                       "Z_fourvecs[1].Phi()")
-                              
-def FourvecBoost(rdf):
+
+def four_vec_boost(rdf):
     """ Boost the various fourvectors in different frames.
 
-    
+
     :param rdf: Input RDataFrame
     :type rdf: ROOT.RDataFrame
-    :return: Output RDataFrame 
+    :return: Output RDataFrame
     :rtype: ROOT.RDataFrame
     """
 
-    return rdf.Define("Z1_HRest", 
+    return rdf.Define("Z1_HRest",
                       "boostFourvec(Z1_fourvec,Higgs_fourvec.BoostVector())")\
-              .Define("Z2_HRest", 
+              .Define("Z2_HRest",
                       "boostFourvec(Z2_fourvec,Higgs_fourvec.BoostVector())")\
-              .Define("Lep11_HRest", 
+              .Define("Lep11_HRest",
                       "boostFourvec(Lep11_fourvec,Higgs_fourvec.BoostVector())")\
-              .Define("Lep12_HRest", 
+              .Define("Lep12_HRest",
                       "boostFourvec(Lep12_fourvec,Higgs_fourvec.BoostVector())")\
-              .Define("Lep21_HRest", 
+              .Define("Lep21_HRest",
                       "boostFourvec(Lep21_fourvec,Higgs_fourvec.BoostVector())")\
-              .Define("Lep22_HRest", 
+              .Define("Lep22_HRest",
                       "boostFourvec(Lep22_fourvec,Higgs_fourvec.BoostVector())")\
-              .Define("Lep11_Z1Rest", 
+              .Define("Lep11_Z1Rest",
                       "boostFourvec(Lep11_fourvec,Z1_fourvec.BoostVector())")\
-              .Define("Z2_Z1Rest", 
+              .Define("Z2_Z1Rest",
                       "boostFourvec(Z2_fourvec,Z1_fourvec.BoostVector())")\
-              .Define("Lep21_Z2Rest", 
+              .Define("Lep21_Z2Rest",
                       "boostFourvec(Lep21_fourvec,Z2_fourvec.BoostVector())")\
-              .Define("Z1_Z2Rest", 
+              .Define("Z1_Z2Rest",
                       "boostFourvec(Z1_fourvec,Z2_fourvec.BoostVector())")\
 
-def DefAngles(rdf):
+def def_angles(rdf):
     """ Define the five angles that allow discrimination between signal and background.
-   
-    
+
+
     :param rdf: Input RDataFrame
     :type rdf: ROOT.RDataFrame
-    :return: Output RDataFrame 
-    :rtype: ROOT.RDataFrame 
+    :return: Output RDataFrame
+    :rtype: ROOT.RDataFrame
     """
-    
-    return rdf.Define("theta_star", 
+
+    return rdf.Define("theta_star",
                       "acos(Z1_HRest.Pz() * pow(Z1_HRest.P(),-1))")\
-              .Define("cos_theta_star", 
+              .Define("cos_theta_star",
                       "Z1_HRest.Pz() * pow(Z1_HRest.P(),-1)")\
               .Define("n1",
                       "crossNorm(Lep11_HRest.Vect(), Lep12_HRest.Vect())")\
@@ -310,16 +311,14 @@ def DefAngles(rdf):
               .Define("theta2",
                       "defTheta(Z1_Z2Rest.Vect(), Lep21_Z2Rest.Vect())")\
               .Define("cos_theta2",
-                      "defCosTheta(Z1_Z2Rest.Vect(), Lep21_Z2Rest.Vect())")  
+                      "defCosTheta(Z1_Z2Rest.Vect(), Lep21_Z2Rest.Vect())")
 
-def AddEventWeight(rdf, sample_name):
+def add_event_weight(rdf, sample_name):
     """ Add weights for the normalisation of the simulated samples in the histograms.
-    
+
     :param rdf: Input RDataFrame
     :type rdf: ROOT.RDataFrame
-    :return: Output RDataFrame 
-    :rtype: ROOT.RDataFrame 
+    :return: Output RDataFrame
+    :rtype: ROOT.RDataFrame
     """
     return rdf.Define("Weight", f"{WEIGHTS[sample_name]}")
-
-

@@ -12,7 +12,7 @@ import pathlib
 import sys
 import os
 #sys.path.insert(0, pathlib.Path(__file__).parents[2].resolve().as_posix())
-sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('../../..'))
 sys.setrecursionlimit(1500)
 
 project = 'HiggsToFourLeptons-8tev'
@@ -28,16 +28,28 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.imgmath', 
+    'sphinx.ext.todo',
+    'breathe',
 ]
 
 templates_path = ['_templates']
-exclude_patterns = []
-
-
+exclude_patterns = ['breathe/*']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'renku'
 html_static_path = ['_static']
+
+
+import subprocess
+subprocess.call('make clean', shell=True)
+subprocess.call('cd ../../doxygen ; doxygen Doxygen', shell=True)
+
+breathe_projects = { "HiggsToFourLeptons_8tev": "../../doxygen/build/xml/" }
+breathe_default_project = "HiggsToFourLeptons_8tev"
+
 

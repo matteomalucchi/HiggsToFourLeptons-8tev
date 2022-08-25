@@ -96,8 +96,8 @@ def ml_histo(args, logger, path = ""):
     ranges_y = [40, -0.03, 1]
     for dataset, rdf in rdfs.items():
         logger.info(f">>> Process sample: {dataset}")
-        histos[dataset] = histogramming_functions.BookHistogram2D(dataset, rdf, variables, ranges_x, ranges_y)
-        histogramming_functions.WriteHistogram(histos[dataset], dataset)
+        histos[dataset] = histogramming_functions.book_histogram_2D(dataset, rdf, variables, ranges_x, ranges_y)
+        histogramming_functions.write_histogram(histos[dataset], dataset)
 
     outfile.Close()
     

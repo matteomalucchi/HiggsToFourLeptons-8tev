@@ -3,7 +3,7 @@
 
 import ROOT
 
-def BookHistogram1D(rdf, variable, range_):
+def book_histogram_1D(rdf, variable, range_):
     """Book a 1D histogram for a specific variable.
     
     :param rdf: Input RDataFrame
@@ -19,7 +19,7 @@ def BookHistogram1D(rdf, variable, range_):
                         range_[0], range_[1], range_[2]),\
                         variable, "Weight")
 
-def BookHistogram2D(dataset, rdf, variables, ranges_x, ranges_y):
+def book_histogram_2D(dataset, rdf, variables, ranges_x, ranges_y):
     """Book a 2D histogram for a specific variable pair of a given dataset.
 
     :param variable: Name of the dataset analysed
@@ -41,7 +41,7 @@ def BookHistogram2D(dataset, rdf, variables, ranges_x, ranges_y):
                         ranges_y[0], ranges_y[1], ranges_y[2]),\
                         variables[0], variables[1])
 
-def WriteHistogram(h, name):
+def write_histogram(h, name):
     """Write a histogram with a given name in the output file.
     
     :param name: Name of the histogram
