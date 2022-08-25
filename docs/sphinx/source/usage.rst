@@ -32,13 +32,13 @@ skim
 
 skim_tools
 ----------
-.. autofunction:: Skimming.skim_tools.EventSelection
-.. autofunction:: Skimming.skim_tools.FourVec
-.. autofunction:: Skimming.skim_tools.OrderFourVec
-.. autofunction:: Skimming.skim_tools.DefMassPtEtaPhi
-.. autofunction:: Skimming.skim_tools.FourvecBoost
-.. autofunction:: Skimming.skim_tools.DefAngles
-.. autofunction:: Skimming.skim_tools.AddEventWeight
+.. autofunction:: Skimming.skim_tools.event_selection
+.. autofunction:: Skimming.skim_tools.four_vec
+.. autofunction:: Skimming.skim_tools.order_four_vec
+.. autofunction:: Skimming.skim_tools.def_mass_pt_eta_phi
+.. autofunction:: Skimming.skim_tools.four_vec_boost
+.. autofunction:: Skimming.skim_tools.def_angles
+.. autofunction:: Skimming.skim_tools.add_event_weight
 
 
 Machine learning 
@@ -70,9 +70,9 @@ ml_histo
 
 histogramming_functions
 -----------------------
-.. autofunction:: Histogramming.histogramming_functions.BookHistogram1D
-.. autofunction:: Histogramming.histogramming_functions.BookHistogram2D
-.. autofunction:: Histogramming.histogramming_functions.WriteHistogram
+.. autofunction:: Histogramming.histogramming_functions.book_histogram_1d
+.. autofunction:: Histogramming.histogramming_functions.book_histogram_2d
+.. autofunction:: Histogramming.histogramming_functions.write_histogram
 
 
 Plotting
@@ -90,13 +90,13 @@ plotting_functions
 ------------------
 
 
-.. autofunction:: Plotting.plotting_functions.GetHistogram
-.. autofunction:: Plotting.plotting_functions.CombineFinalStates
-.. autofunction:: Plotting.plotting_functions.SetStyle
-.. autofunction:: Plotting.plotting_functions.InputStyle
-.. autofunction:: Plotting.plotting_functions.AddTitle
-.. autofunction:: Plotting.plotting_functions.AddLegend
-.. autofunction:: Plotting.plotting_functions.AddLatex
+.. autofunction:: Plotting.plotting_functions.get_histogram
+.. autofunction:: Plotting.plotting_functions.combine_final_states
+.. autofunction:: Plotting.plotting_functions.set_style
+.. autofunction:: Plotting.plotting_functions.input_style
+.. autofunction:: Plotting.plotting_functions.add_title
+.. autofunction:: Plotting.plotting_functions.add_legend
+.. autofunction:: Plotting.plotting_functions.add_latex
 
 
 Higgs mass fit

@@ -13,9 +13,9 @@
 
    .. autosummary::
    
-      BookHistogram1D
-      BookHistogram2D
-      WriteHistogram
+      book_histogram_1d
+      book_histogram_2d
+      write_histogram
    
    
 
