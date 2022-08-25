@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 #Directories
-Input/
+#Input/
 documentation/
 
 # workspace
