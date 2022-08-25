@@ -22,11 +22,11 @@ import ROOT
 
 sys.path.append('../')
 
-from definitions.base_path_def import  BASE_PATH
-from definitions.samples_def import  SAMPLES
-from definitions.variables_def import  VARIABLES
+from Definitions.base_path_def import  BASE_PATH
+from Definitions.samples_def import  SAMPLES
+from Definitions.variables_def import  VARIABLES
 
-from skimming import skim_tools
+from Skimming import skim_tools
 
 
 def skim(args, logger, path_sf="skimming", path_sd=""):

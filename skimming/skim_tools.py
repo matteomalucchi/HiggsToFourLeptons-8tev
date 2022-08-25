@@ -1,7 +1,7 @@
 """ Definitions of the functions used in the skimming step of the analysis.
 """
 
-from definitions.weights_def import  WEIGHTS
+from Definitions.weights_def import  WEIGHTS
 
 """ROOT.gSystem.Load("skim_functions_lib.so")
 ROOT.gInterpreter.ProcessLine('#include "skim_functions_lib.h"' )"""

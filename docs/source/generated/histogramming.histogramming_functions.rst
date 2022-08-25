@@ -1,7 +1,7 @@
-﻿histogramming.histogramming\_functions
+﻿Histogramming.histogramming\_functions
 ======================================
 
-.. automodule:: histogramming.histogramming_functions
+.. automodule:: Histogramming.histogramming_functions
 
    
    

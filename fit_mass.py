@@ -8,8 +8,8 @@ import logging
 
 import ROOT
 
-from definitions.samples_def import SAMPLES
-from definitions.selections_def import  SELECTIONS
+from Definitions.samples_def import SAMPLES
+from Definitions.selections_def import  SELECTIONS
 
 
 def fit_mass (args, logger):

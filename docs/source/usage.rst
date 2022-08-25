@@ -28,17 +28,17 @@ Skimming
 
 skim
 ----
-.. autofunction:: skimming.skim.skim
+.. autofunction:: Skimming.skim.skim
 
 skim_tools
 ----------
-.. autofunction:: skimming.skim_tools.EventSelection
-.. autofunction:: skimming.skim_tools.FourVec
-.. autofunction:: skimming.skim_tools.OrderFourVec
-.. autofunction:: skimming.skim_tools.DefMassPtEtaPhi
-.. autofunction:: skimming.skim_tools.FourvecBoost
-.. autofunction:: skimming.skim_tools.DefAngles
-.. autofunction:: skimming.skim_tools.AddEventWeight
+.. autofunction:: Skimming.skim_tools.EventSelection
+.. autofunction:: Skimming.skim_tools.FourVec
+.. autofunction:: Skimming.skim_tools.OrderFourVec
+.. autofunction:: Skimming.skim_tools.DefMassPtEtaPhi
+.. autofunction:: Skimming.skim_tools.FourvecBoost
+.. autofunction:: Skimming.skim_tools.DefAngles
+.. autofunction:: Skimming.skim_tools.AddEventWeight
 
 
 Machine learning 
@@ -46,15 +46,15 @@ Machine learning
 
 ml_training
 -----------
-.. autofunction:: machine_learning.ml_training.ml_training
+.. autofunction:: Machine_learning.ml_training.ml_training
 
 ml_application
 --------------
-.. autofunction:: machine_learning.ml_application.ml_application
+.. autofunction:: Machine_learning.ml_application.ml_application
 
 ml_selection
 ------------
-.. autofunction:: machine_learning.ml_selection.ml_selection
+.. autofunction:: Machine_learning.ml_selection.ml_selection
 
 
 Histogramming
@@ -62,17 +62,17 @@ Histogramming
 
 make_histo
 ----------
-.. autofunction:: histogramming.make_histo.make_histo
+.. autofunction:: Histogramming.make_histo.make_histo
 
 ml_histo
 --------
-.. autofunction:: histogramming.ml_histo.ml_histo
+.. autofunction:: Histogramming.ml_histo.ml_histo
 
 histogramming_functions
 -----------------------
-.. autofunction:: histogramming.histogramming_functions.BookHistogram1D
-.. autofunction:: histogramming.histogramming_functions.BookHistogram2D
-.. autofunction:: histogramming.histogramming_functions.WriteHistogram
+.. autofunction:: Histogramming.histogramming_functions.BookHistogram1D
+.. autofunction:: Histogramming.histogramming_functions.BookHistogram2D
+.. autofunction:: Histogramming.histogramming_functions.WriteHistogram
 
 
 Plotting
@@ -80,23 +80,23 @@ Plotting
 
 make_plot
 ---------
-.. autofunction:: plotting.make_plot.make_plot
+.. autofunction:: Plotting.make_plot.make_plot
 
 ml_plot
 -------
-.. autofunction:: plotting.ml_plot.ml_plot
+.. autofunction:: Plotting.ml_plot.ml_plot
 
 plotting_functions
 ------------------
 
 
-.. autofunction:: plotting.plotting_functions.GetHistogram
-.. autofunction:: plotting.plotting_functions.CombineFinalStates
-.. autofunction:: plotting.plotting_functions.SetStyle
-.. autofunction:: plotting.plotting_functions.InputStyle
-.. autofunction:: plotting.plotting_functions.AddTitle
-.. autofunction:: plotting.plotting_functions.AddLegend
-.. autofunction:: plotting.plotting_functions.AddLatex
+.. autofunction:: Plotting.plotting_functions.GetHistogram
+.. autofunction:: Plotting.plotting_functions.CombineFinalStates
+.. autofunction:: Plotting.plotting_functions.SetStyle
+.. autofunction:: Plotting.plotting_functions.InputStyle
+.. autofunction:: Plotting.plotting_functions.AddTitle
+.. autofunction:: Plotting.plotting_functions.AddLegend
+.. autofunction:: Plotting.plotting_functions.AddLatex
 
 
 Higgs mass fit
@@ -114,24 +114,24 @@ test_skim
 ---------
 
 ..
-   .. autofunction:: test.test_skim.TestSkim.test_sip
-   .. autofunction:: test.test_skim.TestSkim.test_pt_cuts
-   .. autofunction:: test.test_skim.TestSkim.test_lep_fourvec
-   .. autofunction:: test.test_skim.TestSkim.test_z_idx_samekind
-   .. autofunction:: test.test_skim.TestSkim.test_z_fourvec_samekind
-   .. autofunction:: test.test_skim.TestSkim.test_z_fourvec_2mu2el
-   .. autofunction:: test.test_skim.TestSkim.test_deltar
-   .. autofunction:: test.test_skim.TestSkim.test_order_idx_z
-   .. autofunction:: test.test_skim.TestSkim.test_split_lep_samekind
-   .. autofunction:: test.test_skim.TestSkim.test_lep1
-   .. autofunction:: test.test_skim.TestSkim.test_lep2
-   .. autofunction:: test.test_skim.TestSkim.test_z_heavy
-   .. autofunction:: test.test_skim.TestSkim.test_z_light
-   .. autofunction:: test.test_skim.TestSkim.test_boost
-   .. autofunction:: test.test_skim.TestSkim.test_cross
-   .. autofunction:: test.test_skim.TestSkim.test_phi
-   .. autofunction:: test.test_skim.TestSkim.test_theta
-   .. autofunction:: test.test_skim.TestSkim.test_cos_theta
+   .. autofunction:: Test.test_skim.TestSkim.test_sip
+   .. autofunction:: Test.test_skim.TestSkim.test_pt_cuts
+   .. autofunction:: Test.test_skim.TestSkim.test_lep_fourvec
+   .. autofunction:: Test.test_skim.TestSkim.test_z_idx_samekind
+   .. autofunction:: Test.test_skim.TestSkim.test_z_fourvec_samekind
+   .. autofunction:: Test.test_skim.TestSkim.test_z_fourvec_2mu2el
+   .. autofunction:: Test.test_skim.TestSkim.test_deltar
+   .. autofunction:: Test.test_skim.TestSkim.test_order_idx_z
+   .. autofunction:: Test.test_skim.TestSkim.test_split_lep_samekind
+   .. autofunction:: Test.test_skim.TestSkim.test_lep1
+   .. autofunction:: Test.test_skim.TestSkim.test_lep2
+   .. autofunction:: Test.test_skim.TestSkim.test_z_heavy
+   .. autofunction:: Test.test_skim.TestSkim.test_z_light
+   .. autofunction:: Test.test_skim.TestSkim.test_boost
+   .. autofunction:: Test.test_skim.TestSkim.test_cross
+   .. autofunction:: Test.test_skim.TestSkim.test_phi
+   .. autofunction:: Test.test_skim.TestSkim.test_theta
+   .. autofunction:: Test.test_skim.TestSkim.test_cos_theta
 
-.. autoclass:: test.test_skim.TestSkim
+.. autoclass:: Test.test_skim.TestSkim
    :members:

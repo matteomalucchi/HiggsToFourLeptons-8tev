@@ -1,7 +1,7 @@
-﻿histogramming.ml\_histo
+﻿Histogramming.ml\_histo
 =======================
 
-.. automodule:: histogramming.ml_histo
+.. automodule:: Histogramming.ml_histo
 
    
    

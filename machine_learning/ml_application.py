@@ -14,8 +14,8 @@ import logging
 import ROOT
 
 sys.path.append('../')
-from definitions.samples_def import SAMPLES
-from definitions.variables_ml_def import VARIABLES_ML_DICT
+from Definitions.samples_def import SAMPLES
+from Definitions.variables_ml_def import VARIABLES_ML_DICT
 
 def ml_application(args, logger, path_d="", path_sd=""):
     """ Main function that avaluates the DNN on the whole dataset.

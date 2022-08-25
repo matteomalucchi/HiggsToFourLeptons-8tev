@@ -1,7 +1,7 @@
-﻿plotting.make\_plot
+﻿Plotting.make\_plot
 ===================
 
-.. automodule:: plotting.make_plot
+.. automodule:: Plotting.make_plot
 
    
    

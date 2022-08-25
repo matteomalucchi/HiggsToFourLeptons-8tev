@@ -13,8 +13,8 @@ import logging
 import ROOT
 
 sys.path.append('../')
-from definitions.samples_def import  SAMPLES
-from definitions.variables_def import VARIABLES_COMPLETE
+from Definitions.samples_def import  SAMPLES
+from Definitions.variables_def import VARIABLES_COMPLETE
 
 
 def ml_selection(args, logger, path_sd=""):

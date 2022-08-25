@@ -13,7 +13,7 @@ import sys
 import ROOT
 
 sys.path.append('../')
-from plotting import plotting_functions
+from Plotting import plotting_functions
 
 #ROOT.gROOT.SetBatch(True)
 

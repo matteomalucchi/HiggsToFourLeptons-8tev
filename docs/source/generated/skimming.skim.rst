@@ -1,7 +1,7 @@
-﻿skimming.skim
+﻿Skimming.skim
 =============
 
-.. automodule:: skimming.skim
+.. automodule:: Skimming.skim
 
    
    

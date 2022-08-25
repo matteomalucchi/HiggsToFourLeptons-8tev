@@ -1,7 +1,7 @@
-﻿skimming.skim\_tools
+﻿Skimming.skim\_tools
 ====================
 
-.. automodule:: skimming.skim_tools
+.. automodule:: Skimming.skim_tools
 
    
    

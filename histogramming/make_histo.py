@@ -14,11 +14,11 @@ import logging
 import ROOT
 
 sys.path.append('../')
-from definitions.variables_def import VARIABLES_DICT
-from definitions.samples_def import  SAMPLES
-from definitions.selections_def import  SELECTIONS
+from Definitions.variables_def import VARIABLES_DICT
+from Definitions.samples_def import  SAMPLES
+from Definitions.selections_def import  SELECTIONS
 
-from histogramming import histogramming_functions
+from Histogramming import histogramming_functions
 
 
 def make_histo(args, logger, path=""):

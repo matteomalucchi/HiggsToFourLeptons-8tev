@@ -15,8 +15,8 @@ from tensorflow.keras.layers import Dense
 import ROOT
 
 sys.path.append('../')
-from definitions.samples_def import SAMPLES
-from definitions.variables_ml_def import VARIABLES_ML_DICT
+from Definitions.samples_def import SAMPLES
+from Definitions.variables_ml_def import VARIABLES_ML_DICT
 
 
 def ml_training(args, logger, path_o="", path_sd=""):

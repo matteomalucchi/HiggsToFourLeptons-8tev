@@ -13,8 +13,8 @@ import logging
 import ROOT
 
 sys.path.append('../')
-from definitions.samples_def import SAMPLES
-from histogramming import histogramming_functions
+from Definitions.samples_def import SAMPLES
+from Histogramming import histogramming_functions
 
 
 def ml_histo(args, logger, path = ""):

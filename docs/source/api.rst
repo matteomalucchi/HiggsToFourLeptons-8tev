@@ -6,21 +6,21 @@ API
 
    run_analysis
    
-   skimming.skim
-   skimming.skim_tools
+   Skimming.skim
+   Skimming.skim_tools
 
-   machine_learning.ml_training
-   machine_learning.ml_application
-   machine_learning.ml_selection
+   Machine_learning.ml_training
+   Machine_learning.ml_application
+   Machine_learning.ml_selection
 
-   histogramming.make_histo
-   histogramming.ml_histo
-   histogramming.histogramming_functions
+   Histogramming.make_histo
+   Histogramming.ml_histo
+   Histogramming.histogramming_functions
 
-   plotting.make_plot
-   plotting.ml_plot
-   plotting.plotting_functions
+   Plotting.make_plot
+   Plotting.ml_plot
+   Plotting.plotting_functions
 
    fit_mass
 
-   test.test_skim
+   Test.test_skim

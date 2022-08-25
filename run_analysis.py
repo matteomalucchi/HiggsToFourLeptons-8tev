@@ -10,10 +10,10 @@ import sys
 import time
 
 
-from skimming import skim
-from machine_learning import  ml_training, ml_application, ml_selection
-from plotting import make_plot, ml_plot
-from histogramming import make_histo, ml_histo
+from Skimming import skim
+from Machine_learning import  ml_training, ml_application, ml_selection
+from Plotting import make_plot, ml_plot
+from Histogramming import make_histo, ml_histo
 import fit_mass
 
 

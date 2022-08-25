@@ -1,7 +1,7 @@
-﻿test.test\_skim
+﻿Test.test\_skim
 ===============
 
-.. automodule:: test.test_skim
+.. automodule:: Test.test_skim
 
    
    

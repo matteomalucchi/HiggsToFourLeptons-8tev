@@ -12,9 +12,9 @@ import ROOT
 
 sys.path.append('../')
 
-from definitions.variables_def import VARIABLES_DICT
-from definitions.selections_def import  SELECTIONS
-from plotting import plotting_functions
+from Definitions.variables_def import VARIABLES_DICT
+from Definitions.selections_def import  SELECTIONS
+from Plotting import plotting_functions
 
 ROOT.gROOT.SetBatch(True)
 ROOT.gErrorIgnoreLevel = ROOT.kWarning
