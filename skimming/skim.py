@@ -47,7 +47,7 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
 
     """
 
-    logger.info(f">>> Executing {os.path.basename(__file__)}\n")
+    logger.info(">>> Executing %s \n", os.path.basename(__file__))
 
     ROOT.gInterpreter.ProcessLine(f'#include "{os.path.join(path_sf, "skim_functions.h")}"' )
 
@@ -55,13 +55,13 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
     if args.parallel and args.range ==0:
         ROOT.ROOT.EnableImplicitMT(args.nWorkers)
         thread_size = ROOT.ROOT.GetThreadPoolSize()
-        logger.info(f">>> Thread pool size for parallel processing: {thread_size}")
+        logger.info(">>> Thread pool size for parallel processing: %s", thread_size)
 
     # Create the directory to save the skimmed data if doesn't already exist
     dir_name = os.path.join(path_sd, args.output, "skim_data")
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
-        logger.debug("Directory " , dir_name ,  " Created ")
+        logger.debug("Directory %s Created", dir_name)
 
     #Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
@@ -72,7 +72,7 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
 
         # Loop over the possible final states
         for final_state in final_states:
-            logger.info(f">>> Process sample: {sample_name} and final state {final_state}\n")
+            logger.info(">>> Process sample: %s and final state %s \n", sample_name, final_state)
             start_time = time.time()
 
             rdf2 = skim_tools.event_selection(rdf, final_state)
@@ -84,14 +84,14 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
             rdf_final = skim_tools.add_event_weight(rdf7, sample_name)
 
             rdf_final.Report().Print()
-            logger.debug(f"{rdf_final.GetColumnNames()}\n")
+            logger.debug("{rdf_final.GetColumnNames()}\n")
 
             # Save the skimmed samples
             complete_name = os.path.join(dir_name, f"{sample_name}{final_state}Skim.root")
 
             rdf_final.Snapshot("Events", complete_name, VARIABLES.keys())
 
-            logger.info(f">>> Execution time: {(time.time() - start_time)} s \n")
+            logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
 
 
 if __name__ == "__main__":

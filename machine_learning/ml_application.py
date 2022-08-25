@@ -1,4 +1,4 @@
-""" 
+"""
 In this step the trained DNN is evaluated on the various datasets
 and the resulting disciminant is saved in a new branch of the "Events" tree.
 """
@@ -19,7 +19,7 @@ from Definitions.variables_ml_def import VARIABLES_ML_DICT
 
 def ml_application(args, logger, path_d="", path_sd=""):
     """ Main function that avaluates the DNN on the whole dataset.
-    
+
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
     :param logger: Configurated logger for printing messages.
@@ -29,14 +29,14 @@ def ml_application(args, logger, path_d="", path_sd=""):
     :param path_sd: Optional base path to find the directory ``skim_data/``.
     :type path_sd: str
     """
-    
-    logger.info(f">>> Executing {os.path.basename(__file__)}\n")
+
+    logger.info(">>> Executing %s \n", os.path.basename(__file__))
 
     # Enamble multi-threading
     if args.parallel:
         ROOT.ROOT.EnableImplicitMT()
         thread_size = ROOT.ROOT.GetThreadPoolSize()
-        logger.info(f">>> Thread pool size for parallel processing: {thread_size}")
+        logger.info(">>> Thread pool size for parallel processing: %s", thread_size)
 
     # Setup TMVA
     ROOT.TMVA.Tools.Instance()
@@ -53,62 +53,73 @@ def ml_application(args, logger, path_d="", path_sd=""):
         reader.AddVariable(branch_name, branches[branch_name])
 
     # Book methods
-    dataset_path=os.path.join(path_d, args.output, "ml_output", "dataset", "weights", "TMVAClassification_PyKeras.weights.xml")
+    dataset_path=os.path.join(path_d, args.output, "ml_output",
+                              "dataset", "weights", "TMVAClassification_PyKeras.weights.xml")
     reader.BookMVA("PyKeras", ROOT.TString(dataset_path))
 
     # Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
         # Loop over the possible final states
         for final_state in final_states:
-            
-            logger.info(f">>> Process sample: {sample_name} and final state {final_state}")
+
+            logger.info(">>> Process sample: %s and final state %s", sample_name, final_state)
             start_time = time.time()
-            in_file_path=os.path.join(path_sd, args.output, "skim_data", f"{sample_name}{final_state}Skim.root")
-            in_file = ROOT.TFile(in_file_path,"UPDATE")          
+            in_file_path=os.path.join(path_sd, args.output,
+                                    "skim_data", f"{sample_name}{final_state}Skim.root")
+            in_file = ROOT.TFile(in_file_path,"UPDATE")
 
             tree = in_file.Get("Events")
-            
-            br = tree.GetListOfBranches().FindObject("Discriminant")
-            if br != None:
-               tree.SetBranchStatus("Discriminant", 0)   
 
-            new_tree = tree.CloneTree()            
+            br_discr = tree.GetListOfBranches().FindObject("Discriminant")
+            if br_discr is not None:
+                tree.SetBranchStatus("Discriminant", 0)
+
+            new_tree = tree.CloneTree()
 
             discr_array = array("f", [-999])
             branch = new_tree.Branch("Discriminant", discr_array, "Discriminant/F")
             rand = ROOT.TRandom2()
             for i in range(tree.GetEntries()):
-                    new_tree.GetEntry(i)  
-                    if args.variablesML == "tot":                  
-                        discr_array[0] = reader.EvaluateMVA([new_tree.Z1_mass, new_tree.Z2_mass, new_tree.cos_theta_star,
-                                          new_tree.Phi, new_tree.Phi1, new_tree.cos_theta1, new_tree.cos_theta2], "PyKeras")
-                    elif args.variablesML == "part":
-                        discr_array[0] = reader.EvaluateMVA([new_tree.cos_theta_star, new_tree.Phi, new_tree.Phi1, 
-                                                             new_tree.cos_theta1, new_tree.cos_theta2], "PyKeras")
-                    elif args.variablesML == "higgs":
-                        discr_array[0] = reader.EvaluateMVA([new_tree.Higgs_mass], "PyKeras")
-                    #discr_array[0]= rand.Rndm()
-                    branch.Fill()
+                new_tree.GetEntry(i)
+                if args.variablesML == "tot":
+                    discr_array[0] = reader.EvaluateMVA([new_tree.Z1_mass,
+                                        new_tree.Z2_mass, new_tree.cos_theta_star,
+                                        new_tree.Phi, new_tree.Phi1, new_tree.cos_theta1,
+                                        new_tree.cos_theta2], "PyKeras")
+                elif args.variablesML == "part":
+                    discr_array[0] = reader.EvaluateMVA([new_tree.cos_theta_star,
+                                                         new_tree.Phi, new_tree.Phi1,
+                                                         new_tree.cos_theta1,
+                                                         new_tree.cos_theta2], "PyKeras")
+                elif args.variablesML == "higgs":
+                    discr_array[0] = reader.EvaluateMVA([new_tree.Higgs_mass], "PyKeras")
+                #discr_array[0]= rand.Rndm()
+                branch.Fill()
 
             new_tree.Write("", ROOT.TObject.kOverwrite)
-            
+
             #in_file.Close()
-            logger.info(f">>> Execution time: {(time.time() - start_time)} s \n")            
+            logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
 if __name__ == "__main__":
-    
-    # Create and configure logger 
-    logging.basicConfig( format='\n%(asctime)s %(message)s') 
-    # Create an object 
-    logger=logging.getLogger() 
+
+    # Create and configure logger
+    logging.basicConfig( format='\n%(asctime)s %(message)s')
+    # Create an object
+    logger_main=logging.getLogger()
     # Set the threshold of logger
-    logger.setLevel(logging.INFO)     
+    logger_main.setLevel(logging.INFO)
     # global configuration
-    
+
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
-    parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
-    parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
-    parser.add_argument('-v', '--variablesML',     default="tot"                               , type=str,   help='name of the set of variables to be used in the ML algorithm (tot, part, higgs)')
-    parser.add_argument('-o', '--output',     default="Output", type=str,   help='name of the output directory')
-    args = parser.parse_args()
-    
-    ml_application(args, logger, "..", "..")
+    parser.add_argument('-p', '--parallel',   default=False,   action='store_const',
+                        const=True, help='enables running in parallel')
+    parser.add_argument('-n', '--nWorkers',   default=0,
+                        type=int,   help='number of workers' )
+    parser.add_argument('-v', '--variablesML',     default="tot",
+                         type=str,   help='name of the set of variables \
+                         to be used in the ML algorithm (tot, part, higgs)')
+    parser.add_argument('-o', '--output',     default="Output", type=str,
+                        help='name of the output directory')
+    args_main = parser.parse_args()
+
+    ml_application(args_main, logger_main, "..", "..")

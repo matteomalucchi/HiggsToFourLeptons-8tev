@@ -24,18 +24,18 @@ def fit_mass (args, logger):
     """
     ROOT.gErrorIgnoreLevel = ROOT.kWarning
 
-    logger.info(f">>> Executing {os.path.basename(__file__)}\n")
+    logger.info(">>> Executing %s \n", os.path.basename(__file__))
     
 
     # Create the directory to save the outputs of the fit if doesn't already exist
     dir_name = os.path.join(args.output, "fit_results")
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
-        logger.debug("Directory " , dir_name ,  " Created ")
+        logger.debug("Directory %s Created", dir_name)
         
     # Loop over the possible selections
     for selection, tree_name in SELECTIONS.items():
-        logger.info(f">>> Process {selection}\n")
+        logger.info(">>> Process {selection}\n")
         
         start_time = time.time()
         
@@ -45,7 +45,7 @@ def fit_mass (args, logger):
 
         for sample_name, final_states in SAMPLES.items():
             for final_state in final_states:
-                logger.info(f">>> Process sample {sample_name} and final state {final_state}")
+                logger.info(">>> Process sample %s and final state %s", sample_name, final_state)
 
                 # Get the input file name
                 infile_name = f"{sample_name}{final_state}Skim.root"
@@ -100,8 +100,8 @@ def fit_mass (args, logger):
         #Unbinned ML fit to data
         fitdata = totPDF.fitTo(data, ROOT.RooFit.Save(True))
         fitdata.Print("v")
-        logger.info(f"Fraction sig/bkg is:{sig_frac_count}\n")
-        logger.info(f"Fraction bkg/sig is:{bkg_frac_count}\n")
+        logger.info("Fraction sig/bkg is:{sig_frac_count}\n")
+        logger.info("Fraction bkg/sig is:{bkg_frac_count}\n")
 
         meanHiggs_sig.Print()
         meanHiggs_data.Print()
@@ -125,7 +125,7 @@ def fit_mass (args, logger):
         output_name = os.path.join(dir_name, f"fit_mass_{selection}.png")
         c1.SaveAs(output_name)
         
-        logger.info(f">>> Execution time: {(time.time() - start_time)} s \n")        
+        logger.info(">>> Execution time: %s s \n", (time.time() - start_time))        
 
         ''' #Now save the data and the PDF into a Workspace, for later use for statistical analysis
         fOutput = ROOT.TFile(f"Workspace_mumufit_{selection}.root","RECREATE")
@@ -144,15 +144,15 @@ if __name__ == "__main__":
     # Create and configure logger 
     logging.basicConfig( format='\n%(asctime)s %(message)s') 
     # Create an object 
-    logger=logging.getLogger() 
+    logger_main=logging.getLogger() 
     # Set the threshold of logger
-    logger.setLevel(logging.INFO)     
+    logger_main.setLevel(logging.INFO)     
     
     # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
     parser.add_argument('-o', '--output',     default="Output", type=str,   help='name of the output directory')
-    args = parser.parse_args()
+    args_main = parser.parse_args()
     
     fit_mass(args, logger)

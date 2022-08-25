@@ -1,14 +1,10 @@
-"""Tests for the functions used in the file ``skim_tools.py`` during 
+"""Tests for the functions used in the file ``skim_tools.py`` during
 the skimming process defined in the header file ``skim_functions.h``.
 """
 
 import unittest
 import ROOT
 
-#ROOT.gSystem.Load("skim_functions_lib.so")
-#ROOT.gInterpreter.ProcessLine('#include "skim_functions_lib.h"' )
-#ROOT.gInterpreter.ProcessLine('#include "skimming/skim_functions.h"' )
-#ROOT.gInterpreter.ProcessLine('#include "test/test_variables.h"' )
 
 class TestSkim(unittest.TestCase):
 
@@ -16,7 +12,7 @@ class TestSkim(unittest.TestCase):
         super(TestSkim, self).__init__(*args, **kwargs)
         ROOT.gInterpreter.ProcessLine('#include "skimming/skim_functions.h"' )
         ROOT.gInterpreter.ProcessLine('#include "test/test_variables.h"' )
-        
+
     def test_sip(self):
         """Test the definition of sip
         """
@@ -24,7 +20,7 @@ class TestSkim(unittest.TestCase):
             ROOT.dxy, ROOT.dz, ROOT.sigma_dxy, ROOT.sigma_dz)[0], ROOT.sip[0], 5)
 
     def test_pt_cuts(self):
-        """Test the lepton pt cuts 
+        """Test the lepton pt cuts
         """
         self.assertTrue(ROOT.ptCuts(ROOT.mu_pt, ROOT.e_pt))
         self.assertTrue(ROOT.ptCuts(ROOT.mu_pt, ROOT.not_e_pt))
@@ -35,7 +31,7 @@ class TestSkim(unittest.TestCase):
         """Test the reconstruction of the fourvector
         """
         self.assertAlmostEqual((ROOT.lepFourVec(
-            ROOT.lep_pt, ROOT.lep_eta, ROOT.lep_phi, ROOT.lep_mass)[0] 
+            ROOT.lep_pt, ROOT.lep_eta, ROOT.lep_phi, ROOT.lep_mass)[0]
             - ROOT.lep_fourvec[0]).Mag(), 0)
 
     def test_z_idx_samekind(self):
@@ -46,12 +42,9 @@ class TestSkim(unittest.TestCase):
             for j in range(2):
                 self.assertEqual(ROOT.zIdxSamekind(
                     ROOT.el_fourvecs_4, ROOT.el_charges)[i][j], ROOT.el_idx[i][j])
-            '''   
-            self.assertTrue(ROOT.VecOps.All(ROOT.zIdxSamekind(
-            ROOT.el_fourvecs_4, ROOT.el_charges)[i] - ROOT.el_idx[i]))'''
-                     
+
     def test_z_fourvec_samekind(self):
-        """Test the reconstruction of the two Z fourvectors 
+        """Test the reconstruction of the two Z fourvectors
         in the case of leptons of the same kind.
         """
         for i in range(2):
@@ -59,13 +52,13 @@ class TestSkim(unittest.TestCase):
                 ROOT.el_idx, ROOT.el_fourvecs_4)[i] - ROOT.z_fourvecs_4[i]).Mag(), 0)
 
     def test_z_fourvec_2mu2el(self):
-        """Test the reconstruction of the two Z fourvectors 
+        """Test the reconstruction of the two Z fourvectors
         in the case of leptons of different kind.
         """
         for i in range(2):
             self.assertAlmostEqual((ROOT.zFourvec2mu2el(
                 ROOT.mu_fourvecs_2, ROOT.el_fourvecs_2)[i] - ROOT.z_fourvecs_2[i]).Mag(), 0)
-            
+
     def test_deltar(self):
         """Test the angular separation.
         """
@@ -85,7 +78,7 @@ class TestSkim(unittest.TestCase):
                     ROOT.el_idx, ROOT.rev_z_fourvecs_4)[i][j], ROOT.rev_el_idx[i][j])
 
     def test_split_lep_samekind(self):
-        """Test the splitting of the leptons 
+        """Test the splitting of the leptons
         in the case of 4 leptons of the same kind.
         """
         self.assertEqual((ROOT.splitLepSamekind(
@@ -98,23 +91,23 @@ class TestSkim(unittest.TestCase):
             ROOT.el_idx[1], ROOT.el_fourvecs_4, -ROOT.el_charges)- ROOT.el0).Mag(), 0)
 
     def test_lep1(self):
-        """Test the selection of the lepton/anti-lepton belonging 
+        """Test the selection of the lepton/anti-lepton belonging
         to the heavier boson Z1 in case of leptons of different kinds.
         """
         self.assertEqual((ROOT.lep1(
             ROOT.mu_fourvecs_2, ROOT.el_fourvecs_2, ROOT.mu_charges_2, ROOT.el_charges_2)- ROOT.el3).Mag(), 0)
         self.assertEqual((ROOT.lep1(
             ROOT.mu_fourvecs_2, ROOT.el_fourvecs_2, -ROOT.mu_charges_2, -ROOT.el_charges_2)- ROOT.el2).Mag(), 0)
-    
+
     def test_lep2(self):
-        """Test the selection of the lepton/anti-lepton belonging 
+        """Test the selection of the lepton/anti-lepton belonging
         to the lighter boson Z2 in case of leptons of different kinds.
         """
         self.assertEqual((ROOT.lep2(
             ROOT.mu_fourvecs_2, ROOT.el_fourvecs_2, ROOT.mu_charges_2, ROOT.el_charges_2)- ROOT.el0).Mag(), 0)
         self.assertEqual((ROOT.lep2(
             ROOT.mu_fourvecs_2, ROOT.el_fourvecs_2, -ROOT.mu_charges_2, -ROOT.el_charges_2)- ROOT.el1).Mag(), 0)
-         
+
     def test_z_heavy(self):
         """Test the selection of the heavier Z.
         """
@@ -161,4 +154,3 @@ class TestSkim(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
