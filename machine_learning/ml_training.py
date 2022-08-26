@@ -140,14 +140,7 @@ def ml_training(args, logger, path_o="", path_sd=""):
     logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
 
 if __name__ == "__main__":
-
-    # Create and configure logger
-    logging.basicConfig( format='\n%(asctime)s %(message)s')
-    # Create an object
-    logger_main=logging.getLogger()
-    # Set the threshold of logger
-    logger_main.setLevel(logging.DEBUG)
-
+    
     # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-v', '--variablesML',     default="tot"  , type=str,
@@ -155,7 +148,17 @@ if __name__ == "__main__":
                             in the ML algorithm (tot, part, higgs)')
     parser.add_argument('-o', '--output',     default="Output", type=str,
                         help='name of the output directory')
+    parser.add_argument('-l', '--logLevel',   default=20, type=int,   
+                            help='integer representing the level of the logger:\
+                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
     args_main = parser.parse_args()
+
+    # Create and configure logger
+    logging.basicConfig( format='\n%(asctime)s %(message)s')
+    # Create an object
+    logger_main=logging.getLogger()
+    # Set the threshold of logger
+    logger_main.setLevel(args_main.logLevel)
 
     ml_training(args_main, logger_main, "..", "..")
 

@@ -24,7 +24,8 @@ def run_analysis (argv):
     :type argv: list(str)
     """
     start_time = time.time()
-    # General configuration
+    
+    # Global configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-r', '--range',  nargs='?', default=0, const=10000000, type=int,
                             help='run the analysis only on a finite \

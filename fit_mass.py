@@ -148,13 +148,21 @@ if __name__ == "__main__":
     # Create an object 
     logger_main=logging.getLogger() 
     # Set the threshold of logger
-    logger_main.setLevel(logging.INFO)     
-    
-    # General configuration
+    logger_main.setLevel(args_main.logLevel)         # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
     parser.add_argument('-o', '--output',     default="Output", type=str,   help='name of the output directory')
+    parser.add_argument('-l', '--logLevel',   default=20, type=int,   
+                            help='integer representing the level of the logger:\
+                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
     args_main = parser.parse_args()
+
+    # Create and configure logger
+    logging.basicConfig( format='\n%(asctime)s %(message)s')
+    # Create an object
+    logger_main=logging.getLogger()
+    # Set the threshold of logger
+    logger_main.setLevel(args_main.logLevel)
     
     fit_mass(args, logger)
