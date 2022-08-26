@@ -32,6 +32,9 @@ def run_analysis (argv):
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',
                         const=True, help='enables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0, type=int,   help='number of workers' )
+    parser.add_argument('-l', '--logLevel',   default=20, type=int,   
+                            help='integer representing the level of the logger:\
+                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
     parser.add_argument('-m', '--ml', default=False,   action='store_const', const=True,
                         help='enables machine learning algorithm')
     parser.add_argument('-v', '--variablesML',     default="tot" , type=str,
@@ -57,15 +60,17 @@ def run_analysis (argv):
     # Create an object
     logger_global=logging.getLogger()
     # Set the threshold of logger_global
-    logger_global.setLevel(logging.INFO)
+    logger_global.setLevel(args_global.logLevel)
 
     # Create the directory to save the outputs if doesn't already exist
-    if not os.path.exists(args_global.output):
+    try:
         os.makedirs(args_global.output)
-        logger_global.debug("Directory %s Created", args_global.output)
+        logger_global.debug("Directory %s/ Created", args_global.output)
+    except FileExistsError:
+        logger_global.debug("The directory %s/ already exists", args_global.output)
 
-    """skim.skim(args_global, logger_global)
-
+    skim.skim(args_global, logger_global)
+    """
     if args_global.ml:
         ml_training.ml_training(args_global, logger_global)
         ml_application.ml_application(args_global, logger_global)

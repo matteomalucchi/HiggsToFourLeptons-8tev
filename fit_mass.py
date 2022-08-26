@@ -29,9 +29,11 @@ def fit_mass (args, logger):
 
     # Create the directory to save the outputs of the fit if doesn't already exist
     dir_name = os.path.join(args.output, "fit_results")
-    if not os.path.exists(dir_name):
+    try:
         os.makedirs(dir_name)
-        logger.debug("Directory %s Created", dir_name)
+        logger.debug("Directory %s/ Created", dir_name)
+    except FileExistsError:
+        logger.debug("The directory %s/ already exists", dir_name)
         
     # Loop over the possible selections
     for selection, tree_name in SELECTIONS.items():

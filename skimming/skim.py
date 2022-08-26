@@ -58,36 +58,53 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
 
     # Create the directory to save the skimmed data if doesn't already exist
     dir_name = os.path.join(path_sd, args.output, "skim_data")
-    if not os.path.exists(dir_name):
+    try:
         os.makedirs(dir_name)
-        logger.debug("Directory %s Created", dir_name)
+        logger.debug("Directory %s/ Created", dir_name)
+    except FileExistsError:
+        logger.debug("The directory %s/ already exists", dir_name)
 
     #Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
-        rdf = ROOT.RDataFrame("Events", os.path.join( BASE_PATH, f"{sample_name}.root"))
+        file_name=os.path.join( BASE_PATH, f"{sample_name}.root")
 
+        # Check if file exists or not 
+        try:
+            if not os.path.exists(file_name):
+                raise FileNotFoundError
+            rdf = ROOT.RDataFrame("Events", file_name)
+        except FileNotFoundError as not_fund_err:
+            logger.exception("Sample %s ERROR: File %s.root can't be found %s",
+                                sample_name, sample_name, not_fund_err,  stack_info=True)
+            continue
+
+        # Analysis only part of the data if the range option is active
         if args.range != 0:
             rdf=rdf.Range(args.range)
 
         # Loop over the possible final states
         for final_state in final_states:
             logger.info(">>> Process sample: %s and final state %s \n", sample_name, final_state)
+
             start_time = time.time()
 
-            rdf2 = skim_tools.event_selection(rdf, final_state)
-            rdf3 = skim_tools.four_vec(rdf2, final_state)
-            rdf4 = skim_tools.order_four_vec(rdf3, final_state)
+            try:
+                rdf2 = skim_tools.event_selection(rdf, final_state)
+                rdf3 = skim_tools.four_vec(rdf2, final_state)
+                rdf4 = skim_tools.order_four_vec(rdf3, final_state)
+            except RuntimeError as run_time_err:
+                logger.exception("Sample %s ERROR: %s ", sample_name, run_time_err,  stack_info=True)
+                continue
+
             rdf5 = skim_tools.def_mass_pt_eta_phi(rdf4)
             rdf6 = skim_tools.four_vec_boost(rdf5)
             rdf7 = skim_tools.def_angles(rdf6)
             rdf_final = skim_tools.add_event_weight(rdf7, sample_name)
-
             rdf_final.Report().Print()
-            logger.debug("{rdf_final.GetColumnNames()}\n")
+            logger.debug("%s\n", rdf_final.GetColumnNames())
 
             # Save the skimmed samples
             complete_name = os.path.join(dir_name, f"{sample_name}{final_state}Skim.root")
-
             rdf_final.Snapshot("Events", complete_name, VARIABLES.keys())
 
             logger.info(">>> Execution time: %s s \n", (time.time() - start_time))

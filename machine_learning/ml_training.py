@@ -44,21 +44,23 @@ def ml_training(args, logger, path_o="", path_sd=""):
 
     # Create the directory to save the outputs of the ml algorithm if doesn't already exist
     dir_name = os.path.join(path_o, args.output, "ml_output")
-    if not os.path.exists(dir_name):
+    try:
         os.makedirs(dir_name)
-        logger.debug("Directory %s Created", dir_name)
+        logger.debug("Directory %s/ Created", dir_name)
+    except FileExistsError:
+        logger.debug("The directory %s/ already exists", dir_name)
 
     # Create file to save the results
     tmva_path=os.path.join(dir_name, "TMVA.root")
     output = ROOT.TFile.Open(tmva_path, "RECREATE")
 
     factory = ROOT.TMVA.Factory("TMVAClassification", output,
-                        "!V:!Silent:Color:DrawProgressBar:\
-                        Transformations=D,G:AnalysisType=Classification")
+                        "!V:!Silent:Color:DrawProgressBar:Transformations=D,G:AnalysisType=Classification")
 
     # Variables used in the ML algorithm
     variables=VARIABLES_ML_DICT[args.variablesML]
-    #
+    
+    # Directory where the weights are saved
     dataset_path=os.path.join(dir_name, "dataset")
     dataloader = ROOT.TMVA.DataLoader(dataset_path)
     for variable in variables:
@@ -73,17 +75,28 @@ def ml_training(args, logger, path_o="", path_sd=""):
 
     for sample_name, final_states in simulated_samples.items():
         for final_state in final_states:
-            logger.info(">>> Process sample %s and final state %s", sample_name, final_state)
-            file_name=os.path.join(path_sd, args.output, "skim_data",
+            logger.debug(">>> Process sample %s and final state %s", sample_name, final_state)
+            
+            # Check if file exists or not
+            try: 
+                file_name=os.path.join(path_sd, args.output, "skim_data",
                                    f"{sample_name}{final_state}Skim.root")
+                if not os.path.exists(file_name):
+                    raise FileNotFoundError
+            except FileNotFoundError as not_found_err:
+                logger.exception("Sample %s and final state %s ERROR: File %s can't be found %s",
+                                sample_name, final_state, file_name, not_found_err,  stack_info=True)
+                continue
+            
             if sample_name == "SMHiggsToZZTo4L":
                 signal_chain.Add(file_name)
             else:
                 bkg_chain.Add(file_name)
-
+    
     dataloader.AddSignalTree(signal_chain, 1.0)
     dataloader.AddBackgroundTree(bkg_chain, 1.0)
 
+    
     #dataloader.PrepareTrainingAndTestTree(TCut(""),"nTrain_Signal=13354:nTrain_Background=95961:\
     #                                                    SplitMode=Block:NormMode=NumEvents:!V")
     dataloader.PrepareTrainingAndTestTree(ROOT.TCut(""),"SplitMode=Random:NormMode=NumEvents:!V")
@@ -133,7 +146,7 @@ if __name__ == "__main__":
     # Create an object
     logger_main=logging.getLogger()
     # Set the threshold of logger
-    logger_main.setLevel(logging.INFO)
+    logger_main.setLevel(logging.DEBUG)
 
     # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )

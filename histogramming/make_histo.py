@@ -47,9 +47,12 @@ def make_histo(args, logger, path=""):
 
     # Create the directory and the output file to store the histograms
     dir_name = os.path.join(path, args.output, "histograms")
-    if not os.path.exists(dir_name):
+    try:
         os.makedirs(dir_name)
-        logger.debug("Directory %s Created", dir_name)
+        logger.debug("Directory %s/ Created", dir_name)
+    except FileExistsError:
+        logger.debug("The directory %s/ already exists", dir_name)
+        
     outfile_path = os.path.join(dir_name, "histograms.root")
     outfile = ROOT.TFile(outfile_path, "RECREATE")
 

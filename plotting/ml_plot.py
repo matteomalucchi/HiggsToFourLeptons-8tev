@@ -54,9 +54,11 @@ def ml_plot (args, logger, path=""):
 
     # Create the directory to save the plots if doesn't already exist
     dir_name = os.path.join(path, args.output, "discriminant_plots")
-    if not os.path.exists(dir_name):
+    try:
         os.makedirs(dir_name)
-        logger.debug("Directory %s Created", dir_name)
+        logger.debug("Directory %s/ Created", dir_name)
+    except FileExistsError:
+        logger.debug("The directory %s/ already exists", dir_name)
 
     for type_dataset in ["signal", "background"]:
 

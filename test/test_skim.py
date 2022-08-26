@@ -9,7 +9,7 @@ import ROOT
 class TestSkim(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
-        super(TestSkim, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         ROOT.gInterpreter.ProcessLine('#include "skimming/skim_functions.h"' )
         ROOT.gInterpreter.ProcessLine('#include "test/test_variables.h"' )
 
