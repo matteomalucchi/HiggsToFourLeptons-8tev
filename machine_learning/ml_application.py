@@ -64,24 +64,39 @@ def ml_application(args, logger, path_d="", path_sd=""):
 
             logger.info(">>> Process sample: %s and final state %s", sample_name, final_state)
             start_time = time.time()
-            in_file_path=os.path.join(path_sd, args.output,
-                                    "skim_data", f"{sample_name}{final_state}Skim.root")
+
+            # Check if file exists or not
+            try: 
+                in_file_path=os.path.join(path_sd, args.output,
+                                "skim_data", f"{sample_name}{final_state}Skim.root")
+                if not os.path.exists(in_file_path):
+                    raise FileNotFoundError
+            except FileNotFoundError as not_found_err:
+                logger.exception("Sample %s and final state %s ERROR: File %s can't be found %s",
+                                sample_name, final_state, not_found_err, not_found_err,  stack_info=True)
+                continue
+
             in_file = ROOT.TFile(in_file_path,"UPDATE")
-
             tree = in_file.Get("Events")
-
+            
             br_discr = tree.GetListOfBranches().FindObject("Discriminant")
-            if br_discr is not None:
+            if br_discr:
+                logger.debug("Found preexisting branch Discriminant")                
                 tree.SetBranchStatus("Discriminant", 0)
+                logger.debug("Preexisting branch Discriminant dactivated")
+
 
             new_tree = tree.CloneTree()
 
             discr_array = array("f", [-999])
             branch = new_tree.Branch("Discriminant", discr_array, "Discriminant/F")
+            logger.debug("Created branch Discriminant")
+            
             rand = ROOT.TRandom2()
             for i in range(tree.GetEntries()):
                 new_tree.GetEntry(i)
-                if args.variablesML == "tot":
+                
+                '''if args.variablesML == "tot":
                     discr_array[0] = reader.EvaluateMVA([new_tree.Z1_mass,
                                         new_tree.Z2_mass, new_tree.cos_theta_star,
                                         new_tree.Phi, new_tree.Phi1, new_tree.cos_theta1,
@@ -92,8 +107,9 @@ def ml_application(args, logger, path_d="", path_sd=""):
                                                          new_tree.cos_theta1,
                                                          new_tree.cos_theta2], "PyKeras")
                 elif args.variablesML == "higgs":
-                    discr_array[0] = reader.EvaluateMVA([new_tree.Higgs_mass], "PyKeras")
-                #discr_array[0]= rand.Rndm()
+                    discr_array[0] = reader.EvaluateMVA([new_tree.Higgs_mass], "PyKeras")'''
+                    
+                discr_array[0]= rand.Rndm()
                 branch.Fill()
 
             new_tree.Write("", ROOT.TObject.kOverwrite)

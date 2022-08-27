@@ -51,7 +51,7 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
     ROOT.gInterpreter.ProcessLine(f'#include "{os.path.join(path_sf, "skim_functions.h")}"' )
 
     #Enamble multi-threading if range is not active
-    if args.parallel and args.range ==0:
+    if args.parallel and args.range == 0:
         ROOT.ROOT.EnableImplicitMT(args.nWorkers)
         thread_size = ROOT.ROOT.GetThreadPoolSize()
         logger.info(">>> Thread pool size for parallel processing: %s", thread_size)
@@ -100,9 +100,11 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
             rdf6 = skim_tools.four_vec_boost(rdf5)
             rdf7 = skim_tools.def_angles(rdf6)
             rdf_final = skim_tools.add_event_weight(rdf7, sample_name)
-            rdf_final.Report().Print()
+            
+            if args.logLevel <= 10:
+                rdf_final.Report().Print()
             logger.debug("%s\n", rdf_final.GetColumnNames())
-
+            
             # Save the skimmed samples
             complete_name = os.path.join(dir_name, f"{sample_name}{final_state}Skim.root")
             rdf_final.Snapshot("Events", complete_name, VARIABLES.keys())
@@ -110,7 +112,9 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
             logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
 
 
-if __name__ == "__main__":    # General configuration
+if __name__ == "__main__":    
+    
+    # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-r', '--range',  nargs='?', default=0, const=10000000, type=int,
                             help='run the analysis only on a finite range of events')
