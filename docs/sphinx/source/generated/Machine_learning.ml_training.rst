@@ -1,7 +1,7 @@
-﻿Machine\_learning.ml\_training
+﻿Machine\_Learning.ml\_training
 ==============================
 
-.. automodule:: Machine_learning.ml_training
+.. automodule:: Machine_Learning.ml_training
 
    
    

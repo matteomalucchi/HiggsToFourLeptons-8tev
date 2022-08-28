@@ -1,7 +1,7 @@
-﻿Machine\_learning.ml\_application
+﻿Machine\_Learning.ml\_application
 =================================
 
-.. automodule:: Machine_learning.ml_application
+.. automodule:: Machine_Learning.ml_application
 
    
    

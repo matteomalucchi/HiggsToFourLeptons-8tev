@@ -1,7 +1,7 @@
-﻿Machine\_learning.ml\_selection
+﻿Machine\_Learning.ml\_selection
 ===============================
 
-.. automodule:: Machine_learning.ml_selection
+.. automodule:: Machine_Learning.ml_selection
 
    
    
