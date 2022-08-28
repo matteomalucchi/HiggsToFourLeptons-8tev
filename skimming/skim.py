@@ -34,7 +34,7 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
     The function loops over the datasets and distinguishes the possible
     final states. It creates for each one of them a RDataFrame which allows
     to apply cuts and define new useful observables. Finally, it creates files
-    containing the new skimmed data in the directory ``skim_data/``.
+    containing the new skimmed data in the directory ``Skim_data/``.
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
@@ -42,7 +42,7 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
     :type logger: logging.RootLogger
     :param path_sf: Optional base path to find the header file ``skim_functions.h``.
     :type path_sf: str
-    :param path_sd: Optional base path to find the directory ``skim_data/``.
+    :param path_sd: Optional base path to find the directory ``Skim_data/``.
     :type path_sd: str
     """
 
@@ -57,7 +57,7 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
         logger.info(">>> Thread pool size for parallel processing: %s", thread_size)
 
     # Create the directory to save the skimmed data if doesn't already exist
-    dir_name = os.path.join(path_sd, args.output, "skim_data")
+    dir_name = os.path.join(path_sd, args.output, "Skim_data")
     try:
         os.makedirs(dir_name)
         logger.debug("Directory %s/ Created", dir_name)
