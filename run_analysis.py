@@ -47,6 +47,9 @@ def run_analysis (argv):
                             action='store_const',     const=True,
                             help='enables the histogramming and \
                                 plotting of the variable distributions')
+    parser.add_argument('-t', '--typeDistribution',   default="all", type=str,   
+                            help='Type of distributions to plot: \
+                            all, data, background, signal, sig_bkg_normalized, total' )
     parser.add_argument('-o', '--output',     default="Output", type=str,
                             help='name of the output directory')
 

@@ -17,7 +17,6 @@ from Definitions.selections_def import  SELECTIONS
 from Plotting import plotting_functions
 
 ROOT.gROOT.SetBatch(True)
-ROOT.gErrorIgnoreLevel = ROOT.kWarning
 
 
 def make_plot (args, logger, path=""):
@@ -39,10 +38,20 @@ def make_plot (args, logger, path=""):
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
 
+    if args.logLevel >= 20:
+        ROOT.gErrorIgnoreLevel = ROOT.kWarning
 
-    infile_path = os.path.join(path, args.output, "histograms", "histograms.root")
-    infile = ROOT.TFile(infile_path, "READ")
-
+    infile_path = os.path.join(path, args.output, "Histograms", "Histograms.root")
+    # Check if file exists or not 
+    try:
+        if not os.path.exists(infile_path):
+            raise FileNotFoundError
+        infile = ROOT.TFile(infile_path, "READ")
+    except FileNotFoundError as not_fund_err:
+        logger.exception("File %s can't be found %s",
+                        infile_path, not_fund_err,  stack_info=True)
+        return
+        
     plotting_functions.set_style()
 
     if args.ml :
@@ -53,7 +62,7 @@ def make_plot (args, logger, path=""):
     variables = var_dict.keys()
 
     for selection in SELECTIONS.keys():
-        logger.info(">>> Processing {selection}\n")
+        logger.info(">>> Processing %s\n", selection)
 
         for variable in variables:
             if variable != "Weight":
@@ -61,10 +70,18 @@ def make_plot (args, logger, path=""):
                 # Get histograms for the signal
                 signals = {}
                 for final_state in ["FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]:
-                    signals[final_state] = plotting_functions.get_histogram(infile,
-                                            f"SMHiggsToZZTo4L_{final_state}_{variable}_{selection}")
-                plotting_functions.combine_final_states(signals)
-
+                    histo_name = f"SMHiggsToZZTo4L_{final_state}_{variable}_{selection}"
+                    try:
+                        signals[final_state] = plotting_functions.get_histogram(infile, histo_name)
+                    except RuntimeError as run_time_err:
+                        logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
+                
+                try:
+                    plotting_functions.combine_final_states(signals)
+                except KeyError:
+                    logger.debug("ERROR: Failed to create the signal histogram of the combined final states", 
+                                    stack_info=True)
+                    
                 # Get the normalized histograms for the signal
                 signals_norm = {}
                 for final_state, signal_histo in signals.items():
@@ -74,14 +91,22 @@ def make_plot (args, logger, path=""):
 
                 # Get histograms for the background
                 backgrounds = {}
-                backgrounds["FourMuons"] = plotting_functions.get_histogram(infile,
-                                f"ZZTo4mu_FourMuons_{variable}_{selection}")
-                backgrounds["FourElectrons"] = plotting_functions.get_histogram(infile,
-                                f"ZZTo4e_FourElectrons_{variable}_{selection}")
-                backgrounds["TwoMuonsTwoElectrons"] = plotting_functions.get_histogram(infile,
-                                f"ZZTo2e2mu_TwoMuonsTwoElectrons_{variable}_{selection}")
-                plotting_functions.combine_final_states(backgrounds)
-
+                try:
+                    backgrounds["FourMuons"] = plotting_functions.get_histogram(infile,
+                                    f"ZZTo4mu_FourMuons_{variable}_{selection}")
+                    backgrounds["FourElectrons"] = plotting_functions.get_histogram(infile,
+                                    f"ZZTo4e_FourElectrons_{variable}_{selection}")
+                    backgrounds["TwoMuonsTwoElectrons"] = plotting_functions.get_histogram(infile,
+                                    f"ZZTo2e2mu_TwoMuonsTwoElectrons_{variable}_{selection}")
+                except RuntimeError as run_time_err:
+                        logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
+                
+                try:
+                    plotting_functions.combine_final_states(backgrounds)
+                except KeyError:
+                    logger.debug("ERROR: Failed to create the background histogram of the combined final states", 
+                                    stack_info=True)
+                    
                 # Get the normalized histograms for the background
                 backgrounds_norm = {}
                 for final_state, background_histo in backgrounds.items():
@@ -102,15 +127,22 @@ def make_plot (args, logger, path=""):
                                                       "Run2012C_DoubleElectron"]]
                         ]:
                     for sample in samples:
-                        histo = plotting_functions.get_histogram(infile,
+                        try: 
+                            histo = plotting_functions.get_histogram(infile,
                                         f"{sample}_{final_state}_{variable}_{selection}")
-                        if not final_state in data:
-                            data[final_state] = histo
-                        else:
-                            data[final_state].Add(histo)
+                            if not final_state in data:
+                                data[final_state] = histo
+                            else:
+                                data[final_state].Add(histo)
+                        except RuntimeError as run_time_err:
+                            logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
 
-                plotting_functions.combine_final_states(data)
-
+                try:
+                    plotting_functions.combine_final_states(data)
+                except KeyError:
+                    logger.debug("ERROR: Failed to create the data histogram of the combined final states", 
+                                    stack_info=True)
+                    
                 # Dictionary for the different types of datasets
                 inputs_dict = {
                     "data" : data,
@@ -124,68 +156,75 @@ def make_plot (args, logger, path=""):
                 for input_type, inputs in inputs_dict.items():
 
                     # Create the directory to save the plots if doesn't already exist
-                    dir_name = os.path.join(path, args.output, "plots", selection, input_type)
-                    if not os.path.exists(dir_name):
+                    dir_name = os.path.join(path, args.output, "Plots", selection, input_type)
+                    try:
                         os.makedirs(dir_name)
-                        logger.debug("Directory %s Created", dir_name)
+                        logger.debug("Directory %s/ Created", dir_name)
+                    except FileExistsError:
+                        logger.debug("The directory %s/ already exists", dir_name)
 
                     for final_state in ["FourMuons", "FourElectrons",
-                                        "TwoMuonsTwoElectrons", "combined"]:
+                                        "TwoMuonsTwoElectrons", "Combined"]:
                         canvas = ROOT.TCanvas("", "", 600, 600)
                         legend = ROOT.TLegend(0.5, 0.7, 0.8, 0.9)
                         legend.SetBorderSize(0)
+                        
+                        try:
+                            if input_type in ["data", "background", "signal"]:
+                                input_histo = inputs[final_state]
+                                plotting_functions.input_style(input_type, input_histo)
+                                plotting_functions.add_title(input_histo, var_dict[variable])
+                                input_histo.SetMaximum(input_histo.GetMaximum() * 1.4)
+                                if input_type == "data":
+                                    input_histo.Draw("E1P")
+                                elif input_type in ("background", "signal"):
+                                    input_histo.Draw("HIST")
+                                legend=plotting_functions.add_legend(legend, input_type, input_histo)
+                                legend.Draw()
 
-                        if input_type in ["data", "background", "signal"]:
-                            input_histo = inputs[final_state]
-                            plotting_functions.input_style(input_type, input_histo)
-                            plotting_functions.add_title(input_histo, var_dict[variable])
-                            input_histo.SetMaximum(input_histo.GetMaximum() * 1.4)
-                            if input_type == "data":
-                                input_histo.Draw("E1P")
-                            elif input_type in ("background", "signal"):
-                                input_histo.Draw("HIST")
-                            legend=plotting_functions.add_legend(legend, input_type, input_histo)
-                            legend.Draw()
+                            elif input_type == "sig_bkg_normalized":
+                                bkg_norm = inputs[0][final_state]
+                                sig_norm = inputs[1][final_state]
+                                plotting_functions.input_style("background", bkg_norm)
+                                plotting_functions.input_style("signal", sig_norm)
+                                plotting_functions.add_title(bkg_norm, var_dict[variable])
+                                bkg_norm.SetMaximum(max(bkg_norm.GetMaximum(),
+                                                        sig_norm.GetMaximum()) * 1.5)
+                                bkg_norm.Draw("HIST")
+                                sig_norm.Draw("HIST SAME")
+                                legend=plotting_functions.add_legend(legend, "background", bkg_norm)
+                                legend=plotting_functions.add_legend(legend, "signal", sig_norm)
+                                legend.Draw()
 
-                        elif input_type == "sig_bkg_normalized":
-                            bkg_norm = inputs[0][final_state]
-                            sig_norm = inputs[1][final_state]
-                            plotting_functions.input_style("background", bkg_norm)
-                            plotting_functions.input_style("signal", sig_norm)
-                            plotting_functions.add_title(bkg_norm, var_dict[variable])
-                            bkg_norm.SetMaximum(max(bkg_norm.GetMaximum(),
-                                                    sig_norm.GetMaximum()) * 1.5)
-                            bkg_norm.Draw("HIST")
-                            sig_norm.Draw("HIST SAME")
-                            legend=plotting_functions.add_legend(legend, "background", bkg_norm)
-                            legend=plotting_functions.add_legend(legend, "signal", sig_norm)
-                            legend.Draw()
+                            elif input_type == "total":
 
-                        elif input_type == "total":
+                                # Add the background to the signal
+                                # in order to compare it with the data.
+                                signals[final_state].Add(backgrounds[final_state])
+                                for input_key in inputs:
+                                    input_histo=inputs_dict[input_key][final_state]
+                                    plotting_functions.input_style(input_key, input_histo)
+                                    legend=plotting_functions.add_legend(legend, input_key, input_histo)
 
-                            # Add the background to the signal
-                            # in order to compare it with the data.
-                            signals[final_state].Add(backgrounds[final_state])
-                            for input_key in inputs:
-                                input_histo=inputs_dict[input_key][final_state]
-                                plotting_functions.input_style(input_key, input_histo)
-                                legend=plotting_functions.add_legend(legend, input_key, input_histo)
+                                plotting_functions.add_title(signals[final_state], var_dict[variable])
+                                signals[final_state].SetMaximum(
+                                                    max(backgrounds[final_state].GetMaximum(),
+                                                    data[final_state].GetMaximum()) * 1.4)
+                                signals[final_state].Draw("HIST")
+                                backgrounds[final_state].Draw("HIST SAME")
+                                data[final_state].Draw("E1P SAME")
+                                legend.Draw()
 
-                            plotting_functions.add_title(signals[final_state], var_dict[variable])
-                            signals[final_state].SetMaximum(
-                                                max(backgrounds[final_state].GetMaximum(),
-                                                data[final_state].GetMaximum()) * 1.4)
-                            signals[final_state].Draw("HIST")
-                            backgrounds[final_state].Draw("HIST SAME")
-                            data[final_state].Draw("E1P SAME")
-                            legend.Draw()
+                            plotting_functions.add_latex()
 
-                        plotting_functions.add_latex()
-
-                        # Save the plots
-                        file_name = f"{input_type}_{final_state}_{variable}.pdf"
-                        complete_name = os.path.join(dir_name, file_name)
-                        canvas.SaveAs(complete_name)
+                            # Save the plots
+                            file_name = f"{input_type}_{final_state}_{variable}.pdf"
+                            complete_name = os.path.join(dir_name, file_name)
+                            canvas.SaveAs(complete_name)
+                            
+                        except KeyError:
+                            logger.debug("ERROR: Failed to create the plot for %s_%s_%s", 
+                                   input_type, final_state, variable, stack_info=True)
 
 
 if __name__ == "__main__":
@@ -203,6 +242,9 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--logLevel',   default=20, type=int,   
                             help='integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
+    parser.add_argument('-t', '--typeDistribution',   default="all", type=str,   
+                        help='Type of distributions to plot: \
+                        all, data, background, signal, sig_bkg_normalized, total' )
     args_main = parser.parse_args()
 
     # Create and configure logger

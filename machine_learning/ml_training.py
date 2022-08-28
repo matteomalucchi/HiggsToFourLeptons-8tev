@@ -30,7 +30,7 @@ def ml_training(args, logger, path_o="", path_sd=""):
     :type logger: logging.RootLogger
     :param path_o: Optional base path to save the output of the training.
     :type path_o: str
-    :param path_sd: Optional base path to find the directory ``skim_data/``.
+    :param path_sd: Optional base path to find the directory ``Skim_data/``.
     :type path_sd: str
     """
 
@@ -43,7 +43,7 @@ def ml_training(args, logger, path_o="", path_sd=""):
     ROOT.TMVA.PyMethodBase.PyInitialize()
 
     # Create the directory to save the outputs of the ml algorithm if doesn't already exist
-    dir_name = os.path.join(path_o, args.output, "ml_output")
+    dir_name = os.path.join(path_o, args.output, "ML_output")
     try:
         os.makedirs(dir_name)
         logger.debug("Directory %s/ Created", dir_name)
@@ -79,12 +79,12 @@ def ml_training(args, logger, path_o="", path_sd=""):
             
             # Check if file exists or not
             try: 
-                file_name=os.path.join(path_sd, args.output, "skim_data",
+                file_name=os.path.join(path_sd, args.output, "Skim_data",
                                    f"{sample_name}{final_state}Skim.root")
                 if not os.path.exists(file_name):
                     raise FileNotFoundError
             except FileNotFoundError as not_found_err:
-                logger.exception("Sample %s and final state %s ERROR: File %s can't be found %s",
+                logger.debug("Sample %s final state %s: File %s can't be found %s",
                                 sample_name, final_state, file_name, not_found_err,  stack_info=True)
                 continue
             

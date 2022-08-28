@@ -31,29 +31,39 @@ def ml_plot (args, logger, path=""):
     :param logger: Configurated logger for printing messages.
     :type logger: logging.RootLogger
     :param path: Optional base path where the directories
-        ``histograms/`` and ``discriminant_plots/`` can be found.
+        ``histograms/`` and ``Discriminant_plots/`` can be found.
     :type path: str
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
 
-    infile_path = os.path.join(path, args.output, "histograms",
-                               "histograms_discriminant.root")
-    infile = ROOT.TFile(infile_path, "READ")
+    infile_path = os.path.join(path, args.output, "Histograms",
+                               "Histograms_discriminant.root")
+    # Check if file exists or not     
+    try:
+        if not os.path.exists(infile_path):
+            raise FileNotFoundError
+        infile = ROOT.TFile(infile_path, "READ")
+    except FileNotFoundError as not_fund_err:
+        logger.exception("File %s can't be found %s",
+                        infile_path, not_fund_err,  stack_info=True)
+        return
 
     datasets = ["signal", "background", "data_el", "data_mu", "data_elmu"]
 
     plotting_functions.set_style()
     histos = {}
 
+    # Get histograms
     for dataset in datasets:
-        # Get histograms for the signal
-
-        histos[dataset] = plotting_functions.get_histogram(infile, dataset)
-        plotting_functions.input_style(dataset, histos[dataset])
-
+        try:
+            histos[dataset] = plotting_functions.get_histogram(infile, dataset)
+            plotting_functions.input_style(dataset, histos[dataset])
+        except RuntimeError as run_time_err:
+                logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
+                
     # Create the directory to save the plots if doesn't already exist
-    dir_name = os.path.join(path, args.output, "discriminant_plots")
+    dir_name = os.path.join(path, args.output, "Discriminant_plots")
     try:
         os.makedirs(dir_name)
         logger.debug("Directory %s/ Created", dir_name)
@@ -64,13 +74,32 @@ def ml_plot (args, logger, path=""):
 
         canvas = ROOT.TCanvas("", "", 600, 600)
         legend = ROOT.TLegend(0.75, 0.8, 0.85, 0.9)
-
-        plotting_functions.add_title(histos[type_dataset])
-        histos[type_dataset].Scale(1/histos[type_dataset].GetMaximum())
-        histos[type_dataset].Draw("COLZ")
-        histos["data_el"].Draw("SAME P")
-        histos["data_mu"].Draw("SAME P")
-        histos["data_elmu"].Draw("SAME P")
+        try:
+            plotting_functions.add_title(histos[type_dataset])
+            histos[type_dataset].Scale(1/histos[type_dataset].GetMaximum())
+            histos[type_dataset].Draw("COLZ")
+        except KeyError:
+            logger.debug("ERROR: Failed to create the %s histogram", 
+                                    type_dataset, stack_info=True)   
+            continue     
+        
+        try:
+            histos["data_el"].Draw("SAME P")
+        except KeyError:
+            logger.debug("ERROR: Failed to create the data histogram of the FourElectrons final state in the %s TH2D", 
+                                    type_dataset, stack_info=True)
+            
+        try:
+            histos["data_mu"].Draw("SAME P")
+        except KeyError:
+            logger.debug("ERROR: Failed to create the data histogram of the FourMuons final state in the %s TH2D", 
+                                    type_dataset, stack_info=True)
+            
+        try:
+            histos["data_elmu"].Draw("SAME P")
+        except KeyError:
+            logger.debug("ERROR: Failed to create the data histogram of the TwoMuonsTwoElectrons final state in the %s TH2D", 
+                                    type_dataset, stack_info=True)
 
         legend=plotting_functions.add_legend(legend, "discriminant", histos)
         legend.Draw()

@@ -25,7 +25,7 @@ def ml_histo(args, logger, path = ""):
     :type args: argparse.Namespace
     :param logger: Configurated logger for printing messages.
     :type logger: logging.RootLogger
-    :param path: Optional base path where the directories ``skim_data/``
+    :param path: Optional base path where the directories ``Skim_data/``
         and ``histograms/`` can be found.
     :type path: str
 
@@ -41,14 +41,13 @@ def ml_histo(args, logger, path = ""):
 
 
     # Create the directory and the output file to store the histograms
-    dir_name = os.path.join(path, args.output, "histograms")
+    dir_name = os.path.join(path, args.output, "Histograms")
     try:
         os.makedirs(dir_name)
         logger.debug("Directory %s/ Created", dir_name)
     except FileExistsError:
         logger.debug("The directory %s/ already exists", dir_name)
-    outfile_path = os.path.join(dir_name, "histograms_discriminant.root")
-
+    outfile_path = os.path.join(dir_name, "Histograms_discriminant.root")
     outfile = ROOT.TFile(outfile_path, "RECREATE")
 
     sig_chain= ROOT.TChain("Events")
@@ -62,22 +61,31 @@ def ml_histo(args, logger, path = ""):
             logger.info(">>> Process sample %s and final state %s", sample_name, final_state)
 
             # Get the input file name
-            infile_name=f"{sample_name}{final_state}Skim.root"
-            infile_path = os.path.join(path, args.output, "skim_data", infile_name)
-
+            file_name = os.path.join(path, args.output, "Skim_data", 
+                                     f"{sample_name}{final_state}Skim.root")
+ 
+            # Check if file exists or not 
+            try:
+                if not os.path.exists(file_name):
+                    raise FileNotFoundError
+            except FileNotFoundError as not_fund_err:
+                logger.debug("Sample %s final state %s: File %s can't be found %s",
+                                sample_name, final_state, file_name, not_fund_err,  stack_info=True)
+                continue
+            
             if sample_name.startswith("SM"):
-                sig_chain.Add(infile_path)
+                sig_chain.Add(file_name)
 
             elif sample_name.startswith("ZZ"):
-                bkg_chain.Add(infile_path)
+                bkg_chain.Add(file_name)
 
             elif sample_name.startswith("Run"):
                 if final_state == "FourElectrons":
-                    data_el_chain.Add(infile_path)
+                    data_el_chain.Add(file_name)
                 elif final_state == "FourMuons":
-                    data_mu_chain.Add(infile_path)
+                    data_mu_chain.Add(file_name)
                 elif final_state == "TwoMuonsTwoElectrons":
-                    data_elmu_chain.Add(infile_path)
+                    data_elmu_chain.Add(file_name)
 
     sig_rdf = ROOT.ROOT.RDataFrame(sig_chain)
     bkg_rdf = ROOT.RDataFrame(bkg_chain)
@@ -98,11 +106,14 @@ def ml_histo(args, logger, path = ""):
     ranges_x = [40, 100., 180.]
     ranges_y = [40, -0.03, 1]
     for dataset, rdf in rdfs.items():
-        logger.info(">>> Process sample: {dataset}")
-        histos[dataset] = histogramming_functions.book_histogram_2d(dataset,
+        logger.info(">>> Process sample: %s", dataset)
+        try:
+            histos[dataset] = histogramming_functions.book_histogram_2d(dataset,
                                                     rdf, variables, ranges_x, ranges_y)
-        histogramming_functions.write_histogram(histos[dataset], dataset)
-
+            histogramming_functions.write_histogram(histos[dataset], dataset)
+        except TypeError:
+            logger.debug("Dataset %s is empty", dataset)
+        
     outfile.Close()
 
 

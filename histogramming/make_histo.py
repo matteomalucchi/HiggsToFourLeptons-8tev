@@ -11,6 +11,7 @@ import os
 import sys
 import argparse
 import logging
+from typing import Type
 
 import ROOT
 
@@ -31,7 +32,7 @@ def make_histo(args, logger, path=""):
     :type args: argparse.Namespace
     :param logger: Configurated logger for printing messages.
     :type logger: logging.RootLogger
-    :param path: Optional base path where the directories ``skim_data/``
+    :param path: Optional base path where the directories ``Skim_data/``
         and ``histograms/`` can be found.
     :type path: str
     """
@@ -46,14 +47,14 @@ def make_histo(args, logger, path=""):
 
 
     # Create the directory and the output file to store the histograms
-    dir_name = os.path.join(path, args.output, "histograms")
+    dir_name = os.path.join(path, args.output, "Histograms")
     try:
         os.makedirs(dir_name)
         logger.debug("Directory %s/ Created", dir_name)
     except FileExistsError:
         logger.debug("The directory %s/ already exists", dir_name)
         
-    outfile_path = os.path.join(dir_name, "histograms.root")
+    outfile_path = os.path.join(dir_name, "Histograms.root")
     outfile = ROOT.TFile(outfile_path, "RECREATE")
 
     if args.ml :
@@ -68,28 +69,38 @@ def make_histo(args, logger, path=""):
 
         # Loop through skimmed datasets and final states 
         # to produce histograms of all variables.
-        for sample, final_states in SAMPLES.items():
+        for sample_name, final_states in SAMPLES.items():
             for final_state in final_states:
-                logger.info(">>> Process sample {sample} and final state  \
-                            {final_state} with {selection}")
+                logger.info(">>> Process sample %s and final state %s with %s",
+                            sample_name, final_state, selection)
                 
                 start_time = time.time()
 
-                # Create dataframe of the skimmed dataset.
-                complete_name = os.path.join(path, args.output, "skim_data",
-                                             f"{sample}{final_state}Skim.root")
-                rdf = ROOT.RDataFrame(tree_name, complete_name)
+                file_name = os.path.join(path, args.output, "Skim_data",
+                                             f"{sample_name}{final_state}Skim.root")
+                
+                # Check if file exists or not 
+                try:
+                    if not os.path.exists(file_name):
+                        raise FileNotFoundError
+                    rdf = ROOT.RDataFrame(tree_name, file_name)
+                except FileNotFoundError as not_fund_err:
+                    logger.debug("Sample %s final state %s: File %s can't be found %s",
+                                    sample_name, final_state, file_name, not_fund_err,  stack_info=True)
+                    continue
 
                 # Book histograms and write them to output file.
                 histos = {}
-                for variable in variables:
-                    if variable != "Weight":
-                        histos[variable] = histogramming_functions.book_histogram_1d \
-                                                (rdf, variable, var_dict[variable])
-                        histogramming_functions.write_histogram(histos[variable],
-                                                f"{sample}_{final_state}_{variable}_{selection}")
-
-                        #logger.info(type(histos[variable]))
+                try:
+                    for variable in variables:
+                        if variable != "Weight":
+                                histos[variable] = histogramming_functions.book_histogram_1d\
+                                                        (rdf, variable, var_dict[variable])
+                                histogramming_functions.write_histogram(histos[variable],
+                                                        f"{sample_name}_{final_state}_{variable}_{selection}")
+                except TypeError:
+                    logger.debug("Sample %s final state %s is empty", sample_name, final_state)
+                    
                 logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
                 
     outfile.Close()

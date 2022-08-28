@@ -25,7 +25,7 @@ def ml_selection(args, logger, path_sd=""):
     :type args: argparse.Namespace
     :param logger: Configurated logger for printing messages.
     :type logger: logging.RootLogger
-    :param path_sd: Optional base path to find the directory ``skim_data/``.
+    :param path_sd: Optional base path to find the directory ``Skim_data/``.
     :type path_sd: str
     """
 
@@ -43,16 +43,17 @@ def ml_selection(args, logger, path_sd=""):
             logger.info(">>> Process sample: %s and final state %s", sample_name, final_state)
             start_time = time.time()
             
-            file_name=os.path.join(path_sd, args.output, "skim_data",
+            file_name=os.path.join(path_sd, args.output, "Skim_data",
                                 f"{sample_name}{final_state}Skim.root")
+            
             # Check if file exists or not 
             try:
                 if not os.path.exists(file_name):
                     raise FileNotFoundError
                 rdf = ROOT.RDataFrame("Events", file_name)
             except FileNotFoundError as not_fund_err:
-                logger.exception("Sample %s ERROR: File %s.root can't be found %s",
-                                    sample_name, sample_name, not_fund_err,  stack_info=True)
+                logger.debug("Sample %s final state %s: File %s can't be found %s",
+                                    sample_name, final_state, file_name, not_fund_err,  stack_info=True)
                 continue
 
             rdf_final = rdf.Filter("Discriminant>0.5",
@@ -66,9 +67,8 @@ def ml_selection(args, logger, path_sd=""):
             option = ROOT.RDF.RSnapshotOptions("UPDATE", ROOT.kZLIB, 1, 0, 99, False, True)
             try:
                 rdf_final.Snapshot("EventsDNNSelection", file_name, VARIABLES_COMPLETE.keys(), option)
-            except TypeError as _:
-                logger.warning("WARNING: Sample %s final state %s is empty",
-                                    sample_name, final_state)
+            except TypeError:
+                logger.debug("Sample %s final state %s is empty", sample_name, final_state)
 
             logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
 

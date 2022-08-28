@@ -26,7 +26,7 @@ def ml_application(args, logger, path_d="", path_sd=""):
     :type logger: logging.RootLogger
     :param path_d: Optional base path where the ``dataset/`` directory can be found
     :type path_d: str
-    :param path_sd: Optional base path to find the directory ``skim_data/``.
+    :param path_sd: Optional base path to find the directory ``Skim_data/``.
     :type path_sd: str
     """
 
@@ -53,7 +53,7 @@ def ml_application(args, logger, path_d="", path_sd=""):
         reader.AddVariable(branch_name, branches[branch_name])
 
     # Book methods
-    dataset_path=os.path.join(path_d, args.output, "ml_output",
+    dataset_path=os.path.join(path_d, args.output, "ML_output",
                               "dataset", "weights", "TMVAClassification_PyKeras.weights.xml")
     reader.BookMVA("PyKeras", ROOT.TString(dataset_path))
 
@@ -68,12 +68,12 @@ def ml_application(args, logger, path_d="", path_sd=""):
             # Check if file exists or not
             try: 
                 in_file_path=os.path.join(path_sd, args.output,
-                                "skim_data", f"{sample_name}{final_state}Skim.root")
+                                "Skim_data", f"{sample_name}{final_state}Skim.root")
                 if not os.path.exists(in_file_path):
                     raise FileNotFoundError
             except FileNotFoundError as not_found_err:
-                logger.exception("Sample %s and final state %s ERROR: File %s can't be found %s",
-                                sample_name, final_state, not_found_err, not_found_err,  stack_info=True)
+                logger.debug("Sample %s final state %s: File %s can't be found %s",
+                                sample_name, final_state, in_file_path, not_found_err,  stack_info=True)
                 continue
 
             in_file = ROOT.TFile(in_file_path,"UPDATE")

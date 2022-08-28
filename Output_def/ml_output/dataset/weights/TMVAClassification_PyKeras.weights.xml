@@ -18,8 +18,8 @@
     <Option name="H" modified="Yes">True</Option>
     <Option name="CreateMVAPdfs" modified="No">False</Option>
     <Option name="IgnoreNegWeightsInTraining" modified="No">False</Option>
-    <Option name="FilenameModel" modified="Yes">Output/ml_output/model.h5</Option>
-    <Option name="FilenameTrainedModel" modified="No">Output/ml_output/dataset/weights/TrainedModel_PyKeras.h5</Option>
+    <Option name="FilenameModel" modified="Yes">Output/ML_output/model.h5</Option>
+    <Option name="FilenameTrainedModel" modified="No">Output/ML_output/dataset/weights/TrainedModel_PyKeras.h5</Option>
     <Option name="BatchSize" modified="Yes">128</Option>
     <Option name="NumEpochs" modified="Yes">10</Option>
     <Option name="NumThreads" modified="No">0</Option>

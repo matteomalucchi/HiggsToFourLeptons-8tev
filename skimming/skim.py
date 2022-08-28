@@ -74,8 +74,8 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
                 raise FileNotFoundError
             rdf = ROOT.RDataFrame("Events", file_name)
         except FileNotFoundError as not_fund_err:
-            logger.exception("Sample %s ERROR: File %s.root can't be found %s",
-                                sample_name, sample_name, not_fund_err,  stack_info=True)
+            logger.debug("Sample %s: File %s can't be found %s",
+                                sample_name, file_name, not_fund_err,  stack_info=True)
             continue
 
         # Analysis only part of the data if the range option is active

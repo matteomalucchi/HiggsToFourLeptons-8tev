@@ -22,13 +22,13 @@ def fit_mass (args, logger):
     :type logger: logging.RootLogger
 
     """
-    ROOT.gErrorIgnoreLevel = ROOT.kWarning
+    ROOT.gErrorIgnoreLevel = ROOT.kError
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
     
 
     # Create the directory to save the outputs of the fit if doesn't already exist
-    dir_name = os.path.join(args.output, "fit_results")
+    dir_name = os.path.join(args.output, "Fit_results")
     try:
         os.makedirs(dir_name)
         logger.debug("Directory %s/ Created", dir_name)
@@ -37,7 +37,7 @@ def fit_mass (args, logger):
         
     # Loop over the possible selections
     for selection, tree_name in SELECTIONS.items():
-        logger.info(">>> Process {selection}\n")
+        logger.info(">>> Process %s\n", selection)
         
         start_time = time.time()
         
@@ -47,11 +47,19 @@ def fit_mass (args, logger):
 
         for sample_name, final_states in SAMPLES.items():
             for final_state in final_states:
-                logger.info(">>> Process sample %s and final state %s", sample_name, final_state)
+                logger.info(">>> Process sample %s and final state %s", 
+                            sample_name, final_state)
 
-                # Get the input file name
-                infile_name = f"{sample_name}{final_state}Skim.root"
-                infile_path = os.path.join(args.output, "skim_data", infile_name)
+                # Check if input file exists or not
+                try: 
+                    infile_path = os.path.join(args.output, "Skim_data", 
+                                           f"{sample_name}{final_state}Skim.root")
+                    if not os.path.exists(infile_path):
+                        raise FileNotFoundError
+                except FileNotFoundError as not_found_err:
+                    logger.debug("Sample %s final state %s: File %s can't be found %s",
+                                    sample_name, final_state, infile_path, not_found_err,  stack_info=True)
+                    continue
 
                 if sample_name.startswith("SM"):
                     sig_chain.Add(infile_path)
@@ -62,7 +70,7 @@ def fit_mass (args, logger):
                 elif sample_name.startswith("Run"):
                     data_chain.Add(infile_path)
 
-        m4l = ROOT.RooRealVar("Higgs_mass","4 leptons invariant mass", 110, 140,"GeV")
+        m4l = ROOT.RooRealVar("Higgs_mass",f"4 leptons invariant mass with {selection}", 110, 140,"GeV")
         weight = ROOT.RooRealVar("Weight","Weight", 0, 1,"GeV")
 
         sig = ROOT.RooDataSet("signal", "", sig_chain, ROOT.RooArgSet(m4l, weight) )
@@ -84,6 +92,7 @@ def fit_mass (args, logger):
         alphaHiggs = ROOT.RooRealVar("alphaHiggs_sig", "The tail of Higgs CB for the signal", 1.5, -5, 5)
         nHiggs = ROOT.RooRealVar("nHiggs_sig", "The normalization of Higgs CB for the signal", 1.5, 0, 10)
         CBHiggs_sig = ROOT.RooCBShape("CBHiggs_sig","The Higgs Crystall Ball for the signal",m4l,meanHiggs_sig,sigmaHiggs,alphaHiggs,nHiggs)
+        
         #Unbinned ML fit to signal
         fitHiggs = CBHiggs_sig.fitTo(sig, ROOT.RooFit.Save(True), ROOT.RooFit.AsymptoticError(True))
         
@@ -102,8 +111,8 @@ def fit_mass (args, logger):
         #Unbinned ML fit to data
         fitdata = totPDF.fitTo(data, ROOT.RooFit.Save(True))
         fitdata.Print("v")
-        logger.info("Fraction sig/bkg is:{sig_frac_count}\n")
-        logger.info("Fraction bkg/sig is:{bkg_frac_count}\n")
+        logger.info("Fraction sig/bkg is: %s\n",sig_frac_count)
+        logger.info("Fraction bkg/sig is: %s\n",bkg_frac_count)
 
         meanHiggs_sig.Print()
         meanHiggs_data.Print()
@@ -120,35 +129,31 @@ def fit_mass (args, logger):
 
         #CBHiggs_data.plotOn(xframe)
 
-        c1 = ROOT.TCanvas()
+        canvas = ROOT.TCanvas()
         xframe.Draw()
         #input()
         
-        output_name = os.path.join(dir_name, f"fit_mass_{selection}.png")
-        c1.SaveAs(output_name)
+        output_name = os.path.join(dir_name, f"fit_mass_{selection}.pdf")
+        canvas.SaveAs(output_name)
         
         logger.info(">>> Execution time: %s s \n", (time.time() - start_time))        
 
-        ''' #Now save the data and the PDF into a Workspace, for later use for statistical analysis
-        fOutput = ROOT.TFile(f"Workspace_mumufit_{selection}.root","RECREATE")
+         #Now save the data and the PDF into a Workspace, for later use for statistical analysis
+        out_file_name= os.path.join(dir_name, f"Workspace_mass_fit_{selection}.root")
+        fOutput = ROOT.TFile(out_file_name,"RECREATE")
         ws = ROOT.RooWorkspace("ws") 
         getattr(ws,'import')(totPDF)
         getattr(ws,'import')(data)
-        ws.writeToFile("Workspace_mumufit.root")
+        ws.writeToFile(out_file_name)
         del ws
 
         #ws.Write()
         fOutput.Write()
-        fOutput.Close()'''
+        fOutput.Close()
 
 if __name__ == "__main__":
     
-    # Create and configure logger 
-    logging.basicConfig( format='\n%(asctime)s %(message)s') 
-    # Create an object 
-    logger_main=logging.getLogger() 
-    # Set the threshold of logger
-    logger_main.setLevel(args_main.logLevel)         # General configuration
+    # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-p', '--parallel',   default=False,   action='store_const',     const=True, help='enables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,                                 type=int,   help='number of workers' )  
@@ -165,4 +170,4 @@ if __name__ == "__main__":
     # Set the threshold of logger
     logger_main.setLevel(args_main.logLevel)
     
-    fit_mass(args, logger)
+    fit_mass(args_main, logger_main)

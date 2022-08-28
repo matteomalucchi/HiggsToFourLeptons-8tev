@@ -18,7 +18,7 @@ def get_histogram(tfile, dataset):
 
     histo = tfile.Get(dataset)
     if not histo:
-        raise Exception(f"Failed to load histogram {dataset}.")
+        raise RuntimeError(f"Failed to load histogram {dataset}")
     return histo
 
 def combine_final_states(dict_comb):
@@ -27,10 +27,10 @@ def combine_final_states(dict_comb):
     :param dict_comb: Dictionary in which the values are the histograms to be combined
     :type dict_comb: dict(str, ROOT.TH1D)
     """
+    dict_comb["Combined"] = dict_comb["FourMuons"].Clone()
+    dict_comb["Combined"].Add(dict_comb["FourElectrons"])
+    dict_comb["Combined"].Add(dict_comb["TwoMuonsTwoElectrons"])
 
-    dict_comb["combined"] = dict_comb["FourMuons"].Clone()
-    dict_comb["combined"].Add(dict_comb["FourElectrons"])
-    dict_comb["combined"].Add(dict_comb["TwoMuonsTwoElectrons"])
 
 def set_style():
     """Set the style of the plots.
@@ -147,15 +147,25 @@ def add_legend(legend, input_type, histo):
     """
 
     if input_type == "discriminant":
-        legend.AddEntry(histo["data_el"], "4e", "p")
-        legend.AddEntry(histo["data_mu"], "4#mu", "p")
-        legend.AddEntry(histo["data_elmu"], "2e2#mu", "p")
+        try:
+            legend.AddEntry(histo["data_el"], "4e", "p")
+        except KeyError:
+            pass
+        try:
+            legend.AddEntry(histo["data_mu"], "4#mu", "p")
+        except KeyError:
+            pass
+        try:
+            legend.AddEntry(histo["data_elmu"], "2e2#mu", "p")
+        except KeyError:
+            pass
 
     elif input_type == "data":
         legend.AddEntry(histo, "Data", "lep")
 
     elif input_type == "background":
         legend.AddEntry(histo, "Z#gamma*, ZZ", "f")
+        
     elif input_type == "signal":
         legend.AddEntry(histo, "m_{H} = 125 GeV", "l")
 
