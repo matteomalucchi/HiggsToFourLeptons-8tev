@@ -294,14 +294,5 @@ if __name__ == "__main__":
         logger_main.exception("%s \n typeDistribution is set to all \n", arg_err, stack_info=True)
         args_main.typeDistribution = "all"  
         
-    # Check if finalState is valid
-    try:
-        if not any(final_state in args_main.finalState for final_state 
-               in ["all", "FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]):
-            raise argparse.ArgumentTypeError(f"the final state {args_main.finalState} is invalid: \
-                it must be either all,FourMuons,FourElectrons,TwoMuonsTwoElectrons")
-    except argparse.ArgumentTypeError as arg_err:
-        logger_main.exception("%s \n finalState is set to all \n", arg_err, stack_info=True)
-        args_main.finalState = "all"  
 
     make_plot(args_main, logger_main, "..")

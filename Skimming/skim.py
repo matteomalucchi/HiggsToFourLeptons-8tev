@@ -67,6 +67,10 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
     #Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
         file_name=os.path.join( BASE_PATH, f"{sample_name}.root")
+        
+        # Check if the sample is one of those requested by the user
+        if sample_name not in args.sample and args.sample != "all":
+            continue
 
         # Check if file exists or not 
         try:
@@ -134,9 +138,6 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--finalState',   default="all", type=str,   
                             help='comma separated list of the final states to analyse: \
                             FourMuons, FourElectrons, TwoMuonsTwoElectrons' )     
-    parser.add_argument('-f', '--finalState',   default="all", type=str,   
-                            help='comma separated list of the final states to analyse: \
-                            FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
     args_main = parser.parse_args()
 
     # Create and configure logger

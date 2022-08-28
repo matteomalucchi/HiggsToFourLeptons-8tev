@@ -6,6 +6,7 @@ can be provided in order to customize the process.
 import argparse
 import logging
 import os
+from re import A
 import sys
 import time
 import shutil
@@ -17,6 +18,7 @@ from Plotting import make_plot, ml_plot
 from Histogramming import make_histo, ml_histo
 import fit_mass
 
+import set_up
 
 def run_analysis (argv):
     """ Main function that runs in order the whole analysis.
@@ -68,22 +70,28 @@ def run_analysis (argv):
                             help='comma separated list of the type of distributions to plot: \
                             data,background,signal,sig_bkg_normalized,total' )
     
+    parser.add_argument('-s', '--sample',    default="all", type=str,
+                        help='string with comma separated list of samples to analyse')
+    
     parser.add_argument('-o', '--output',     default="Output", type=str,
                             help='name of the output directory')
 
-    """parser.add_argument('-c', '--configfile', default="Configurations/HZZConfiguration.py",
-                        type=str,   help='files to be analysed')
     
-    parser.add_argument('-s', '--samples',    default="", type=str,
-                        help='string with comma separated list of samples to analyse')"""
+    #parser.add_argument('-c', '--configfile', default="Configurations/HZZConfiguration.py",
+     #                   type=str,   help='files to be analysed')
+    
     
     args_global = parser.parse_args()
     
-    # Create and configure logger
+    
+    """# Create and configure logger
     logging.basicConfig( format='\n%(asctime)s - %(filename)s - %(message)s')
     # Create an object
-    logger_global=logging.getLogger() 
+    logger_global=logging.getLogger() """
        
+    logger_global=set_up.set_up(args_global)
+    logger_global.info("a")
+    """  
     # Check if logLevel valid
     try:
         if args_global.logLevel not in [10, 20, 30, 40]:
@@ -95,9 +103,10 @@ def run_analysis (argv):
     # Set the threshold of logger_global
     logger_global.setLevel(args_global.logLevel)   
     
+    
     # Check if typeDistribution is valid
     try:
-        if not any(type_distribution in args_global.typeDistribution for type_distribution 
+        if not any(type_distribution in args_global.typeDistribution.split(",") for type_distribution 
                in ["all", "data", "background", "signal", "sig_bkg_normalized", "total"]):
             raise argparse.ArgumentTypeError(f"the type of distribution {args_global.typeDistribution} is invalid: \
                 it must be either all,data,background,signal,sig_bkg_normalized,total")
@@ -108,7 +117,7 @@ def run_analysis (argv):
     
     # Check if finalState is valid
     try:
-        if not any(final_state in args_global.finalState for final_state 
+        if not any(final_state in args_global.finalState.split(",") for final_state 
                in ["all", "FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]):
             raise argparse.ArgumentTypeError(f"the final state {args_global.finalState} is invalid: \
                 it must be either all,FourMuons,FourElectrons,TwoMuonsTwoElectrons")
@@ -125,7 +134,19 @@ def run_analysis (argv):
                 it must be either tot, part, higgs")
     except argparse.ArgumentTypeError as arg_err:
         logger_global.exception("%s \n variablesML is set to tot \n", arg_err, stack_info=True)
-        args_global.variablesML = "all"    
+        args_global.variablesML = "tot"    
+
+    # Check if sample is valid
+    try:
+        if not any(sample in args_global.sample.split(",") for sample 
+               in ["all", "Run2012B_DoubleElectron", "Run2012B_DoubleMuParked", "Run2012C_DoubleElectron", 
+                   "Run2012C_DoubleMuParked", "SMHiggsToZZTo4L", "ZZTo2e2mu", "ZZTo4e", "ZZTo4mu"]):
+            raise argparse.ArgumentTypeError(f"the sample {args_global.sample} is invalid: \
+                it must be either all, Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
+                Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
+    except argparse.ArgumentTypeError as arg_err:
+        logger_global.exception("%s \n sample is set to all \n", arg_err, stack_info=True)
+        args_global.sample = "all"    
         
         
     # Clear the output folder
@@ -138,13 +159,12 @@ def run_analysis (argv):
             logger_global.debug("Directory %s/ has been succesfully deleted", args_global.clearOutput)
 
 
-
     # Create the directory to save the outputs if doesn't already exist
     try:
         os.makedirs(args_global.output)
         logger_global.debug("Directory %s/ Created", args_global.output)
     except FileExistsError:
-        logger_global.debug("The directory %s/ already exists", args_global.output)
+        logger_global.debug("The directory %s/ already exists", args_global.output)"""
         
     
     skim.skim(args_global, logger_global)
