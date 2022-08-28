@@ -9,9 +9,9 @@ API
    Skimming.skim
    Skimming.skim_tools
 
-   Machine_learning.ml_training
-   Machine_learning.ml_application
-   Machine_learning.ml_selection
+   Machine_Learning.ml_training
+   Machine_Learning.ml_application
+   Machine_Learning.ml_selection
 
    Histogramming.make_histo
    Histogramming.ml_histo

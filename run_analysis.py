@@ -11,7 +11,7 @@ import time
 
 
 from Skimming import skim
-from Machine_learning import  ml_training, ml_application, ml_selection
+from Machine_Learning import  ml_training, ml_application, ml_selection
 from Plotting import make_plot, ml_plot
 from Histogramming import make_histo, ml_histo
 import fit_mass

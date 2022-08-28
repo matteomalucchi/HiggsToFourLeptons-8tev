@@ -46,15 +46,15 @@ Machine learning
 
 ml_training
 -----------
-.. autofunction:: Machine_learning.ml_training.ml_training
+.. autofunction:: Machine_Learning.ml_training.ml_training
 
 ml_application
 --------------
-.. autofunction:: Machine_learning.ml_application.ml_application
+.. autofunction:: Machine_Learning.ml_application.ml_application
 
 ml_selection
 ------------
-.. autofunction:: Machine_learning.ml_selection.ml_selection
+.. autofunction:: Machine_Learning.ml_selection.ml_selection
 
 
 Histogramming
