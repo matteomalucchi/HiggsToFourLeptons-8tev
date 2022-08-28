@@ -75,8 +75,10 @@ def ml_training(args, logger, path_o="", path_sd=""):
 
     for sample_name, final_states in simulated_samples.items():
         for final_state in final_states:
+            # Check if the final state is one of those requested by the user
+            if final_state not in args.finalState and args.finalState != "all":
+                continue
             logger.debug(">>> Process sample %s and final state %s", sample_name, final_state)
-            
             # Check if file exists or not
             try: 
                 file_name=os.path.join(path_sd, args.output, "Skim_data",
@@ -151,15 +153,47 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--logLevel',   default=20, type=int,   
                             help='integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
+    parser.add_argument('-f', '--finalState',   default="all", type=str,   
+                            help='comma separated list of the final states to analyse: \
+                            FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
     args_main = parser.parse_args()
 
     # Create and configure logger
     logging.basicConfig( format='\n%(asctime)s %(message)s')
     # Create an object
     logger_main=logging.getLogger()
+    
+    # Check if logLevel valid           
+    try:
+        if args_main.logLevel not in [10, 20, 30, 40]:
+            raise argparse.ArgumentTypeError(f"the value for logLevel {args_main.logLevel} is invalid: it must be either 10, 20, 30 or 40")
+    except argparse.ArgumentTypeError as arg_err:
+        args_main.logLevel = 20
+        logger_main.exception("%s \nlogLevel is set to 20 \n", arg_err, stack_info=True)
+        
     # Set the threshold of logger
     logger_main.setLevel(args_main.logLevel)
 
+    # Check if finalState is valid
+    try:
+        if not any(final_state in args_main.finalState for final_state 
+               in ["all", "FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]):
+            raise argparse.ArgumentTypeError(f"the final state {args_main.finalState} is invalid: \
+                it must be either all,FourMuons,FourElectrons,TwoMuonsTwoElectrons")
+    except argparse.ArgumentTypeError as arg_err:
+        logger_main.exception("%s \n finalState is set to all \n", arg_err, stack_info=True)
+        args_main.finalState = "all"  
+
+    # Check if variablesML is valid
+    try:
+        if not any(var_ml in args_main.variablesML for var_ml 
+               in ["tot", "part", "higgs"]):
+            raise argparse.ArgumentTypeError(f"the set of ML variables {args_main.variablesML} is invalid: \
+                it must be either tot, part, higgs")
+    except argparse.ArgumentTypeError as arg_err:
+        logger_main.exception("%s \n variablesML is set to tot \n", arg_err, stack_info=True)
+        args_main.variablesML = "all"    
+                
     ml_training(args_main, logger_main, "..", "..")
 
 #root[] TMVA::TMVAGui("TMVA.root")

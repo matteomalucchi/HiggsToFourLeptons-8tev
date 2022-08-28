@@ -94,8 +94,16 @@ def make_plot (args, logger, path=""):
                 try:
                     backgrounds["FourMuons"] = plotting_functions.get_histogram(infile,
                                     f"ZZTo4mu_FourMuons_{variable}_{selection}")
+                except RuntimeError as run_time_err:
+                        logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
+                        
+                try:
                     backgrounds["FourElectrons"] = plotting_functions.get_histogram(infile,
                                     f"ZZTo4e_FourElectrons_{variable}_{selection}")
+                except RuntimeError as run_time_err:
+                        logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
+                        
+                try:
                     backgrounds["TwoMuonsTwoElectrons"] = plotting_functions.get_histogram(infile,
                                     f"ZZTo2e2mu_TwoMuonsTwoElectrons_{variable}_{selection}")
                 except RuntimeError as run_time_err:
@@ -154,6 +162,10 @@ def make_plot (args, logger, path=""):
 
                 # Loop over the types of datasets and the final states
                 for input_type, inputs in inputs_dict.items():
+                    
+                    # Check if the input_type to plot is one of those requested by the user
+                    if input_type not in args.typeDistribution and args.typeDistribution != "all":
+                        continue
 
                     # Create the directory to save the plots if doesn't already exist
                     dir_name = os.path.join(path, args.output, "Plots", selection, input_type)
@@ -218,40 +230,78 @@ def make_plot (args, logger, path=""):
                             plotting_functions.add_latex()
 
                             # Save the plots
-                            file_name = f"{input_type}_{final_state}_{variable}.pdf"
+                            file_name = f"{input_type}_{final_state}_{variable}_{selection}.pdf"
                             complete_name = os.path.join(dir_name, file_name)
                             canvas.SaveAs(complete_name)
                             
                         except KeyError:
-                            logger.debug("ERROR: Failed to create the plot for %s_%s_%s", 
-                                   input_type, final_state, variable, stack_info=True)
+                            logger.debug("ERROR: Failed to create the plot for %s_%s_%s_%s", 
+                                   input_type, final_state, variable, selection, stack_info=True)
 
 
 if __name__ == "__main__":
 
     # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
-    parser.add_argument('-p', '--parallel',   default=False,   action='store_const',
-                        const=True, help='enables running in parallel')
-    parser.add_argument('-n', '--nWorkers',   default=0,
-                        type=int,   help='number of workers' )
-    parser.add_argument('-m', '--ml', default=False,   action='store_const', const=True,
-                        help='enables machine learning algorithm')
     parser.add_argument('-o', '--output',     default="Output", type=str,
                         help='name of the output directory')
+    parser.add_argument('-m', '--ml', default=True,   action='store_const', const=False,
+                        help='disables machine learning algorithm')
     parser.add_argument('-l', '--logLevel',   default=20, type=int,   
                             help='integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
     parser.add_argument('-t', '--typeDistribution',   default="all", type=str,   
-                        help='Type of distributions to plot: \
-                        all, data, background, signal, sig_bkg_normalized, total' )
+                        help='comma separated list of the type of distributions to plot: \
+                        data, background, signal, sig_bkg_normalized, total' )
+    parser.add_argument('-f', '--finalState',   default="all", type=str,   
+                            help='comma separated list of the final states to analyse: \
+                            FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
     args_main = parser.parse_args()
 
     # Create and configure logger
     logging.basicConfig( format='\n%(asctime)s %(message)s')
     # Create an object
     logger_main=logging.getLogger()
+    
+    # Check if logLevel valid       
+    try:
+        if args_main.logLevel not in [10, 20, 30, 40]:
+            raise argparse.ArgumentTypeError(f"the value for logLevel {args_main.logLevel} is invalid: it must be either 10, 20, 30 or 40")
+    except argparse.ArgumentTypeError as arg_err:
+        args_main.logLevel = 20
+        logger_main.exception("%s \nlogLevel is set to 20 \n", arg_err, stack_info=True)
+        
     # Set the threshold of logger
     logger_main.setLevel(args_main.logLevel)
+
+    # Check if finalState is valid
+    try:
+        if not any(final_state in args_main.finalState for final_state 
+               in ["all", "FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]):
+            raise argparse.ArgumentTypeError(f"the final state {args_main.finalState} is invalid: \
+                it must be either all,FourMuons,FourElectrons,TwoMuonsTwoElectrons")
+    except argparse.ArgumentTypeError as arg_err:
+        logger_main.exception("%s \n finalState is set to all \n", arg_err, stack_info=True)
+        args_main.finalState = "all"  
+    
+    # Check if typeDistribution is valid
+    try:
+        if not any(type_distribution in args_main.typeDistribution for type_distribution 
+               in ["all", "data", "background", "signal", "sig_bkg_normalized", "total"]):
+            raise argparse.ArgumentTypeError(f"the type of distribution {args_main.typeDistribution} is invalid: \
+                it must be either all,data,background,signal,sig_bkg_normalized,total")
+    except argparse.ArgumentTypeError as arg_err:
+        logger_main.exception("%s \n typeDistribution is set to all \n", arg_err, stack_info=True)
+        args_main.typeDistribution = "all"  
+        
+    # Check if finalState is valid
+    try:
+        if not any(final_state in args_main.finalState for final_state 
+               in ["all", "FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]):
+            raise argparse.ArgumentTypeError(f"the final state {args_main.finalState} is invalid: \
+                it must be either all,FourMuons,FourElectrons,TwoMuonsTwoElectrons")
+    except argparse.ArgumentTypeError as arg_err:
+        logger_main.exception("%s \n finalState is set to all \n", arg_err, stack_info=True)
+        args_main.finalState = "all"  
 
     make_plot(args_main, logger_main, "..")

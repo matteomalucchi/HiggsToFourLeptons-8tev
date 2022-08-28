@@ -84,6 +84,9 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
 
         # Loop over the possible final states
         for final_state in final_states:
+            # Check if the final state is one of those requested by the user
+            if final_state not in args.finalState and args.finalState != "all":
+                continue
             logger.info(">>> Process sample: %s and final state %s \n", sample_name, final_state)
 
             start_time = time.time()
@@ -117,9 +120,10 @@ if __name__ == "__main__":
     # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
     parser.add_argument('-r', '--range',  nargs='?', default=0, const=10000000, type=int,
-                            help='run the analysis only on a finite range of events')
-    parser.add_argument('-p', '--parallel',   default=False,   action='store_const',
-                            const=True, help='enables running in parallel')
+                            help='number of events on which the analysis \
+                            is ran over (does not work in parallel)')
+    parser.add_argument('-p', '--parallel',   default=True,   action='store_const',
+                            const=False, help='disables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,
                             type=int,   help='number of workers' )
     parser.add_argument('-o', '--output',     default="Output", type=str,
@@ -127,13 +131,38 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--logLevel',   default=20, type=int,   
                             help='integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
+    parser.add_argument('-f', '--finalState',   default="all", type=str,   
+                            help='comma separated list of the final states to analyse: \
+                            FourMuons, FourElectrons, TwoMuonsTwoElectrons' )     
+    parser.add_argument('-f', '--finalState',   default="all", type=str,   
+                            help='comma separated list of the final states to analyse: \
+                            FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
     args_main = parser.parse_args()
 
     # Create and configure logger
     logging.basicConfig( format='\n%(asctime)s %(message)s')
     # Create an object
     logger_main=logging.getLogger()
+    
+    # Check if logLevel valid           
+    try:
+        if args_main.logLevel not in [10, 20, 30, 40]:
+            raise argparse.ArgumentTypeError(f"the value for logLevel {args_main.logLevel} is invalid: it must be either 10, 20, 30 or 40")
+    except argparse.ArgumentTypeError as arg_err:
+        args_main.logLevel = 20
+        logger_main.exception("%s \nlogLevel is set to 20 \n", arg_err, stack_info=True)
+        
     # Set the threshold of logger
     logger_main.setLevel(args_main.logLevel)
-
+    
+    # Check if finalState is valid
+    try:
+        if not any(final_state in args_main.finalState for final_state 
+               in ["all", "FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]):
+            raise argparse.ArgumentTypeError(f"the final state {args_main.finalState} is invalid: \
+                it must be either all,FourMuons,FourElectrons,TwoMuonsTwoElectrons")
+    except argparse.ArgumentTypeError as arg_err:
+        logger_main.exception("%s \n finalState is set to all \n", arg_err, stack_info=True)
+        args_main.finalState = "all"  
+        
     skim(args_main, logger_main, "", "..")

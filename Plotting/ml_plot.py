@@ -116,8 +116,8 @@ if __name__ == "__main__":
 
     # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
-    parser.add_argument('-p', '--parallel',   default=False,   action='store_const',
-                        const=True, help='enables running in parallel')
+    parser.add_argument('-p', '--parallel',   default=True,   action='store_const',
+                        const=False, help='disables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,
                         type=int,   help='number of workers' )
     parser.add_argument('-o', '--output',     default="Output", type=str,
@@ -131,6 +131,15 @@ if __name__ == "__main__":
     logging.basicConfig( format='\n%(asctime)s %(message)s')
     # Create an object
     logger_main=logging.getLogger()
+    
+    # Check if logLevel valid           
+    try:
+        if args_main.logLevel not in [10, 20, 30, 40]:
+            raise argparse.ArgumentTypeError(f"the value for logLevel {args_main.logLevel} is invalid: it must be either 10, 20, 30 or 40")
+    except argparse.ArgumentTypeError as arg_err:
+        args_main.logLevel = 20
+        logger_main.exception("%s \nlogLevel is set to 20 \n", arg_err, stack_info=True)
+        
     # Set the threshold of logger
     logger_main.setLevel(args_main.logLevel)
 
