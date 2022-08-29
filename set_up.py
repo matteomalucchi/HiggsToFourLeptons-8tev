@@ -8,6 +8,8 @@ import shutil
 import logging
 
 from Definitions.variables_def import  VARIABLES_COMPLETE
+from Definitions.samples_def import  SAMPLES
+
 
 def set_up (args):      
     """ Function that sets up the logger, manages the various arguments 
@@ -77,8 +79,7 @@ def set_up (args):
     # Check if sample is valid
     try:
         if not any(sample in args.sample.split(",") for sample 
-               in ["all", "Run2012B_DoubleElectron", "Run2012B_DoubleMuParked", "Run2012C_DoubleElectron", 
-                   "Run2012C_DoubleMuParked", "SMHiggsToZZTo4L", "ZZTo2e2mu", "ZZTo4e", "ZZTo4mu"]):
+               in ["all"] + list(SAMPLES.keys())):
             raise argparse.ArgumentTypeError(f"the sample {args.sample} is invalid: \
                 it must be either all, Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
                 Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")

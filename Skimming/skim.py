@@ -21,7 +21,7 @@ import ROOT
 
 sys.path.append('../')
 
-from Definitions.base_path_def import  BASE_PATH
+from Definitions.base_path_def import BASE_PATH
 from Definitions.samples_def import  SAMPLES
 from Definitions.variables_def import  VARIABLES
 from Definitions.weights_def import  WEIGHTS
@@ -62,10 +62,10 @@ def skim(args, logger, path_sf="Skimming"):
         logger.debug("Directory %s/ Created", dir_name)
     except FileExistsError:
         logger.debug("The directory %s/ already exists", dir_name)
-
+        
     #Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
-        file_name=os.path.join( BASE_PATH, f"{sample_name}.root")
+        file_name=os.path.join(BASE_PATH, f"{sample_name}.root")
         
         # Check if the sample is one of those requested by the user
         if sample_name not in args.sample and args.sample != "all":
@@ -141,6 +141,10 @@ if __name__ == "__main__":
                         help='string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
                         Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')
+    parser.add_argument("-b", "--basePath",  nargs="?", default="../Input", 
+                            const="root://eospublic.cern.ch//eos/opendata/cms/derived-data/AOD2NanoAODOutreachTool/ForHiggsTo4Leptons",
+                            type=str, help="base path where to find the input data. \
+                            If enabled it automatically gets the input data from EOS")
     args_main = parser.parse_args()
 
 

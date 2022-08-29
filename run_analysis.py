@@ -35,24 +35,24 @@ def run_analysis (argv):
                             is ran over (does not work in parallel)")
     
     parser.add_argument("-p", "--parallel",   default=True,   action="store_const",
-                        const=False, help="disables running in parallel")
+                            const=False, help="disables running in parallel")
     
     parser.add_argument("-n", "--nWorkers",   default=0, type=int,   help="number of workers" )
     
     parser.add_argument("-l", "--logLevel",   default=20, type=int,   
                             help="integer representing the level of the logger:\
-                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
+                            DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
     
     parser.add_argument("-f", "--finalState",   default="all", type=str,   
                             help="comma separated list of the final states to analyse: \
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons" ) 
     
     parser.add_argument("-m", "--ml", default=True,   action="store_const", const=False,
-                        help="disables machine learning algorithm")
+                            help="disables machine learning algorithm")
     
     parser.add_argument("-v", "--variablesML",     default="tot" , type=str,
                             help="name of the set of variables to be used in the ML \
-                            algorithm defined "variables_ml_def.py": tot, part, higgs")
+                            algorithm defined 'variables_ml_def.py': tot, part, higgs")
     
     parser.add_argument("-i", "--invariantMassFit", default=True,   action="store_const", const=False,
                         help="disables fit of the Higgs mass")
@@ -60,20 +60,25 @@ def run_analysis (argv):
     parser.add_argument("-d", "--distribution",   default=True,
                             action="store_const",     const=False,
                             help="disables the histogramming and \
-                                plotting of the variable distributions")
+                            plotting of the variable distributions")
     
     parser.add_argument("-t", "--typeDistribution",   default="all", type=str,   
                             help="comma separated list of the type of distributions to plot: \
-                            data,background,signal,sig_bkg_normalized,total" )
+                            data, background, signal, sig_bkg_normalized, total" )
     
     parser.add_argument("-s", "--sample",    default="all", type=str,
-                        help="string with comma separated list of samples to analyse: \
-                        Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
-                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
+                            help="string with comma separated list of samples to analyse: \
+                            Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
+                            Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
     
     parser.add_argument("-u", "--variableDistribution",    default="all", type=str,
-                        help="string with comma separated list of the variables to plot. \
-                            The complete list is defined in 'variables_def.py'")    
+                            help="string with comma separated list of the variables to plot. \
+                            The complete list is defined in 'variables_def.py'")   
+     
+    parser.add_argument("-b", "--basePath",  nargs="?", default="Input", 
+                            const="root://eospublic.cern.ch//eos/opendata/cms/derived-data/AOD2NanoAODOutreachTool/ForHiggsTo4Leptons",
+                            type=str, help="base path where to find the input data. \
+                            If enabled it automatically gets the input data from EOS")
     
     parser.add_argument("-o", "--output",     default="Output", type=str,
                             help="name of the output directory")

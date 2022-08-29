@@ -16,11 +16,3 @@ SAMPLES={
     "ZZTo2e2mu": ["TwoMuonsTwoElectrons"],
 
 }
-'''
-SAMPLES={
-    "Run2012B_DoubleMuParked": ["FourMuons", "TwoMuonsTwoElectrons"],
-    "Run2012C_DoubleMuParked": ["FourMuons", "TwoMuonsTwoElectrons"],
-    "Run2012B_DoubleElectron": ["FourElectrons", "TwoMuonsTwoElectrons"],
-    "Run2012C_DoubleElectron": ["FourElectrons", "TwoMuonsTwoElectrons"],
-    "SMHiggsToZZTo4L": ["FourMuons"]
-}'''
