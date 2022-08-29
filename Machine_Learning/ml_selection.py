@@ -18,7 +18,7 @@ from Definitions.variables_def import VARIABLES_COMPLETE
 
 import set_up
 
-def ml_selection(args, logger, path_sd=""):
+def ml_selection(args, logger):
     """Main function for the selection of the events for which
     the discriminant created by the DNN is above the 0.5 threshold.
 
@@ -26,8 +26,6 @@ def ml_selection(args, logger, path_sd=""):
     :type args: argparse.Namespace
     :param logger: Configurated logger for printing messages.
     :type logger: logging.RootLogger
-    :param path_sd: Optional base path to find the directory ``Skim_data/``.
-    :type path_sd: str
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
@@ -40,6 +38,9 @@ def ml_selection(args, logger, path_sd=""):
 
     #Loop over the various samples and final states
     for sample_name, final_states in SAMPLES.items():
+        # Check if the sample to plot is one of those requested by the user
+        if sample_name not in args.sample and args.sample != "all":
+            continue
         for final_state in final_states:
             # Check if the final state is one of those requested by the user
             if final_state not in args.finalState and args.finalState != "all":
@@ -47,7 +48,7 @@ def ml_selection(args, logger, path_sd=""):
             logger.info(">>> Process sample: %s and final state %s", sample_name, final_state)
             start_time = time.time()
             
-            file_name=os.path.join(path_sd, args.output, "Skim_data",
+            file_name=os.path.join(args.output, "Skim_data",
                                 f"{sample_name}{final_state}Skim.root")
             
             # Check if file exists or not 
@@ -84,7 +85,7 @@ if __name__ == "__main__":
                         const=False, help='disables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,
                         type=int,   help='number of workers' )
-    parser.add_argument('-o', '--output',     default="Output", type=str,
+    parser.add_argument('-o', '--output',     default="../Output", type=str,
                         help='name of the output directory')
     parser.add_argument('-l', '--logLevel',   default=20, type=int,   
                             help='integer representing the level of the logger:\
@@ -92,9 +93,13 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--finalState',   default="all", type=str,   
                             help='comma separated list of the final states to analyse: \
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
+    parser.add_argument('-s', '--sample',    default="all", type=str,
+                        help='string with comma separated list of samples to analyse: \
+                        Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')    
     args_main = parser.parse_args()
-
+    
     logger_main=set_up.set_up(args_main)
     
 
-    ml_selection(args_main, logger_main, "..")
+    ml_selection(args_main, logger_main)

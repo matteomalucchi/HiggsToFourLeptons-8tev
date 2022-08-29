@@ -67,7 +67,9 @@ def run_analysis (argv):
                             data,background,signal,sig_bkg_normalized,total' )
     
     parser.add_argument('-s', '--sample',    default="all", type=str,
-                        help='string with comma separated list of samples to analyse')
+                        help='string with comma separated list of samples to analyse: \
+                        Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')
     
     parser.add_argument('-o', '--output',     default="Output", type=str,
                             help='name of the output directory')
@@ -79,8 +81,6 @@ def run_analysis (argv):
     args_global = parser.parse_args()
        
     logger_global=set_up.set_up(args_global)
-    logger_global.info("a")
-
 
     skim.skim(args_global, logger_global)
     

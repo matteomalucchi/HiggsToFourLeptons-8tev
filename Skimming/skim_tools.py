@@ -1,7 +1,6 @@
 """ Definitions of the functions used in the skimming step of the analysis.
+The basic functions used on the rdf are defined in ``skim_functions.h``.
 """
-
-from Definitions.weights_def import  WEIGHTS
 
 
 def event_selection(rdf, final_state):
@@ -313,7 +312,7 @@ def def_angles(rdf):
               .Define("cos_theta2",
                       "defCosTheta(Z1_Z2Rest.Vect(), Lep21_Z2Rest.Vect())")
 
-def add_event_weight(rdf, sample_name):
+def add_event_weight(rdf, weight):
     """ Add weights for the normalisation of the simulated samples in the histograms.
 
     :param rdf: Input RDataFrame
@@ -321,4 +320,4 @@ def add_event_weight(rdf, sample_name):
     :return: Output RDataFrame
     :rtype: ROOT.RDataFrame
     """
-    return rdf.Define("Weight", f"{WEIGHTS[sample_name]}")
+    return rdf.Define("Weight", f"{weight}")

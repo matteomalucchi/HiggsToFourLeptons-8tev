@@ -24,7 +24,7 @@ from Histogramming import histogramming_functions
 
 import set_up
 
-def make_histo(args, logger, path=""):
+def make_histo(args, logger):
     """ Main function of the histogramming step.
     The function loops over the outputs from the skimming step and produces the
     required histograms for the final plotting step.
@@ -33,9 +33,6 @@ def make_histo(args, logger, path=""):
     :type args: argparse.Namespace
     :param logger: Configurated logger for printing messages.
     :type logger: logging.RootLogger
-    :param path: Optional base path where the directories ``Skim_data/``
-        and ``histograms/`` can be found.
-    :type path: str
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
@@ -48,7 +45,7 @@ def make_histo(args, logger, path=""):
 
 
     # Create the directory and the output file to store the histograms
-    dir_name = os.path.join(path, args.output, "Histograms")
+    dir_name = os.path.join(args.output, "Histograms")
     try:
         os.makedirs(dir_name)
         logger.debug("Directory %s/ Created", dir_name)
@@ -71,6 +68,9 @@ def make_histo(args, logger, path=""):
         # Loop through skimmed datasets and final states 
         # to produce histograms of all variables.
         for sample_name, final_states in SAMPLES.items():
+            # Check if the sample to plot is one of those requested by the user
+            if sample_name not in args.sample and args.sample != "all":
+                continue
             for final_state in final_states:
                 # Check if the final state is one of those requested by the user
                 if final_state not in args.finalState and args.finalState != "all":
@@ -80,7 +80,7 @@ def make_histo(args, logger, path=""):
                 
                 start_time = time.time()
 
-                file_name = os.path.join(path, args.output, "Skim_data",
+                file_name = os.path.join(args.output, "Skim_data",
                                              f"{sample_name}{final_state}Skim.root")
                 
                 # Check if file exists or not 
@@ -120,7 +120,7 @@ if __name__ == "__main__":
                         type=int,   help='number of workers' )
     parser.add_argument('-m', '--ml', default=True,   action='store_const', const=False,
                         help='disables machine learning algorithm')
-    parser.add_argument('-o', '--output',     default="Output", type=str,
+    parser.add_argument('-o', '--output',     default="../Output", type=str,
                         help='name of the output directory')
     parser.add_argument('-l', '--logLevel',   default=20, type=int,   
                             help='integer representing the level of the logger:\
@@ -128,9 +128,13 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--finalState',   default="all", type=str,   
                             help='comma separated list of the final states to analyse: \
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
+    parser.add_argument('-s', '--sample',    default="all", type=str,
+                        help='string with comma separated list of samples to analyse: \
+                        Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')
     args_main = parser.parse_args()
 
     logger_main=set_up.set_up(args_main)
     
 
-    make_histo(args_main, logger_main, "..")
+    make_histo(args_main, logger_main)

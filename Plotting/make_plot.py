@@ -20,7 +20,7 @@ import set_up
 ROOT.gROOT.SetBatch(True)
 
 
-def make_plot (args, logger, path=""):
+def make_plot (args, logger):
     """Main function of the plotting step. The plotting takes for
     each variable the histograms for each final state and sample.
     Then, the histograms are plotted with just the background,
@@ -33,7 +33,7 @@ def make_plot (args, logger, path=""):
     :param logger: Configurated logger for printing messages.
     :type logger: logging.RootLogger
     :param path: Optional base path where the directories
-        ``histograms/`` and ``plot/`` can be found.
+        ``Histograms/`` and ``Plots/`` can be found.
     :type path: str
     """
 
@@ -42,7 +42,7 @@ def make_plot (args, logger, path=""):
     if args.logLevel >= 20:
         ROOT.gErrorIgnoreLevel = ROOT.kWarning
 
-    infile_path = os.path.join(path, args.output, "Histograms", "Histograms.root")
+    infile_path = os.path.join(args.output, "Histograms", "Histograms.root")
     # Check if file exists or not 
     try:
         if not os.path.exists(infile_path):
@@ -70,19 +70,22 @@ def make_plot (args, logger, path=""):
 
                 # Get histograms for the signal
                 signals = {}
-                for final_state in ["FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]:
-                    histo_name = f"SMHiggsToZZTo4L_{final_state}_{variable}_{selection}"
-                    try:
-                        signals[final_state] = plotting_functions.get_histogram(infile, histo_name)
-                    except RuntimeError as run_time_err:
-                        logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
                 
-                try:
-                    plotting_functions.combine_final_states(signals)
-                except KeyError:
-                    logger.debug("ERROR: Failed to create the signal histogram of the combined final states", 
-                                    stack_info=True)
+                # Check if the sample to plot is one of those requested by the user
+                if "SMHiggsToZZTo4L" in args.sample or args.sample == "all":
+                    for final_state in ["FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]:
+                        histo_name = f"SMHiggsToZZTo4L_{final_state}_{variable}_{selection}"
+                        try:
+                            signals[final_state] = plotting_functions.get_histogram(infile, histo_name)
+                        except RuntimeError as run_time_err:
+                            logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
                     
+                    try:
+                        plotting_functions.combine_final_states(signals)
+                    except KeyError:
+                        logger.debug("ERROR: Failed to create the signal histogram of the combined final states", 
+                                        stack_info=True)
+                        
                 # Get the normalized histograms for the signal
                 signals_norm = {}
                 for final_state, signal_histo in signals.items():
@@ -92,22 +95,17 @@ def make_plot (args, logger, path=""):
 
                 # Get histograms for the background
                 backgrounds = {}
-                try:
-                    backgrounds["FourMuons"] = plotting_functions.get_histogram(infile,
-                                    f"ZZTo4mu_FourMuons_{variable}_{selection}")
-                except RuntimeError as run_time_err:
-                        logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
-                        
-                try:
-                    backgrounds["FourElectrons"] = plotting_functions.get_histogram(infile,
-                                    f"ZZTo4e_FourElectrons_{variable}_{selection}")
-                except RuntimeError as run_time_err:
-                        logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
-                        
-                try:
-                    backgrounds["TwoMuonsTwoElectrons"] = plotting_functions.get_histogram(infile,
-                                    f"ZZTo2e2mu_TwoMuonsTwoElectrons_{variable}_{selection}")
-                except RuntimeError as run_time_err:
+                for sample, final_state in {"ZZTo4mu":"FourMuons",
+                                            "ZZTo4e":"FourElectrons",
+                                            "ZZTo2e2mu":"TwoMuonsTwoElectrons"
+                        }.items():
+                    # Check if the sample to plot is one of those requested by the user
+                    if sample not in args.sample and args.sample != "all":
+                        continue
+                    try:
+                        backgrounds[final_state] = plotting_functions.get_histogram(infile,
+                                    f"{sample}_{final_state}_{variable}_{selection}")
+                    except RuntimeError as run_time_err:
                         logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
                 
                 try:
@@ -136,6 +134,9 @@ def make_plot (args, logger, path=""):
                                                       "Run2012C_DoubleElectron"]]
                         ]:
                     for sample in samples:
+                        # Check if the sample to plot is one of those requested by the user
+                        if sample not in args.sample and args.sample != "all":
+                            continue
                         try: 
                             histo = plotting_functions.get_histogram(infile,
                                         f"{sample}_{final_state}_{variable}_{selection}")
@@ -169,7 +170,7 @@ def make_plot (args, logger, path=""):
                         continue
 
                     # Create the directory to save the plots if doesn't already exist
-                    dir_name = os.path.join(path, args.output, "Plots", selection, input_type)
+                    dir_name = os.path.join(args.output, "Plots", selection, input_type)
                     try:
                         os.makedirs(dir_name)
                         logger.debug("Directory %s/ Created", dir_name)
@@ -178,6 +179,10 @@ def make_plot (args, logger, path=""):
 
                     for final_state in ["FourMuons", "FourElectrons",
                                         "TwoMuonsTwoElectrons", "Combined"]:
+                        
+                        if final_state not in args.finalState and args.finalState != "all":
+                            continue
+                        
                         canvas = ROOT.TCanvas("", "", 600, 600)
                         legend = ROOT.TLegend(0.5, 0.7, 0.8, 0.9)
                         legend.SetBorderSize(0)
@@ -244,7 +249,7 @@ if __name__ == "__main__":
 
     # General configuration
     parser = argparse.ArgumentParser( description = 'Analysis Tool' )
-    parser.add_argument('-o', '--output',     default="Output", type=str,
+    parser.add_argument('-o', '--output',     default="../Output", type=str,
                         help='name of the output directory')
     parser.add_argument('-m', '--ml', default=True,   action='store_const', const=False,
                         help='disables machine learning algorithm')
@@ -257,9 +262,13 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--finalState',   default="all", type=str,   
                             help='comma separated list of the final states to analyse: \
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
+    parser.add_argument('-s', '--sample',    default="all", type=str,
+                        help='string with comma separated list of samples to analyse: \
+                        Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')
     args_main = parser.parse_args()
 
     logger_main=set_up.set_up(args_main)
     
     
-    make_plot(args_main, logger_main, "..")
+    make_plot(args_main, logger_main)

@@ -1,6 +1,7 @@
 """ Set up the logger for the analysis, check if 
 the arguments passed are valid and manage the output directory.
 """
+
 import argparse
 import os
 import shutil

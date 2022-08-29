@@ -47,6 +47,9 @@ def fit_mass (args, logger):
         data_chain= ROOT.TChain(tree_name)
 
         for sample_name, final_states in SAMPLES.items():
+            # Check if the sample to plot is one of those requested by the user
+            if sample_name not in args.sample and args.sample != "all":
+                continue
             for final_state in final_states:
                 # Check if the final state is one of those requested by the user
                 if final_state not in args.finalState and args.finalState != "all":
@@ -171,8 +174,12 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--finalState',   default="all", type=str,   
                             help='comma separated list of the final states to analyse: \
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
+    parser.add_argument('-s', '--sample',    default="all", type=str,
+                        help='string with comma separated list of samples to analyse: \
+                        Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')    
     args_main = parser.parse_args()
-
+    
     logger_main=set_up.set_up(args_main)
     
     

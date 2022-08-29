@@ -19,7 +19,7 @@ import set_up
 
 #ROOT.gROOT.SetBatch(True)
 
-def ml_plot (args, logger, path=""):
+def ml_plot (args, logger):
     """ Main function of the plotting step. The plotting takes
     for each variable the histograms for each final state and sample.
     Then, the histograms are plotted with just the background,
@@ -32,14 +32,11 @@ def ml_plot (args, logger, path=""):
     :type args: argparse.Namespace
     :param logger: Configurated logger for printing messages.
     :type logger: logging.RootLogger
-    :param path: Optional base path where the directories
-        ``histograms/`` and ``Discriminant_plots/`` can be found.
-    :type path: str
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
 
-    infile_path = os.path.join(path, args.output, "Histograms",
+    infile_path = os.path.join(args.output, "Histograms",
                                "Histograms_discriminant.root")
     # Check if file exists or not     
     try:
@@ -65,7 +62,7 @@ def ml_plot (args, logger, path=""):
                 logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
                 
     # Create the directory to save the plots if doesn't already exist
-    dir_name = os.path.join(path, args.output, "Discriminant_plots")
+    dir_name = os.path.join(args.output, "Discriminant_plots")
     try:
         os.makedirs(dir_name)
         logger.debug("Directory %s/ Created", dir_name)
@@ -122,7 +119,7 @@ if __name__ == "__main__":
                         const=False, help='disables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,
                         type=int,   help='number of workers' )
-    parser.add_argument('-o', '--output',     default="Output", type=str,
+    parser.add_argument('-o', '--output',     default="../Output", type=str,
                         help='name of the output directory')
     parser.add_argument('-l', '--logLevel',   default=20, type=int,   
                             help='integer representing the level of the logger:\
@@ -132,4 +129,4 @@ if __name__ == "__main__":
     logger_main=set_up.set_up(args_main)
     
 
-    ml_plot(args_main, logger_main, "..")
+    ml_plot(args_main, logger_main)

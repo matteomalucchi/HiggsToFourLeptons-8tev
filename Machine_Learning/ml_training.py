@@ -22,7 +22,7 @@ from Definitions.variables_ml_def import VARIABLES_ML_DICT
 import set_up
 
 
-def ml_training(args, logger, path_o="", path_sd=""):
+def ml_training(args, logger):
     """Main function for the training of the DNN. The DNN is
     trained on the simulated Monte Carlo samples.
 
@@ -30,10 +30,6 @@ def ml_training(args, logger, path_o="", path_sd=""):
     :type args: argparse.Namespace
     :param logger: Configurated logger for printing messages.
     :type logger: logging.RootLogger
-    :param path_o: Optional base path to save the output of the training.
-    :type path_o: str
-    :param path_sd: Optional base path to find the directory ``Skim_data/``.
-    :type path_sd: str
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
@@ -45,7 +41,7 @@ def ml_training(args, logger, path_o="", path_sd=""):
     ROOT.TMVA.PyMethodBase.PyInitialize()
 
     # Create the directory to save the outputs of the ml algorithm if doesn't already exist
-    dir_name = os.path.join(path_o, args.output, "ML_output")
+    dir_name = os.path.join(args.output, "ML_output")
     try:
         os.makedirs(dir_name)
         logger.debug("Directory %s/ Created", dir_name)
@@ -76,6 +72,9 @@ def ml_training(args, logger, path_o="", path_sd=""):
     simulated_samples = {k: v for k, v in SAMPLES.items() if not k.startswith("Run")}
 
     for sample_name, final_states in simulated_samples.items():
+        # Check if the sample to plot is one of those requested by the user
+        if sample_name not in args.sample and args.sample != "all":
+            continue
         for final_state in final_states:
             # Check if the final state is one of those requested by the user
             if final_state not in args.finalState and args.finalState != "all":
@@ -83,7 +82,7 @@ def ml_training(args, logger, path_o="", path_sd=""):
             logger.debug(">>> Process sample %s and final state %s", sample_name, final_state)
             # Check if file exists or not
             try: 
-                file_name=os.path.join(path_sd, args.output, "Skim_data",
+                file_name=os.path.join(args.output, "Skim_data",
                                    f"{sample_name}{final_state}Skim.root")
                 if not os.path.exists(file_name):
                     raise FileNotFoundError
@@ -150,7 +149,7 @@ if __name__ == "__main__":
     parser.add_argument('-v', '--variablesML',     default="tot"  , type=str,
                         help='name of the set of variables to be used \
                             in the ML algorithm (tot, part, higgs)')
-    parser.add_argument('-o', '--output',     default="Output", type=str,
+    parser.add_argument('-o', '--output',     default="../Output", type=str,
                         help='name of the output directory')
     parser.add_argument('-l', '--logLevel',   default=20, type=int,   
                             help='integer representing the level of the logger:\
@@ -158,11 +157,15 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--finalState',   default="all", type=str,   
                             help='comma separated list of the final states to analyse: \
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
+    parser.add_argument('-s', '--sample',    default="all", type=str,
+                        help='string with comma separated list of samples to analyse: \
+                        Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')    
     args_main = parser.parse_args()
 
     logger_main=set_up.set_up(args_main)
     
                 
-    ml_training(args_main, logger_main, "..", "..")
+    ml_training(args_main, logger_main)
 
 #root[] TMVA::TMVAGui("TMVA.root")

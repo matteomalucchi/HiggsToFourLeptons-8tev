@@ -19,17 +19,13 @@ from Definitions.variables_ml_def import VARIABLES_ML_DICT
 
 import set_up
 
-def ml_application(args, logger, path_d="", path_sd=""):
+def ml_application(args, logger):
     """ Main function that avaluates the DNN on the whole dataset.
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
     :param logger: Configurated logger for printing messages.
     :type logger: logging.RootLogger
-    :param path_d: Optional base path where the ``dataset/`` directory can be found
-    :type path_d: str
-    :param path_sd: Optional base path to find the directory ``Skim_data/``.
-    :type path_sd: str
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
@@ -55,12 +51,15 @@ def ml_application(args, logger, path_d="", path_sd=""):
         reader.AddVariable(branch_name, branches[branch_name])
 
     # Book methods
-    dataset_path=os.path.join(path_d, args.output, "ML_output",
+    dataset_path=os.path.join(args.output, "ML_output",
                               "dataset", "weights", "TMVAClassification_PyKeras.weights.xml")
     reader.BookMVA("PyKeras", ROOT.TString(dataset_path))
 
     # Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
+        # Check if the sample to plot is one of those requested by the user
+        if sample_name not in args.sample and args.sample != "all":
+            continue
         # Loop over the possible final states
         for final_state in final_states:
             # Check if the final state is one of those requested by the user
@@ -72,7 +71,7 @@ def ml_application(args, logger, path_d="", path_sd=""):
 
             # Check if file exists or not
             try: 
-                in_file_path=os.path.join(path_sd, args.output,
+                in_file_path=os.path.join(args.output,
                                 "Skim_data", f"{sample_name}{final_state}Skim.root")
                 if not os.path.exists(in_file_path):
                     raise FileNotFoundError
@@ -134,7 +133,7 @@ if __name__ == "__main__":
     parser.add_argument('-v', '--variablesML',     default="tot",
                          type=str,   help='name of the set of variables \
                          to be used in the ML algorithm (tot, part, higgs)')
-    parser.add_argument('-o', '--output',     default="Output", type=str,
+    parser.add_argument('-o', '--output',     default="../Output", type=str,
                         help='name of the output directory')
     parser.add_argument('-l', '--logLevel',   default=20, type=int,   
                             help='integer representing the level of the logger:\
@@ -142,9 +141,13 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--finalState',   default="all", type=str,   
                             help='comma separated list of the final states to analyse: \
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
+    parser.add_argument('-s', '--sample',    default="all", type=str,
+                        help='string with comma separated list of samples to analyse: \
+                        Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')    
     args_main = parser.parse_args()
-
+    
     logger_main=set_up.set_up(args_main)
     
         
-    ml_application(args_main, logger_main, "..", "..")
+    ml_application(args_main, logger_main)

@@ -24,12 +24,13 @@ sys.path.append('../')
 from Definitions.base_path_def import  BASE_PATH
 from Definitions.samples_def import  SAMPLES
 from Definitions.variables_def import  VARIABLES
+from Definitions.weights_def import  WEIGHTS
 
 from Skimming import skim_tools
 
 import set_up
 
-def skim(args, logger, path_sf="skimming", path_sd=""):
+def skim(args, logger, path_sf="Skimming"):
     """ Main function of the skimming step.
     The function loops over the datasets and distinguishes the possible
     final states. It creates for each one of them a RDataFrame which allows
@@ -42,8 +43,6 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
     :type logger: logging.RootLogger
     :param path_sf: Optional base path to find the header file ``skim_functions.h``.
     :type path_sf: str
-    :param path_sd: Optional base path to find the directory ``Skim_data/``.
-    :type path_sd: str
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
@@ -57,7 +56,7 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
         logger.info(">>> Thread pool size for parallel processing: %s", thread_size)
 
     # Create the directory to save the skimmed data if doesn't already exist
-    dir_name = os.path.join(path_sd, args.output, "Skim_data")
+    dir_name = os.path.join(args.output, "Skim_data")
     try:
         os.makedirs(dir_name)
         logger.debug("Directory %s/ Created", dir_name)
@@ -106,7 +105,7 @@ def skim(args, logger, path_sf="skimming", path_sd=""):
             rdf5 = skim_tools.def_mass_pt_eta_phi(rdf4)
             rdf6 = skim_tools.four_vec_boost(rdf5)
             rdf7 = skim_tools.def_angles(rdf6)
-            rdf_final = skim_tools.add_event_weight(rdf7, sample_name)
+            rdf_final = skim_tools.add_event_weight(rdf7, WEIGHTS[sample_name])
             
             if args.logLevel <= 10:
                 rdf_final.Report().Print()
@@ -130,7 +129,7 @@ if __name__ == "__main__":
                             const=False, help='disables running in parallel')
     parser.add_argument('-n', '--nWorkers',   default=0,
                             type=int,   help='number of workers' )
-    parser.add_argument('-o', '--output',     default="Output", type=str,
+    parser.add_argument('-o', '--output',     default="../Output", type=str,
                             help='name of the output directory')
     parser.add_argument('-l', '--logLevel',   default=20, type=int,   
                             help='integer representing the level of the logger:\
@@ -139,11 +138,13 @@ if __name__ == "__main__":
                             help='comma separated list of the final states to analyse: \
                             FourMuons, FourElectrons, TwoMuonsTwoElectrons' )     
     parser.add_argument('-s', '--sample',    default="all", type=str,
-                        help='string with comma separated list of samples to analyse')
+                        help='string with comma separated list of samples to analyse: \
+                        Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')
     args_main = parser.parse_args()
 
 
     logger_main=set_up.set_up(args_main)
     
 
-    skim(args_main, logger_main, "", "..")
+    skim(args_main, logger_main, "")
