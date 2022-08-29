@@ -5,6 +5,8 @@ API
    :toctree: generated
 
    run_analysis
+
+   set_up
    
    Skimming.skim
    Skimming.skim_tools

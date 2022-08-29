@@ -23,6 +23,14 @@ run_analysis
 .. autofunction:: run_analysis.run_analysis
 
 
+Set up the analysis
+===================
+
+set_up
+------
+.. autofunction:: set_up.set_up
+
+
 Skimming
 ========
 
@@ -113,31 +121,6 @@ Test Skim
 test_skim
 ---------
 
-..
-   .. autofunction:: Test.test_skim.TestSkim.test_sip
-   .. autofunction:: Test.test_skim.TestSkim.test_pt_cuts
-   .. autofunction:: Test.test_skim.TestSkim.test_lep_fourvec
-   .. autofunction:: Test.test_skim.TestSkim.test_z_idx_samekind
-   .. autofunction:: Test.test_skim.TestSkim.test_z_fourvec_samekind
-   .. autofunction:: Test.test_skim.TestSkim.test_z_fourvec_2mu2el
-   .. autofunction:: Test.test_skim.TestSkim.test_deltar
-   .. autofunction:: Test.test_skim.TestSkim.test_order_idx_z
-   .. autofunction:: Test.test_skim.TestSkim.test_split_lep_samekind
-   .. autofunction:: Test.test_skim.TestSkim.test_lep1
-   .. autofunction:: Test.test_skim.TestSkim.test_lep2
-   .. autofunction:: Test.test_skim.TestSkim.test_z_heavy
-   .. autofunction:: Test.test_skim.TestSkim.test_z_light
-   .. autofunction:: Test.test_skim.TestSkim.test_boost
-   .. autofunction:: Test.test_skim.TestSkim.test_cross
-   .. autofunction:: Test.test_skim.TestSkim.test_phi
-   .. autofunction:: Test.test_skim.TestSkim.test_theta
-   .. autofunction:: Test.test_skim.TestSkim.test_cos_theta
-
 .. autoclass:: Test.test_skim.TestSkim
    :members:
 
-
-..
-   .. doxygenfunction:: sipDef
-
-   .. doxygenfunction:: HiggsToFourLeptons-8tev::ptCuts

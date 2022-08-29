@@ -1,9 +1,20 @@
+""" Set up the logger for the analysis, check if 
+the arguments passed are valid and manage the output directory.
+"""
 import argparse
 import os
 import shutil
 import logging
 
 def set_up (args):      
+    """ Function that sets up the logger, manages the various arguments 
+    of argparse and handles the output directory.
+    
+    :param args: Global configuration of the analysis.
+    :type args: argparse.Namespace
+    :return: Configuarated logger
+    :rtype: logger   
+    """
     
     # Create and configure logger
     logging.basicConfig( format='\n%(asctime)s - %(filename)s - %(message)s')
@@ -29,7 +40,7 @@ def set_up (args):
         if not any(type_distribution in args.typeDistribution.split(",") for type_distribution 
                in ["all", "data", "background", "signal", "sig_bkg_normalized", "total"]):
             raise argparse.ArgumentTypeError(f"the type of distribution {args.typeDistribution} is invalid: \
-                it must be either all,data,background,signal,sig_bkg_normalized,total")
+                it must be either all, data, background, signal, sig_bkg_normalized, total")
     except argparse.ArgumentTypeError as arg_err:
         logger.exception("%s \n typeDistribution is set to all \n", arg_err, stack_info=True)
         args.typeDistribution = "all"       
@@ -41,7 +52,7 @@ def set_up (args):
         if not any(final_state in args.finalState.split(",") for final_state 
                in ["all", "FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]):
             raise argparse.ArgumentTypeError(f"the final state {args.finalState} is invalid: \
-                it must be either all,FourMuons,FourElectrons,TwoMuonsTwoElectrons")
+                it must be either all, FourMuons, FourElectrons, TwoMuonsTwoElectrons")
     except argparse.ArgumentTypeError as arg_err:
         logger.exception("%s \n finalState is set to all \n", arg_err, stack_info=True)
         args.finalState = "all"  
@@ -73,16 +84,18 @@ def set_up (args):
         args.sample = "all"    
     except AttributeError:
         pass        
-        
+       
     # Clear the output folder
-    if args.clearOutput != "":
-        try:
-            shutil.rmtree(args.clearOutput)
-        except OSError as os_err:
-            logger.debug("ERROR directory %s/ could not be deleted: \n %s", args.clearOutput, os_err)
-        else:
-            logger.debug("Directory %s/ has been succesfully deleted", args.clearOutput)
-
+    try: 
+        if args.clearOutput != "":
+            try:
+                shutil.rmtree(args.clearOutput)
+            except OSError as os_err:
+                logger.debug("ERROR directory %s/ could not be deleted: \n %s", args.clearOutput, os_err)
+            else:
+                logger.debug("Directory %s/ has been succesfully deleted", args.clearOutput)
+    except AttributeError:
+        pass     
 
     # Create the directory to save the outputs if doesn't already exist
     try:
@@ -90,6 +103,8 @@ def set_up (args):
         logger.debug("Directory %s/ Created", args.output)
     except FileExistsError:
         logger.debug("The directory %s/ already exists", args.output)
+    except AttributeError:
+        pass             
         
     return logger
     

@@ -13,7 +13,6 @@ which are later used for a machine learning algorithm.
 """
 
 import argparse
-import logging
 import time
 import os
 import sys
@@ -28,6 +27,7 @@ from Definitions.variables_def import  VARIABLES
 
 from Skimming import skim_tools
 
+import set_up
 
 def skim(args, logger, path_sf="skimming", path_sd=""):
     """ Main function of the skimming step.
@@ -138,32 +138,12 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--finalState',   default="all", type=str,   
                             help='comma separated list of the final states to analyse: \
                             FourMuons, FourElectrons, TwoMuonsTwoElectrons' )     
+    parser.add_argument('-s', '--sample',    default="all", type=str,
+                        help='string with comma separated list of samples to analyse')
     args_main = parser.parse_args()
 
-    # Create and configure logger
-    logging.basicConfig( format='\n%(asctime)s %(message)s')
-    # Create an object
-    logger_main=logging.getLogger()
+
+    logger_main=set_up.set_up(args_main)
     
-    # Check if logLevel valid           
-    try:
-        if args_main.logLevel not in [10, 20, 30, 40]:
-            raise argparse.ArgumentTypeError(f"the value for logLevel {args_main.logLevel} is invalid: it must be either 10, 20, 30 or 40")
-    except argparse.ArgumentTypeError as arg_err:
-        args_main.logLevel = 20
-        logger_main.exception("%s \nlogLevel is set to 20 \n", arg_err, stack_info=True)
-        
-    # Set the threshold of logger
-    logger_main.setLevel(args_main.logLevel)
-    
-    # Check if finalState is valid
-    try:
-        if not any(final_state in args_main.finalState for final_state 
-               in ["all", "FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]):
-            raise argparse.ArgumentTypeError(f"the final state {args_main.finalState} is invalid: \
-                it must be either all,FourMuons,FourElectrons,TwoMuonsTwoElectrons")
-    except argparse.ArgumentTypeError as arg_err:
-        logger_main.exception("%s \n finalState is set to all \n", arg_err, stack_info=True)
-        args_main.finalState = "all"  
-        
+
     skim(args_main, logger_main, "", "..")

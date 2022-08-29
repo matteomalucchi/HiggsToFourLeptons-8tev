@@ -6,7 +6,6 @@ inital dataset based on observables motivated through physics.
 import os
 import sys
 import argparse
-import logging
 
 import ROOT
 
@@ -15,6 +14,8 @@ sys.path.append('../')
 from Definitions.variables_def import VARIABLES_DICT
 from Definitions.selections_def import  SELECTIONS
 from Plotting import plotting_functions
+
+import set_up
 
 ROOT.gROOT.SetBatch(True)
 
@@ -258,41 +259,7 @@ if __name__ == "__main__":
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
     args_main = parser.parse_args()
 
-    # Create and configure logger
-    logging.basicConfig( format='\n%(asctime)s %(message)s')
-    # Create an object
-    logger_main=logging.getLogger()
+    logger_main=set_up.set_up(args_main)
     
-    # Check if logLevel valid       
-    try:
-        if args_main.logLevel not in [10, 20, 30, 40]:
-            raise argparse.ArgumentTypeError(f"the value for logLevel {args_main.logLevel} is invalid: it must be either 10, 20, 30 or 40")
-    except argparse.ArgumentTypeError as arg_err:
-        args_main.logLevel = 20
-        logger_main.exception("%s \nlogLevel is set to 20 \n", arg_err, stack_info=True)
-        
-    # Set the threshold of logger
-    logger_main.setLevel(args_main.logLevel)
-
-    # Check if finalState is valid
-    try:
-        if not any(final_state in args_main.finalState for final_state 
-               in ["all", "FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]):
-            raise argparse.ArgumentTypeError(f"the final state {args_main.finalState} is invalid: \
-                it must be either all,FourMuons,FourElectrons,TwoMuonsTwoElectrons")
-    except argparse.ArgumentTypeError as arg_err:
-        logger_main.exception("%s \n finalState is set to all \n", arg_err, stack_info=True)
-        args_main.finalState = "all"  
     
-    # Check if typeDistribution is valid
-    try:
-        if not any(type_distribution in args_main.typeDistribution for type_distribution 
-               in ["all", "data", "background", "signal", "sig_bkg_normalized", "total"]):
-            raise argparse.ArgumentTypeError(f"the type of distribution {args_main.typeDistribution} is invalid: \
-                it must be either all,data,background,signal,sig_bkg_normalized,total")
-    except argparse.ArgumentTypeError as arg_err:
-        logger_main.exception("%s \n typeDistribution is set to all \n", arg_err, stack_info=True)
-        args_main.typeDistribution = "all"  
-        
-
     make_plot(args_main, logger_main, "..")

@@ -7,13 +7,15 @@ separated in the three possible final states.
 
 import os
 import argparse
-import logging
+
 import sys
 
 import ROOT
 
 sys.path.append('../')
 from Plotting import plotting_functions
+
+import set_up
 
 #ROOT.gROOT.SetBatch(True)
 
@@ -127,20 +129,7 @@ if __name__ == "__main__":
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
     args_main = parser.parse_args()
 
-    # Create and configure logger
-    logging.basicConfig( format='\n%(asctime)s %(message)s')
-    # Create an object
-    logger_main=logging.getLogger()
+    logger_main=set_up.set_up(args_main)
     
-    # Check if logLevel valid           
-    try:
-        if args_main.logLevel not in [10, 20, 30, 40]:
-            raise argparse.ArgumentTypeError(f"the value for logLevel {args_main.logLevel} is invalid: it must be either 10, 20, 30 or 40")
-    except argparse.ArgumentTypeError as arg_err:
-        args_main.logLevel = 20
-        logger_main.exception("%s \nlogLevel is set to 20 \n", arg_err, stack_info=True)
-        
-    # Set the threshold of logger
-    logger_main.setLevel(args_main.logLevel)
 
     ml_plot(args_main, logger_main, "..")
