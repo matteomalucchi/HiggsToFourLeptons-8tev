@@ -97,11 +97,13 @@ def make_histo(args, logger):
                 histos = {}
                 try:
                     for variable in variables:
-                        if variable != "Weight":
-                                histos[variable] = histogramming_functions.book_histogram_1d\
-                                                        (rdf, variable, var_dict[variable])
-                                histogramming_functions.write_histogram(histos[variable],
-                                                        f"{sample_name}_{final_state}_{variable}_{selection}")
+                        # Check if the variable to plot is one of those requested by the user
+                        if (variable not in args.variableDistribution and args.variableDistribution != "all") or variable == "Weight":
+                            continue
+                        histos[variable] = histogramming_functions.book_histogram_1d\
+                                                (rdf, variable, var_dict[variable])
+                        histogramming_functions.write_histogram(histos[variable],
+                                                f"{sample_name}_{final_state}_{variable}_{selection}")
                 except TypeError:
                     logger.debug("Sample %s final state %s is empty", sample_name, final_state)
                     
@@ -132,6 +134,9 @@ if __name__ == "__main__":
                         help='string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
                         Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')
+    parser.add_argument('-u', '--variableDistribution',    default="all", type=str,
+                        help='string with comma separated list of the variables to plot. \
+                            The complete list is defined in "variables_def.py"') 
     args_main = parser.parse_args()
 
     logger_main=set_up.set_up(args_main)

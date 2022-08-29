@@ -7,6 +7,8 @@ import os
 import shutil
 import logging
 
+from Definitions.variables_def import  VARIABLES_COMPLETE
+
 def set_up (args):      
     """ Function that sets up the logger, manages the various arguments 
     of argparse and handles the output directory.
@@ -84,7 +86,19 @@ def set_up (args):
         logger.exception("%s \n sample is set to all \n", arg_err, stack_info=True)
         args.sample = "all"    
     except AttributeError:
-        pass        
+        pass     
+    
+    # Check if variable is valid
+    try:
+        if not any(variable in args.variableDistribution.split(",") for variable 
+               in ["all"] + list(VARIABLES_COMPLETE.keys())):
+            raise argparse.ArgumentTypeError(f"the variable {args.variableDistribution} is invalid: \
+                it must be one of those listed in 'variables_def.py' ")
+    except argparse.ArgumentTypeError as arg_err:
+        logger.exception("%s \n variable is set to all \n", arg_err, stack_info=True)
+        args.variableDistribution = "all"    
+    except AttributeError:
+        pass       
        
     # Clear the output folder
     try: 
