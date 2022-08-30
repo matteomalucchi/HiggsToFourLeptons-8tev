@@ -149,8 +149,8 @@ def fit_mass (args, logger):
         out_file_name= os.path.join(dir_name, f"Workspace_mass_fit_{selection}.root")
         fOutput = ROOT.TFile(out_file_name,"RECREATE")
         ws = ROOT.RooWorkspace("ws") 
-        getattr(ws,'import')(totPDF)
-        getattr(ws,'import')(data)
+        getattr(ws,"import")(totPDF)
+        getattr(ws,"import")(data)
         ws.writeToFile(out_file_name)
         del ws
 
@@ -161,23 +161,23 @@ def fit_mass (args, logger):
 if __name__ == "__main__":
     
     # General configuration
-    parser = argparse.ArgumentParser( description = 'Analysis Tool' )
-    parser.add_argument('-p', '--parallel',   default=True,   action='store_const',   
-                        const=False, help='disables running in parallel')
-    parser.add_argument('-n', '--nWorkers',   default=0,                       
-                        type=int,   help='number of workers' )  
-    parser.add_argument('-o', '--output',     default="Output", type=str,  
-                        help='name of the output directory')
-    parser.add_argument('-l', '--logLevel',   default=20, type=int,   
-                            help='integer representing the level of the logger:\
-                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
-    parser.add_argument('-f', '--finalState',   default="all", type=str,   
-                            help='comma separated list of the final states to analyse: \
-                            FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
-    parser.add_argument('-s', '--sample',    default="all", type=str,
-                        help='string with comma separated list of samples to analyse: \
+    parser = argparse.ArgumentParser( description = "Analysis Tool" )
+    parser.add_argument("-p", "--parallel",   default=True,   action="store_const",   
+                        const=False, help="disables running in parallel")
+    parser.add_argument("-n", "--nWorkers",   default=0,                       
+                        type=int,   help="number of workers" )  
+    parser.add_argument("-o", "--output",     default="Output", type=str,  
+                        help="name of the output directory")
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+                            help="integer representing the level of the logger:\
+                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
+    parser.add_argument("-f", "--finalState",   default="all", type=str,   
+                            help="comma separated list of the final states to analyse: \
+                            FourMuons,FourElectrons,TwoMuonsTwoElectrons" )
+    parser.add_argument("-s", "--sample",    default="all", type=str,
+                        help="string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
-                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')    
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")    
     args_main = parser.parse_args()
     
     logger_main=set_up.set_up(args_main)

@@ -22,7 +22,7 @@ def set_up (args):
     """
     
     # Create and configure logger
-    logging.basicConfig( format='\n%(asctime)s - %(filename)s - %(message)s')
+    logging.basicConfig( format="\n%(asctime)s - %(filename)s - %(message)s")
     # Create an object
     logger=logging.getLogger() 
        
@@ -66,13 +66,13 @@ def set_up (args):
     
     # Check if variablesML is valid
     try:
-        if not any(var_ml in args.variablesML for var_ml 
+        if not any(var_ml in args.algorithmMLVar for var_ml 
                in ["tot", "part", "higgs"]):
-            raise argparse.ArgumentTypeError(f"the set of ML variables {args.variablesML} is invalid: \
+            raise argparse.ArgumentTypeError(f"the set of ML variables {args.algorithmMLVar} is invalid: \
                 it must be either tot, part, higgs")
     except argparse.ArgumentTypeError as arg_err:
         logger.exception("%s \n variablesML is set to tot \n", arg_err, stack_info=True)
-        args.variablesML = "tot"    
+        args.algorithmMLVar = "tot"    
     except AttributeError:
         pass
     
@@ -101,6 +101,15 @@ def set_up (args):
     except AttributeError:
         pass       
        
+    # Create the directory to save the downloaded files if doesn't already exist
+    try:
+        os.makedirs(args.download)
+        logger.debug("Directory %s/ Created", args.download)
+    except FileExistsError:
+        logger.debug("The directory %s/ already exists", args.download)
+    except AttributeError:
+        pass           
+    
     # Clear the output folder
     try: 
         if args.clearOutput != "":

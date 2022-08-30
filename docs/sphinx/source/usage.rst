@@ -31,6 +31,14 @@ set_up
 .. autofunction:: set_up.set_up
 
 
+Download the datasets
+=====================
+
+download
+--------
+.. autofunction:: download.download
+
+
 Skimming
 ========
 

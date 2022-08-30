@@ -1,5 +1,4 @@
-"""
-In this step the DNN is trained on the Monte Carlo samples
+""" In this step the DNN is trained on the Monte Carlo samples
 of signal and background. The training is done thanks to
 keras API.
 """
@@ -14,7 +13,7 @@ from tensorflow.keras.layers import Dense
 
 import ROOT
 
-sys.path.append('../')
+sys.path.append("../")
 
 from Definitions.samples_def import SAMPLES
 from Definitions.variables_ml_def import VARIABLES_ML_DICT
@@ -56,7 +55,7 @@ def ml_training(args, logger):
                         "!V:!Silent:Color:DrawProgressBar:Transformations=D,G:AnalysisType=Classification")
 
     # Variables used in the ML algorithm
-    variables=VARIABLES_ML_DICT[args.variablesML]
+    variables=VARIABLES_ML_DICT[args.algorithmMLVar]
     
     # Directory where the weights are saved
     dataset_path=os.path.join(dir_name, "dataset")
@@ -145,22 +144,22 @@ def ml_training(args, logger):
 if __name__ == "__main__":
     
     # General configuration
-    parser = argparse.ArgumentParser( description = 'Analysis Tool' )
-    parser.add_argument('-v', '--variablesML',     default="tot"  , type=str,
-                        help='name of the set of variables to be used \
-                            in the ML algorithm (tot, part, higgs)')
-    parser.add_argument('-o', '--output',     default="../Output", type=str,
-                        help='name of the output directory')
-    parser.add_argument('-l', '--logLevel',   default=20, type=int,   
-                            help='integer representing the level of the logger:\
-                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
-    parser.add_argument('-f', '--finalState',   default="all", type=str,   
-                            help='comma separated list of the final states to analyse: \
-                            FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
-    parser.add_argument('-s', '--sample',    default="all", type=str,
-                        help='string with comma separated list of samples to analyse: \
+    parser = argparse.ArgumentParser( description = "Analysis Tool" )
+    parser.add_argument("-a", "--algorithmMLVar",     default="tot"  , type=str,
+                        help="name of the set of variables to be used \
+                            in the ML algorithm (tot, part, higgs)")
+    parser.add_argument("-o", "--output",     default="../Output", type=str,
+                        help="name of the output directory")
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+                            help="integer representing the level of the logger:\
+                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
+    parser.add_argument("-f", "--finalState",   default="all", type=str,   
+                            help="comma separated list of the final states to analyse: \
+                            FourMuons,FourElectrons,TwoMuonsTwoElectrons" )
+    parser.add_argument("-s", "--sample",    default="all", type=str,
+                        help="string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
-                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')    
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")    
     args_main = parser.parse_args()
 
     logger_main=set_up.set_up(args_main)

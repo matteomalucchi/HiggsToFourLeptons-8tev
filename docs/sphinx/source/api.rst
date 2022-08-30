@@ -4,9 +4,18 @@ API
 .. autosummary::
    :toctree: generated
 
+   Definitions.eos_link_def
+   Definitions.samples_def
+   Definitions.selections_def
+   Definitions.variables_def
+   Definitions.variables_ml_def
+   Definitions.weights_def
+
    run_analysis
 
    set_up
+
+   download
    
    Skimming.skim
    Skimming.skim_tools

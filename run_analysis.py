@@ -1,5 +1,4 @@
-"""
-Running of the whole analysis. Various possible arguments
+""" Running of the whole analysis. Various possible arguments
 can be provided in order to customize the process.
 """
 
@@ -13,6 +12,7 @@ from Skimming import skim
 from Machine_Learning import  ml_training, ml_application, ml_selection
 from Plotting import make_plot, ml_plot
 from Histogramming import make_histo, ml_histo
+import download
 import fit_mass
 
 import set_up
@@ -51,17 +51,17 @@ def run_analysis (argv):
     parser.add_argument("-m", "--ml", default=True,   action="store_const", const=False,
                             help="disables machine learning algorithm")
     
-    parser.add_argument("-v", "--variablesML",     default="tot" , type=str,
+    parser.add_argument("-a", "--algorithmMLVar",     default="tot" , type=str,
                             help="name of the set of variables to be used in the ML \
                             algorithm defined 'variables_ml_def.py': tot, part, higgs")
     
-    parser.add_argument("-i", "--invariantMassFit", default=True,   action="store_const", const=False,
-                        help="disables fit of the Higgs mass")
+    parser.add_argument("-i", "--invariantMassFit", default=True,   
+                            action="store_const", const=False,
+                            help="disables fit of the Higgs mass")
     
-    parser.add_argument("-d", "--distribution",   default=True,
+    parser.add_argument("-g", "--graphPlots",   default=True,
                             action="store_const",     const=False,
-                            help="disables the histogramming and \
-                            plotting of the variable distributions")
+                            help="disables the graphing of the distribution plots")
     
     parser.add_argument("-t", "--typeDistribution",   default="all", type=str,   
                             help="comma separated list of the type of distributions to plot: \
@@ -72,24 +72,26 @@ def run_analysis (argv):
                             Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
                             Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
     
-    parser.add_argument("-u", "--variableDistribution",    default="all", type=str,
+    parser.add_argument("-v", "--variableDistribution",    default="all", type=str,
                             help="string with comma separated list of the variables to plot. \
                             The complete list is defined in 'variables_def.py'")   
      
-    parser.add_argument("-b", "--basePath",  nargs="?", default="Input", const=EOS_LINK,
+    parser.add_argument("-b", "--basePath",  nargs="?", default="Input",  const=EOS_LINK,
                             type=str, help="base path where to find the input data. \
                             If enabled it automatically gets the input data from EOS")
     
+    parser.add_argument("-d", "--download",  nargs="?", default="",  const="Input",
+                            type=str, help="enables the download of input data")
+        
     parser.add_argument("-o", "--output",     default="Output", type=str,
                             help="name of the output directory")
-
-    
-    #parser.add_argument("-c", "--configfile", default="Configurations/HZZConfiguration.py",
-     #                   type=str,   help="files to be analysed")
     
     args_global = parser.parse_args()
        
     logger_global=set_up.set_up(args_global)
+    
+    if args_global.download != "":
+        download.download(args_global, logger_global)
 
     skim.skim(args_global, logger_global)
     

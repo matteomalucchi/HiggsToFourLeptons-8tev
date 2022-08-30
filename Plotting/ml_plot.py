@@ -12,7 +12,7 @@ import sys
 
 import ROOT
 
-sys.path.append('../')
+sys.path.append("../")
 from Plotting import plotting_functions
 
 import set_up
@@ -114,16 +114,16 @@ def ml_plot (args, logger):
 if __name__ == "__main__":
 
     # General configuration
-    parser = argparse.ArgumentParser( description = 'Analysis Tool' )
-    parser.add_argument('-p', '--parallel',   default=True,   action='store_const',
-                        const=False, help='disables running in parallel')
-    parser.add_argument('-n', '--nWorkers',   default=0,
-                        type=int,   help='number of workers' )
-    parser.add_argument('-o', '--output',     default="../Output", type=str,
-                        help='name of the output directory')
-    parser.add_argument('-l', '--logLevel',   default=20, type=int,   
-                            help='integer representing the level of the logger:\
-                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
+    parser = argparse.ArgumentParser( description = "Analysis Tool" )
+    parser.add_argument("-p", "--parallel",   default=True,   action="store_const",
+                        const=False, help="disables running in parallel")
+    parser.add_argument("-n", "--nWorkers",   default=0,
+                        type=int,   help="number of workers" )
+    parser.add_argument("-o", "--output",     default="../Output", type=str,
+                        help="name of the output directory")
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+                            help="integer representing the level of the logger:\
+                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
     args_main = parser.parse_args()
 
     logger_main=set_up.set_up(args_main)

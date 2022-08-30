@@ -1,5 +1,4 @@
-"""
-This step consists in the selection of the events for which
+""" This step consists in the selection of the events for which
 the discriminant created by the DNN is above the 0.5 threshold.
 A new set of files is created for this purpose.
 """
@@ -12,7 +11,7 @@ import argparse
 
 import ROOT
 
-sys.path.append('../')
+sys.path.append("../")
 from Definitions.samples_def import  SAMPLES
 from Definitions.variables_def import VARIABLES_COMPLETE
 
@@ -80,23 +79,23 @@ def ml_selection(args, logger):
 if __name__ == "__main__":
 
     # General configuration
-    parser = argparse.ArgumentParser( description = 'Analysis Tool' )
-    parser.add_argument('-p', '--parallel',   default=True,   action='store_const',
-                        const=False, help='disables running in parallel')
-    parser.add_argument('-n', '--nWorkers',   default=0,
-                        type=int,   help='number of workers' )
-    parser.add_argument('-o', '--output',     default="../Output", type=str,
-                        help='name of the output directory')
-    parser.add_argument('-l', '--logLevel',   default=20, type=int,   
-                            help='integer representing the level of the logger:\
-                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
-    parser.add_argument('-f', '--finalState',   default="all", type=str,   
-                            help='comma separated list of the final states to analyse: \
-                            FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
-    parser.add_argument('-s', '--sample',    default="all", type=str,
-                        help='string with comma separated list of samples to analyse: \
+    parser = argparse.ArgumentParser( description = "Analysis Tool" )
+    parser.add_argument("-p", "--parallel",   default=True,   action="store_const",
+                        const=False, help="disables running in parallel")
+    parser.add_argument("-n", "--nWorkers",   default=0,
+                        type=int,   help="number of workers" )
+    parser.add_argument("-o", "--output",     default="../Output", type=str,
+                        help="name of the output directory")
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+                            help="integer representing the level of the logger:\
+                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
+    parser.add_argument("-f", "--finalState",   default="all", type=str,   
+                            help="comma separated list of the final states to analyse: \
+                            FourMuons,FourElectrons,TwoMuonsTwoElectrons" )
+    parser.add_argument("-s", "--sample",    default="all", type=str,
+                        help="string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
-                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')    
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")    
     args_main = parser.parse_args()
     
     logger_main=set_up.set_up(args_main)

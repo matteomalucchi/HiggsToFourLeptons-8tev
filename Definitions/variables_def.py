@@ -1,5 +1,3 @@
-import math
-
 """Each entry in the dictionary contains the name of the variable 
 saved in the output file to be further studied as key and a tuple 
 specifying the histogram details as value.
@@ -7,6 +5,9 @@ The tuple sets the number of bins, the lower edge and the upper
 edge of the histogram, as well as a human-readable label for each 
 variable on the plot axis and the units of measurement (if any).
 """
+
+import math
+
 
 VARIABLES = {
         "Weight": (),

@@ -1,5 +1,4 @@
-"""
-Implementation of the skimming process
+""" Implementation of the skimming process
 
 This consists in reducing the initial samples to a dataset
 specific for this analysis. The skimming removes all events
@@ -19,7 +18,7 @@ import sys
 
 import ROOT
 
-sys.path.append('../')
+sys.path.append("../")
 
 from Definitions.eos_link_def import  EOS_LINK
 from Definitions.samples_def import  SAMPLES
@@ -127,26 +126,26 @@ def skim(args, logger, path_sf="Skimming"):
 if __name__ == "__main__":    
     
     # General configuration
-    parser = argparse.ArgumentParser( description = 'Analysis Tool' )
-    parser.add_argument('-r', '--range',  nargs='?', default=0, const=10000000, type=int,
-                            help='number of events on which the analysis \
-                            is ran over (does not work in parallel)')
-    parser.add_argument('-p', '--parallel',   default=True,   action='store_const',
-                            const=False, help='disables running in parallel')
-    parser.add_argument('-n', '--nWorkers',   default=0,
-                            type=int,   help='number of workers' )
-    parser.add_argument('-o', '--output',     default="../Output", type=str,
-                            help='name of the output directory')
-    parser.add_argument('-l', '--logLevel',   default=20, type=int,   
-                            help='integer representing the level of the logger:\
-                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
-    parser.add_argument('-f', '--finalState',   default="all", type=str,   
-                            help='comma separated list of the final states to analyse: \
-                            FourMuons, FourElectrons, TwoMuonsTwoElectrons' )     
-    parser.add_argument('-s', '--sample',    default="all", type=str,
-                        help='string with comma separated list of samples to analyse: \
+    parser = argparse.ArgumentParser( description = "Analysis Tool" )
+    parser.add_argument("-r", "--range",  nargs="?", default=0, const=10000000, type=int,
+                            help="number of events on which the analysis \
+                            is ran over (does not work in parallel)")
+    parser.add_argument("-p", "--parallel",   default=True,   action="store_const",
+                            const=False, help="disables running in parallel")
+    parser.add_argument("-n", "--nWorkers",   default=0,
+                            type=int,   help="number of workers" )
+    parser.add_argument("-o", "--output",     default="../Output", type=str,
+                            help="name of the output directory")
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+                            help="integer representing the level of the logger:\
+                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
+    parser.add_argument("-f", "--finalState",   default="all", type=str,   
+                            help="comma separated list of the final states to analyse: \
+                            FourMuons, FourElectrons, TwoMuonsTwoElectrons" )     
+    parser.add_argument("-s", "--sample",    default="all", type=str,
+                        help="string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
-                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
     parser.add_argument("-b", "--basePath",  nargs="?", default="../Input",  const=EOS_LINK,
                             type=str, help="base path where to find the input data. \
                             If enabled it automatically gets the input data from EOS")

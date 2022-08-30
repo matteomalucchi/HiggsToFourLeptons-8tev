@@ -1,5 +1,4 @@
-"""
-In this step the trained DNN is evaluated on the various datasets
+""" In this step the trained DNN is evaluated on the various datasets
 and the resulting disciminant is saved in a new branch of the "Events" tree.
 """
 
@@ -13,7 +12,7 @@ import argparse
 
 import ROOT
 
-sys.path.append('../')
+sys.path.append("../")
 from Definitions.samples_def import SAMPLES
 from Definitions.variables_ml_def import VARIABLES_ML_DICT
 
@@ -42,7 +41,7 @@ def ml_application(args, logger):
     reader = ROOT.TMVA.Reader("Color:!Silent")
 
     # Variables used in the ML algorithm
-    variables=VARIABLES_ML_DICT[args.variablesML]
+    variables=VARIABLES_ML_DICT[args.algorithmMLVar]
 
     branches = {}
     for branch_name in variables:
@@ -100,17 +99,17 @@ def ml_application(args, logger):
             for i in range(tree.GetEntries()):
                 new_tree.GetEntry(i)
                 
-                '''if args.variablesML == "tot":
+                '''if args.algorithmMLVar == "tot":
                     discr_array[0] = reader.EvaluateMVA([new_tree.Z1_mass,
                                         new_tree.Z2_mass, new_tree.cos_theta_star,
                                         new_tree.Phi, new_tree.Phi1, new_tree.cos_theta1,
                                         new_tree.cos_theta2], "PyKeras")
-                elif args.variablesML == "part":
+                elif args.algorithmMLVar == "part":
                     discr_array[0] = reader.EvaluateMVA([new_tree.cos_theta_star,
                                                          new_tree.Phi, new_tree.Phi1,
                                                          new_tree.cos_theta1,
                                                          new_tree.cos_theta2], "PyKeras")
-                elif args.variablesML == "higgs":
+                elif args.algorithmMLVar == "higgs":
                     discr_array[0] = reader.EvaluateMVA([new_tree.Higgs_mass], "PyKeras")'''
                     
                 discr_array[0]= rand.Rndm()
@@ -125,26 +124,26 @@ def ml_application(args, logger):
 if __name__ == "__main__":    
     
     # General configuration
-    parser = argparse.ArgumentParser( description = 'Analysis Tool' )
-    parser.add_argument('-p', '--parallel',   default=True,   action='store_const',
-                        const=False, help='disables running in parallel')
-    parser.add_argument('-n', '--nWorkers',   default=0,
-                        type=int,   help='number of workers' )
-    parser.add_argument('-v', '--variablesML',     default="tot",
-                         type=str,   help='name of the set of variables \
-                         to be used in the ML algorithm (tot, part, higgs)')
-    parser.add_argument('-o', '--output',     default="../Output", type=str,
-                        help='name of the output directory')
-    parser.add_argument('-l', '--logLevel',   default=20, type=int,   
-                            help='integer representing the level of the logger:\
-                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40' )
-    parser.add_argument('-f', '--finalState',   default="all", type=str,   
-                            help='comma separated list of the final states to analyse: \
-                            FourMuons,FourElectrons,TwoMuonsTwoElectrons' )
-    parser.add_argument('-s', '--sample',    default="all", type=str,
-                        help='string with comma separated list of samples to analyse: \
+    parser = argparse.ArgumentParser( description = "Analysis Tool" )
+    parser.add_argument("-p", "--parallel",   default=True,   action="store_const",
+                        const=False, help="disables running in parallel")
+    parser.add_argument("-n", "--nWorkers",   default=0,
+                        type=int,   help="number of workers" )
+    parser.add_argument("-a", "--algorithmMLVar",     default="tot",
+                         type=str,   help="name of the set of variables \
+                         to be used in the ML algorithm (tot, part, higgs)")
+    parser.add_argument("-o", "--output",     default="../Output", type=str,
+                        help="name of the output directory")
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+                            help="integer representing the level of the logger:\
+                             DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
+    parser.add_argument("-f", "--finalState",   default="all", type=str,   
+                            help="comma separated list of the final states to analyse: \
+                            FourMuons,FourElectrons,TwoMuonsTwoElectrons" )
+    parser.add_argument("-s", "--sample",    default="all", type=str,
+                        help="string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
-                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')    
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")    
     args_main = parser.parse_args()
     
     logger_main=set_up.set_up(args_main)
