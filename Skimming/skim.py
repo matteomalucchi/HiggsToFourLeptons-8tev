@@ -21,7 +21,7 @@ import ROOT
 
 sys.path.append('../')
 
-from Definitions.base_path_def import BASE_PATH
+from Definitions.eos_link_def import  EOS_LINK
 from Definitions.samples_def import  SAMPLES
 from Definitions.variables_def import  VARIABLES
 from Definitions.weights_def import  WEIGHTS
@@ -29,6 +29,7 @@ from Definitions.weights_def import  WEIGHTS
 from Skimming import skim_tools
 
 import set_up
+
 
 def skim(args, logger, path_sf="Skimming"):
     """ Main function of the skimming step.
@@ -65,7 +66,7 @@ def skim(args, logger, path_sf="Skimming"):
         
     #Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
-        file_name=os.path.join(BASE_PATH, f"{sample_name}.root")
+        file_name=os.path.join(args.basePath, f"{sample_name}.root")
         
         # Check if the sample is one of those requested by the user
         if sample_name not in args.sample and args.sample != "all":
@@ -75,11 +76,14 @@ def skim(args, logger, path_sf="Skimming"):
         try:
             if not os.path.exists(file_name):
                 raise FileNotFoundError
-            rdf = ROOT.RDataFrame("Events", file_name)
         except FileNotFoundError as not_fund_err:
-            logger.debug("Sample %s: File %s can't be found %s",
-                                sample_name, file_name, not_fund_err,  stack_info=True)
-            continue
+            logger.debug("File %s.root can't be found locally %s",
+                            sample_name, not_fund_err,  stack_info=True)
+            logger.debug("File %s.root is obtained from the following EOS link: \n %s",
+                            sample_name, EOS_LINK,  stack_info=True)
+            file_name=os.path.join(EOS_LINK, f"{sample_name}.root")
+        finally:
+            rdf = ROOT.RDataFrame("Events", file_name)
 
         # Analysis only part of the data if the range option is active
         if args.range != 0:
@@ -87,9 +91,11 @@ def skim(args, logger, path_sf="Skimming"):
 
         # Loop over the possible final states
         for final_state in final_states:
+            
             # Check if the final state is one of those requested by the user
             if final_state not in args.finalState and args.finalState != "all":
                 continue
+            
             logger.info(">>> Process sample: %s and final state %s \n", sample_name, final_state)
 
             start_time = time.time()
@@ -141,8 +147,7 @@ if __name__ == "__main__":
                         help='string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
                         Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu')
-    parser.add_argument("-b", "--basePath",  nargs="?", default="../Input", 
-                            const="root://eospublic.cern.ch//eos/opendata/cms/derived-data/AOD2NanoAODOutreachTool/ForHiggsTo4Leptons",
+    parser.add_argument("-b", "--basePath",  nargs="?", default="../Input",  const=EOS_LINK,
                             type=str, help="base path where to find the input data. \
                             If enabled it automatically gets the input data from EOS")
     args_main = parser.parse_args()

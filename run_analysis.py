@@ -7,6 +7,7 @@ import argparse
 import sys
 import time
 
+from Definitions.eos_link_def import  EOS_LINK
 
 from Skimming import skim
 from Machine_Learning import  ml_training, ml_application, ml_selection
@@ -75,8 +76,7 @@ def run_analysis (argv):
                             help="string with comma separated list of the variables to plot. \
                             The complete list is defined in 'variables_def.py'")   
      
-    parser.add_argument("-b", "--basePath",  nargs="?", default="Input", 
-                            const="root://eospublic.cern.ch//eos/opendata/cms/derived-data/AOD2NanoAODOutreachTool/ForHiggsTo4Leptons",
+    parser.add_argument("-b", "--basePath",  nargs="?", default="Input", const=EOS_LINK,
                             type=str, help="base path where to find the input data. \
                             If enabled it automatically gets the input data from EOS")
     
