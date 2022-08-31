@@ -93,7 +93,7 @@ def run_analysis (argv):
     if args_global.download != "":
         download.download(args_global, logger_global)
 
-    skim.skim(args_global, logger_global)
+    """skim.skim(args_global, logger_global)
     
     if args_global.ml:
         ml_training.ml_training(args_global, logger_global)
@@ -107,7 +107,7 @@ def run_analysis (argv):
         make_plot.make_plot(args_global, logger_global)
         
     if args_global.invMassFit:
-        fit_mass.fit_mass(args_global, logger_global)
+        fit_mass.fit_mass(args_global, logger_global)"""
 
     logger_global.info(">>> Execution time: %s s \n", (time.time() - start_time))
 

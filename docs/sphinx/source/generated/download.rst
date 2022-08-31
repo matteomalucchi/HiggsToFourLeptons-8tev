@@ -14,6 +14,7 @@
    .. autosummary::
    
       download
+      get_file
    
    
 

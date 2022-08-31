@@ -132,6 +132,7 @@ dmypy.json
 #Input/
 documentation/
 Output/
+downloads/
 
 # workspace
 *.code-workspace

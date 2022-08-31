@@ -13,6 +13,8 @@
 
    .. autosummary::
    
+      check_val
+      create_dir
       set_up
    
    

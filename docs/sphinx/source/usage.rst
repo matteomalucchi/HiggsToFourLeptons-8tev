@@ -29,6 +29,8 @@ Set up the analysis
 set_up
 ------
 .. autofunction:: set_up.set_up
+.. autofunction:: set_up.check_val
+.. autofunction:: set_up.create_dir
 
 
 Download the datasets
@@ -37,6 +39,7 @@ Download the datasets
 download
 --------
 .. autofunction:: download.download
+.. autofunction:: download.get_file
 
 
 Skimming

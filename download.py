@@ -1,13 +1,18 @@
 """ Download the various sample from the CMS open-data portal.
 """
 
-import urllib
-import wget
+import urllib.error
+import urllib.request
 import argparse
 import os 
+import threading as thr
+from time import perf_counter
+from functools import wraps
 
 import set_up
 
+
+            
 SAMPLES_DOWNLOAD={
     "SMHiggsToZZTo4L" : 12361,
     "ZZTo4mu" : 12362,
@@ -19,8 +24,59 @@ SAMPLES_DOWNLOAD={
     "Run2012C_DoubleElectron" : 12368
 }
 
+def get_file(log, num, sample, file):
+    """Function that downloads the various sample from the CMS open-data portal.
+
+    :param log: Configurated logger for printing messages.
+    :type log: logging.RootLogger
+    :param num: Number present in the url
+    :type num: int
+    :param sample: Name of the sample to download.
+    :type sample: str
+    :param file: Name of the file to be saved.
+    :type file: str
+    """
+    count = 1
+    while count <= 2:
+        try:    
+            urllib.request.urlretrieve(f"http://opendata.cern.ch/record/{num}/files/{sample}1.root", file)
+            break
+        except urllib.error.HTTPError as http_err:
+            log.exception("File %s.root can't be found %s", 
+                            sample, http_err, stack_info=True)   
+            break     
+        except urllib.error.ContentTooShortError:
+            log.exception("Network conditions is not good. Reloading for %d time file %s.root", count, sample)
+            count += 1
+    
+    if count > 2:
+        log.exception("Download of %s.root has failed due to bad network conditions!", sample)
+
+
+"""def count(func):
+    @wraps(func)
+    def counted(*args):
+        counted.call_count += 1
+        return func(*args)
+    counted.call_count = 0
+    return counted
+
+@count
+def get_file(log, num, sample, file):
+
+    try:    
+        urllib.request.urlretrieve(f"http://opendata.cern.ch/record/{num}/files/{sample}.root", file)
+    except urllib.error.HTTPError as http_err:
+        log.exception("File %s.root can't be found %s", 
+                        sample, http_err, stack_info=True)   
+    except urllib.error.ContentTooShortError:
+        log.exception("Network conditions is not good. Reloading for %d time file %s.root", get_file.call_count, sample)
+        if get_file.call_count == 10 : return
+        get_file(log, num, sample, file)
+    """
+
 def download(args, logger):
-    """ Function that downloads the various sample from the CMS open-data portal.
+    """ Main function that creates the threads and sets up the multithread process.
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
@@ -29,7 +85,9 @@ def download(args, logger):
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
-    
+   
+    threads = []
+
     #Loop over the various samples
     for sample_name, number in SAMPLES_DOWNLOAD.items():
         
@@ -40,11 +98,19 @@ def download(args, logger):
         logger.info(">>> Process sample: %s \n", sample_name)
         file_name=os.path.join(args.download, f"{sample_name}.root")
         
-        try:
-            _ = wget.download(f"http://opendata.cern.ch/record/{number}/files/{sample_name}.root", file_name)
-        except urllib.error.HTTPError as http_err:
-            logger.exception("File %s.root can't be found %s", 
-                            sample_name, http_err, stack_info=True)
+        threads.append(thr.Thread(target=get_file, args=(logger, number, sample_name, file_name)))
+
+    t= perf_counter()
+    
+    #start threads
+    for thread in threads:
+        thread.start()
+    #join threads
+    for thread in threads:
+        thread.join()
+        
+    print("Time: "+str(perf_counter()-t))
+        
 
     
 if __name__ == "__main__": 
