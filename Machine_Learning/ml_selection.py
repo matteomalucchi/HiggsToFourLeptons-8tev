@@ -59,6 +59,12 @@ def ml_selection(args, logger):
                 logger.debug("Sample %s final state %s: File %s can't be found %s",
                                     sample_name, final_state, file_name, not_fund_err,  stack_info=True)
                 continue
+                
+            file = ROOT.TFile(file_name,"READ")
+            tree= file.Get("Events")
+            branch = tree.GetListOfBranches().FindObject("Discriminant")
+            if not branch:
+                return
 
             rdf_final = rdf.Filter("Discriminant>0.5",
                                     "Select only events with above threshold discriminat")

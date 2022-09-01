@@ -8,6 +8,7 @@ import time
 
 from Definitions.eos_link_def import  EOS_LINK
 
+import set_up
 from Skimming import skim
 from Machine_Learning import  ml_training, ml_application, ml_selection
 from Plotting import make_plot, ml_plot
@@ -15,10 +16,8 @@ from Histogramming import make_histo, ml_histo
 import download
 import fit_mass
 
-import set_up
-
 def run_analysis (argv):
-    """ Main function that runs in order the whole analysis.
+    """ Main function that runs the whole analysis.
 
     :param argv: Global configuration of the analysis.
     :type argv: list(str)
@@ -93,25 +92,25 @@ def run_analysis (argv):
     if args_global.download != "":
         download.download(args_global, logger_global)
 
-    """skim.skim(args_global, logger_global)
+    #skim.skim(args_global, logger_global)
     
     if args_global.ml:
-        ml_training.ml_training(args_global, logger_global)
+        #ml_training.ml_training(args_global, logger_global)
         ml_application.ml_application(args_global, logger_global)
         ml_selection.ml_selection(args_global, logger_global)
         ml_histo.ml_histo(args_global, logger_global)
         ml_plot.ml_plot(args_global, logger_global)
 
-    if args_global.distribution:
+    if args_global.graphPlots:
         make_histo.make_histo(args_global, logger_global)
         make_plot.make_plot(args_global, logger_global)
         
-    if args_global.invMassFit:
-        fit_mass.fit_mass(args_global, logger_global)"""
+    if args_global.invariantMassFit:
+        fit_mass.fit_mass(args_global, logger_global)
 
     logger_global.info(">>> Execution time: %s s \n", (time.time() - start_time))
 
-
+    
 if __name__ == "__main__":
 
     run_analysis( sys.argv[1:] )

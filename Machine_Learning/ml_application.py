@@ -29,6 +29,9 @@ def ml_application(args, logger):
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
 
+    if args.logLevel >= 20:
+            ROOT.gErrorIgnoreLevel = ROOT.kError
+
     # Enamble multi-threading
     if args.parallel:
         ROOT.ROOT.EnableImplicitMT()
@@ -49,10 +52,16 @@ def ml_application(args, logger):
         branches[branch_name] = array("f", [-999])
         reader.AddVariable(branch_name, branches[branch_name])
 
-    # Book methods
-    dataset_path=os.path.join(args.output, "ML_output",
-                              "dataset", "weights", "TMVAClassification_PyKeras.weights.xml")
-    reader.BookMVA("PyKeras", ROOT.TString(dataset_path))
+    try:
+        # Book methods
+        dataset_path=os.path.join(args.output, "ML_output",
+                                "dataset", "weights", "TMVAClassification_PyKeras.weights.xml")
+        reader.BookMVA("PyKeras", ROOT.TString(dataset_path))
+    except TypeError as type_err:
+        logger.exception("Unable too open weights %s", 
+                        type_err, stack_info=True)
+        logger.exception("Exit the program")                        
+        return
 
     # Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
@@ -99,7 +108,7 @@ def ml_application(args, logger):
             for i in range(tree.GetEntries()):
                 new_tree.GetEntry(i)
                 
-                '''if args.algorithmMLVar == "tot":
+                if args.algorithmMLVar == "tot":
                     discr_array[0] = reader.EvaluateMVA([new_tree.Z1_mass,
                                         new_tree.Z2_mass, new_tree.cos_theta_star,
                                         new_tree.Phi, new_tree.Phi1, new_tree.cos_theta1,
@@ -110,9 +119,9 @@ def ml_application(args, logger):
                                                          new_tree.cos_theta1,
                                                          new_tree.cos_theta2], "PyKeras")
                 elif args.algorithmMLVar == "higgs":
-                    discr_array[0] = reader.EvaluateMVA([new_tree.Higgs_mass], "PyKeras")'''
+                    discr_array[0] = reader.EvaluateMVA([new_tree.Higgs_mass], "PyKeras")
                     
-                discr_array[0]= rand.Rndm()
+                #discr_array[0]= rand.Rndm()
                 branch.Fill()
 
             new_tree.Write("", ROOT.TObject.kOverwrite)

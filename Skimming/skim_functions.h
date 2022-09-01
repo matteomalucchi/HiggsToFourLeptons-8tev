@@ -1,3 +1,8 @@
+/* 
+ * Definitions of the functions used during the skimming process
+*/
+
+
 #ifndef SkimFunctionsHfile_
 #define SkimFunctionsHfile_
 
@@ -21,7 +26,6 @@ const auto Z_MASS = 91.2;
 RVec<float> sipDef(VecF dxy, VecF dz, VecF sigma_dxy, VecF sigma_dz){
     auto ip=sqrt(dxy*dxy + dz*dz);
     auto sigma_ip=sqrt((sigma_dxy)*(sigma_dxy) + (sigma_dz)*(sigma_dz));
-    //auto sigma_ip=sqrt((sigma_dxy*dxy/ip)*(sigma_dxy*dxy/ip) + (sigma_dz*dz/ip)*(sigma_dz*dz/ip));
     auto sip=(ip/sigma_ip);
     return sip;
 };

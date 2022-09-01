@@ -9,12 +9,16 @@ two Z bosons which subsequently decay in four leptons.
 Check out the :doc:`usage` section for further information, including how to
 :ref:`install <installation>` the project.
 
+The definitions of the functions can be found in the section :doc:`functions`.
+
+
 .. note::
 
    This project is under active development.
 
 .. toctree::
    usage
+   functions
    api
    :caption: Contents:
 

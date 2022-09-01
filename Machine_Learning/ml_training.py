@@ -95,12 +95,16 @@ def ml_training(args, logger):
             else:
                 bkg_chain.Add(file_name)
     
-    dataloader.AddSignalTree(signal_chain, 1.0)
-    dataloader.AddBackgroundTree(bkg_chain, 1.0)
+    try:
+        dataloader.AddSignalTree(signal_chain, 1.0)
+        dataloader.AddBackgroundTree(bkg_chain, 1.0)
+    except TypeError as type_err:
+        logger.exception("Unable to train the DNN on the simulated samples %s", 
+                        type_err, stack_info=True)
+        logger.exception("Exit the program")                        
+        return
 
     
-    #dataloader.PrepareTrainingAndTestTree(TCut(""),"nTrain_Signal=13354:nTrain_Background=95961:\
-    #                                                    SplitMode=Block:NormMode=NumEvents:!V")
     dataloader.PrepareTrainingAndTestTree(ROOT.TCut(""),"SplitMode=Random:NormMode=NumEvents:!V")
 
     # Generate model

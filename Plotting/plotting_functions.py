@@ -12,6 +12,7 @@ def get_histogram(tfile, dataset):
     :type tfile: ROOT.TFile
     :param dataset: Name of the histogram
     :type dataset: str
+    :raises RuntimeError: Raised when the histogram can't be loaded
     :return: Retrieved histogram
     :rtype: ROOT.TH1D
     """
