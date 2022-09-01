@@ -8,9 +8,9 @@ RUN apt-get update
 
 RUN apt-get install python3 python3-pip -y
 
-COPY docs/requirements.txt .
+COPY requirements.txt .
 
-RUN python3 -m pip install -r docs/requirements.txt
+RUN python3 -m pip install -r requirements.txt
 
 COPY . .
 
