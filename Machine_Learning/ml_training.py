@@ -50,7 +50,8 @@ def ml_training(args, logger):
     # Create file to save the results
     tmva_path=os.path.join(dir_name, "TMVA.root")
     output = ROOT.TFile.Open(tmva_path, "RECREATE")
-
+    logger.debug("File %s Created", tmva_path)
+    
     factory = ROOT.TMVA.Factory("TMVAClassification", output,
                         "!V:!Silent:Color:DrawProgressBar:Transformations=D,G:AnalysisType=Classification")
 
@@ -152,7 +153,7 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--algorithmMLVar",     default="tot"  , type=str,
                         help="name of the set of variables to be used \
                             in the ML algorithm (tot, part, higgs)")
-    parser.add_argument("-o", "--output",     default="../Output", type=str,
+    parser.add_argument("-o", "--output",     default=os.path.join("..", "Output"), type=str,
                         help="name of the output directory")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,   
                             help="integer representing the level of the logger:\

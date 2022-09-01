@@ -28,20 +28,23 @@ def ml_application(args, logger):
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
+    ROOT.gErrorIgnoreLevel = ROOT.kError
+    
+    start_time_tot = time.time()
+    
+    #if args.logLevel >= 20:
+    #    ROOT.gErrorIgnoreLevel = ROOT.kError
 
-    if args.logLevel >= 20:
-            ROOT.gErrorIgnoreLevel = ROOT.kError
-
-    # Enamble multi-threading
+    """# Enamble multi-threading
     if args.parallel:
         ROOT.ROOT.EnableImplicitMT()
         thread_size = ROOT.ROOT.GetThreadPoolSize()
         logger.info(">>> Thread pool size for parallel processing: %s", thread_size)
-
+"""
     # Setup TMVA
     ROOT.TMVA.Tools.Instance()
     ROOT.TMVA.PyMethodBase.PyInitialize()
-    reader = ROOT.TMVA.Reader("Color:!Silent")
+    reader = ROOT.TMVA.Reader("Color:Silent:!V")
 
     # Variables used in the ML algorithm
     variables=VARIABLES_ML_DICT[args.algorithmMLVar]
@@ -127,8 +130,9 @@ def ml_application(args, logger):
             new_tree.Write("", ROOT.TObject.kOverwrite)
 
             #in_file.Close()
-            logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
+            logger.info(">>> Execution time for %s %s: %s s \n", sample_name, final_state, (time.time() - start_time))
             
+    logger.info(">>> Total Execution time: %s s \n", (time.time() - start_time_tot))
             
 if __name__ == "__main__":    
     
@@ -141,7 +145,7 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--algorithmMLVar",     default="tot",
                          type=str,   help="name of the set of variables \
                          to be used in the ML algorithm (tot, part, higgs)")
-    parser.add_argument("-o", "--output",     default="../Output", type=str,
+    parser.add_argument("-o", "--output",     default=os.path.join("..", "Output"), type=str,
                         help="name of the output directory")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,   
                             help="integer representing the level of the logger:\

@@ -173,10 +173,6 @@ if __name__ == "__main__":
     
     # General configuration
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
-    parser.add_argument("-p", "--parallel",   default=True,   action="store_const",   
-                        const=False, help="disables running in parallel")
-    parser.add_argument("-n", "--nWorkers",   default=0,                       
-                        type=int,   help="number of workers" )  
     parser.add_argument("-o", "--output",     default="Output", type=str,  
                         help="name of the output directory")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,   

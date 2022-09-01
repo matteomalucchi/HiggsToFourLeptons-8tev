@@ -28,7 +28,6 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",
-    "sphinxarg.ext"
 ]
 
 """    "sphinx.ext.duration",
@@ -39,7 +38,7 @@ extensions = [
     "sphinxarg.ext"""
 
 templates_path = ["_templates"]
-exclude_patterns = ["breathe/*"]
+exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -47,10 +46,11 @@ exclude_patterns = ["breathe/*"]
 html_theme = "renku"
 html_static_path = ["_static"]
 
-
+"""
 import subprocess
 subprocess.call("make clean", shell=True)
 subprocess.call("cd ../../doxygen ; doxygen Doxygen", shell=True)
 
 breathe_projects = { "HiggsToFourLeptons_8tev": "../../doxygen/build/xml/" }
 breathe_default_project = "HiggsToFourLeptons_8tev"
+"""

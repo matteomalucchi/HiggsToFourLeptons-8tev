@@ -46,6 +46,8 @@ def skim(args, logger, path_sf="Skimming"):
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
+    
+    start_time_tot = time.time()
 
     ROOT.gInterpreter.ProcessLine(f'#include "{os.path.join(path_sf, "skim_functions.h")}"' )
 
@@ -120,8 +122,9 @@ def skim(args, logger, path_sf="Skimming"):
             complete_name = os.path.join(dir_name, f"{sample_name}{final_state}Skim.root")
             rdf_final.Snapshot("Events", complete_name, VARIABLES.keys())
 
-            logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
-
+            logger.info(">>> Execution time for %s %s: %s s \n", sample_name, final_state, (time.time() - start_time))
+    
+    logger.info(">>> Total Execution time: %s s \n",(time.time() - start_time_tot))
 
 if __name__ == "__main__":    
     
@@ -134,7 +137,7 @@ if __name__ == "__main__":
                             const=False, help="disables running in parallel")
     parser.add_argument("-n", "--nWorkers",   default=0,
                             type=int,   help="number of workers" )
-    parser.add_argument("-o", "--output",     default="../Output", type=str,
+    parser.add_argument("-o", "--output",     default=os.path.join("..", "Output"), type=str,
                             help="name of the output directory")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,   
                             help="integer representing the level of the logger:\
