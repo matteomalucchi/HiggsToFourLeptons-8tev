@@ -1,4 +1,4 @@
-<a href='https://higgstofourleptons-8tev.readthedocs.io/en/latest/index.html'>
+<a href='https://higgstofourleptons-8tev.readthedocs.io/en/latest/'>
     <img src='https://readthedocs.org/projects/higgstofourleptons-8tev/badge/?version=latest' alt='Documentation Status' />
 </a>
 
@@ -18,7 +18,7 @@ variables the invariant masses of the two reconstructed Z bosons and the five an
 formed by the leptons in the final state as described in detail in the article 
 \href{https://journals.aps.org/prd/abstract/10.1103/PhysRevD.86.095031}{[Phys.Rev.D86:095031,2012]}. 
 Then, the algorithm is applied to the whole dataset in order to obtain a graph in which the 
-distribution of the kinematic discriminant $K_D$ versus the invariant mass of the four leptons is plotted.
+distribution of the kinematic discriminant versus the invariant mass of the four leptons is plotted.
 This shows a clear separation between signal and background, hence a further cut on the data can be 
 applied in order to obtain a "cleaner" sample. Finally, the invariant mass of the four leptons 
 is fitted in order to obtain an estimate of the Higgs mass.
