@@ -5,7 +5,7 @@
 # Analysis of Higgs boson decays to four leptons
 
 This repository contains an analysis of the decay of a Higgs boson into two Z bosons which in turn decay in four leptons using reduced NanoAOD files created from CMS Open Data. The analysis follows loosely 
-\href{https://www.sciencedirect.com/science/article/pii/S0370269312008581}{the official CMS analysis published in 2012} and
+[the official CMS analysis published in 2012](https://www.sciencedirect.com/science/article/pii/S0370269312008581) and
 consists in two main parts: the reconstruction of the Higgs boson mass and 
 the development of a machine learning algorithm which allows for a better 
 discrimination between signal and background. The first is obtained by "skimming" 
@@ -16,7 +16,7 @@ signal and background. The second part consists in training a machine learning a
 using as input the simulated signal and background Monte Carlo samples and as discriminant
 variables the invariant masses of the two reconstructed Z bosons and the five angles 
 formed by the leptons in the final state as described in detail in the article 
-\href{https://journals.aps.org/prd/abstract/10.1103/PhysRevD.86.095031}{[Phys.Rev.D86:095031,2012]}. 
+[[Phys.Rev.D86:095031,2012]](https://journals.aps.org/prd/abstract/10.1103/PhysRevD.86.095031). 
 Then, the algorithm is applied to the whole dataset in order to obtain a graph in which the 
 distribution of the kinematic discriminant versus the invariant mass of the four leptons is plotted.
 This shows a clear separation between signal and background, hence a further cut on the data can be 
