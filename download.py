@@ -39,7 +39,7 @@ def get_file(log, num, sample, file):
     count = 1
     while count <= 2:
         try:    
-            urllib.request.urlretrieve(f"http://opendata.cern.ch/record/{num}/files/{sample}1.root", file)
+            urllib.request.urlretrieve(f"http://opendata.cern.ch/record/{num}/files/{sample}.root", file)
             break
         except urllib.error.HTTPError as http_err:
             log.exception("File %s.root can't be found %s", 
