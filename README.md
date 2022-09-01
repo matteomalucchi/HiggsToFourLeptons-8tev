@@ -1,5 +1,5 @@
-<a href='https://higgstofourleptons-8tev.readthedocs.io/en/latest/?badge=latest'>
-    <img src='https://higgstofourleptons-8tev.readthedocs.io/en/latest/contents.html' alt='Documentation Status' />
+<a href='https://higgstofourleptons-8tev.readthedocs.io/en/latest/contents.html'>
+    <img src='https://readthedocs.org/projects/higgstofourleptons-8tev/badge/?version=latest' alt='Documentation Status' />
 </a>
 
 # Analysis of Higgs boson decays to four leptons
