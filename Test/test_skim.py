@@ -10,8 +10,8 @@ class TestSkim(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        ROOT.gInterpreter.ProcessLine('#include "skimming/skim_functions.h"' )
-        ROOT.gInterpreter.ProcessLine('#include "test/test_variables.h"' )
+        ROOT.gInterpreter.ProcessLine('#include "Skimming/skim_functions.h"' )
+        ROOT.gInterpreter.ProcessLine('#include "Test/test_variables.h"' )
 
     def test_sip(self):
         """Test the definition of sip
