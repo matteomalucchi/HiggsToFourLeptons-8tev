@@ -2,7 +2,7 @@ Welcome to HiggsToFourLeptons-8tev's documentation!
 ===================================================
 
 
-**HiggsToFourLeptons-8tev** is a project that makes use of the Python language 
+**HiggsToFourLeptons-8tev** is a 1 project that makes use of the Python language 
 and is interfaced with ROOT, and provides analysis tools for the Higgs decay in
 two Z bosons which subsequently decay in four leptons. The datasets used are
 reduced NanoAOD files created from CMS Open Data 
