@@ -27,6 +27,9 @@ master_doc = 'contents'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
+    'readthedocs_ext.readthedocs',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.todo',
     "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
@@ -46,7 +49,7 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "renku"
+html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 
 """
