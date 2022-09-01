@@ -27,6 +27,9 @@ def run_analysis (argv):
     # Global configuration
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
     
+    parser.add_argument("-d", "--download",  nargs="?", default="",  const="Input",
+                            type=str, help="enables the download of input data")
+        
     parser.add_argument("-c", "--clearOutput",  nargs="?", default="", const="Output", type=str,
                             help="name of output folder to be deleted")
     
@@ -79,9 +82,6 @@ def run_analysis (argv):
                             type=str, help="base path where to find the input data. \
                             If enabled it automatically gets the input data from EOS")
     
-    parser.add_argument("-d", "--download",  nargs="?", default="",  const="Input",
-                            type=str, help="enables the download of input data")
-        
     parser.add_argument("-o", "--output",     default="Output", type=str,
                             help="name of the output directory")
     
