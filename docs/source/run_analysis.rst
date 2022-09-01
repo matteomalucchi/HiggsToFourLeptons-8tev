@@ -11,7 +11,7 @@ run_analysis.py
     :undoc-members:
     :show-inheritance:
 
-.. argparse::
-    :filename: ../../run_analysis.py
-    :func: run_analysis
-    :prog: fancytools
+    .. argparse::
+        :filename: ../run_analysis.py
+        :func: run_analysis
+        :prog: fancytools
