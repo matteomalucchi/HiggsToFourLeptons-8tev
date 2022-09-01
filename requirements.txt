@@ -1,2 +1,4 @@
 tensorflow
 keras
+sphinx-autopackagesummary
+sphinx-c-autodoc
