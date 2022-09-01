@@ -8,10 +8,10 @@ RUN apt-get update
 
 RUN apt-get install python3 python3-pip -y
 
-COPY requirements.txt .
+COPY docs/requirements.txt .
 
-RUN python3 -m pip install -r requirements.txt
+RUN python3 -m pip install -r docs/requirements.txt
 
 COPY . .
 
-# RUN python3 -m unittest
+ RUN python3 -m unittest
