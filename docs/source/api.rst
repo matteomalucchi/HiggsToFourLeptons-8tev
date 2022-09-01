@@ -35,15 +35,3 @@ API
    fit_mass
 
    Test.test_skim
-
-
-..
-   .. autodoxygenindex::
-      :project: auto
-
-   breathe_projects_source = {
-      "auto" : ( "Skimming", ["skim_functions.h"])
-   }
-
-..
-   .. doxygenfunction:: HiggsToFourLeptons_8tev::ptCuts

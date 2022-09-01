@@ -18,5 +18,8 @@ To use HiggsToFourLeptons-8tev, first clone the
 
 Run complete analysis
 ---------------------
-The complete analysis can be performed by simply running `python run_analysis.py`.
-This automatically runs all the code necessary to perform the complete analysis.
+The complete analysis can be performed by simply running 
+
+.. code-block:: console
+
+   $ python run_analysis.py
