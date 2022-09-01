@@ -1,4 +1,4 @@
-<a href='https://higgstofourleptons-8tev.readthedocs.io/en/latest/contents.html'>
+<a href='https://higgstofourleptons-8tev.readthedocs.io/en/latest/index.html'>
     <img src='https://readthedocs.org/projects/higgstofourleptons-8tev/badge/?version=latest' alt='Documentation Status' />
 </a>
 
