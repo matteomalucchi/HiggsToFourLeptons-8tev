@@ -98,7 +98,7 @@ def download(args, logger):
         logger.info(">>> Process sample: %s \n", sample_name)
         file_name=os.path.join(args.download, f"{sample_name}.root")
         
-        threads.append(thr.Thread(target=get_file, args=(logger, number, sample_name, file_name)))
+        #threads.append(thr.Thread(target=get_file, args=(logger, number, sample_name, file_name)))
 
     t= perf_counter()
     
