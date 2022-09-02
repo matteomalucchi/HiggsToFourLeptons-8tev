@@ -16,7 +16,7 @@ from Histogramming import make_histo, ml_histo
 import download
 import fit_mass
 
-def run_analysis ():
+def run_analysis (argv):
     """ Main function that runs the whole analysis.
 
     :param argv: Global configuration of the analysis.
@@ -92,7 +92,7 @@ def run_analysis ():
     if args_global.download != "":
         download.download(args_global, logger_global)
 
-    #skim.skim(args_global, logger_global)
+    skim.skim(args_global, logger_global)
     
     if args_global.ml:
         ml_training.ml_training(args_global, logger_global)
@@ -113,4 +113,4 @@ def run_analysis ():
     
 if __name__ == "__main__":
 
-    run_analysis()
+    run_analysis(sys.argv[1:])

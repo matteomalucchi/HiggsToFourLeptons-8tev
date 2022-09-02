@@ -23,7 +23,7 @@ SAMPLES_DOWNLOAD={
     "Run2012B_DoubleElectron" : 12367,
     "Run2012C_DoubleElectron" : 12368
 }
-'''
+
 def get_file(log, num, sample, file):
     """Function that downloads the various sample from the CMS open-data portal.
 
@@ -51,7 +51,7 @@ def get_file(log, num, sample, file):
     
     if count > 2:
         log.exception("Download of %s.root has failed due to bad network conditions!", sample)
-'''
+
 
 """def count(func):
     @wraps(func)
@@ -98,7 +98,7 @@ def download(args, logger):
         logger.info(">>> Process sample: %s \n", sample_name)
         file_name=os.path.join(args.download, f"{sample_name}.root")
         
-        #threads.append(thr.Thread(target=get_file, args=(logger, number, sample_name, file_name)))
+        threads.append(thr.Thread(target=get_file, args=(logger, number, sample_name, file_name)))
 
     t= perf_counter()
     

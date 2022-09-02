@@ -5,10 +5,6 @@ run_analysis.py
 ---------------
 .. autofunction:: run_analysis.run_analysis
 
-download
---------
-
-.. autofunction:: download.download
 
 ..
     .. automodule:: run_analysis
