@@ -5,6 +5,12 @@
 
    
    
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      SAMPLES_DOWNLOAD
+   
    
 
    
@@ -14,7 +20,6 @@
    .. autosummary::
    
       download
-      get_file
    
    
 
