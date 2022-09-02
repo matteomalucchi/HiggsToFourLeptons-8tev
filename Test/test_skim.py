@@ -32,7 +32,7 @@ class TestSkim(unittest.TestCase):
         """
         self.assertAlmostEqual((ROOT.lepFourVec(
             ROOT.lep_pt, ROOT.lep_eta, ROOT.lep_phi, ROOT.lep_mass)[0]
-            - ROOT.lep_fourvec[0]).Mag(), 2)
+            - ROOT.lep_fourvec[0]).Mag(), 0)
 
     def test_z_idx_samekind(self):
         """Test the reconstruction of the lepton pair whose
