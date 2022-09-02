@@ -39,6 +39,9 @@ def run_analysis (argv):
                             help="name of output folder to be deleted. \
                             If not specified otherwise the 'Output/' directory is deleted")
     
+    parser.add_argument("-q", "--skim",   default=True,   action="store_const",
+                            const=False, help="disables the skimming step") 
+
     parser.add_argument("-r", "--range",  nargs="?", default=0, const=10000000, type=int,
                             help="number of events on which the analysis \
                             is ran over (does not work in parallel)")
@@ -100,7 +103,8 @@ def run_analysis (argv):
     if args_global.download != "":
         download.download(args_global, logger_global)
 
-    skim.skim(args_global, logger_global)
+    if args_global.skim:
+        skim.skim(args_global, logger_global)
     
     if args_global.ml:
         ml_training.ml_training(args_global, logger_global)

@@ -40,6 +40,7 @@ The options include:
 >     -d [DOWNLOAD], --download [DOWNLOAD]     enables the download of input data. If not specified otherwise the files are saved in the 'Input/' directory
 >     -e, --typeOfParallel  parallel type for the downloads: default is multi-thread, if activated is multi-process
 >     -c [CLEAROUTPUT], --clearOutput [CLEAROUTPUT]       name of output folder to be deleted. If not specified otherwise the 'Output/' directory is deleted
+>     -q, --skim            disables the skimming step
 >     -r [RANGE], --range [RANGE]      number of events on which the analysis is ran over (does not work in parallel)
 >     -p, --parallel        disables running in parallel
 >     -n NWORKERS, --nWorkers NWORKERS        number of workers
@@ -54,13 +55,17 @@ The options include:
 >     -b [BASEPATH], --basePath [BASEPATH]      base path where to find the input data. If enabled it automatically gets the input data from EOS unless a local directory is specified
 >     -o OUTPUT, --output OUTPUT     name of the output directory
 
+Some of the options above are applicable even to the single processes.
+
 ### Download of the input datasets
 
 The datasets can be downloaded locally by running 
 
 >       python download.py -d DirectoryName
 
-If not specified otherwise they are saved in the directory `Input/`.
+If not specified otherwise, datasets are saved in the directory `Input/`. The option `-p`
+disables parallel running, while the option `-e` lets the users choose between 
+multi-threading (default) or multi-processing.
 
 ### Skimming
 
@@ -78,4 +83,9 @@ The skimming step can be performed by running
 
 >       python skim.py 
 
+### Machine learning
 
+In this step the DNN is trained on the Monte Carlo samples
+of signal and background. The training is done thanks to the ROOT.TMVA library
+with keras API. The trained DNN is evaluated on the various datasets and the events
+with discriminant above the 0.5 threshold are saved in a new TTree.

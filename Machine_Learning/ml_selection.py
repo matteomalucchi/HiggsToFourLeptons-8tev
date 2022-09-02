@@ -1,6 +1,6 @@
 """ This step consists in the selection of the events for which
 the discriminant created by the DNN is above the 0.5 threshold.
-A new set of files is created for this purpose.
+The events that pass this cut are saved in anew tree called 'EventsDNNSelection'
 """
 
 import time
