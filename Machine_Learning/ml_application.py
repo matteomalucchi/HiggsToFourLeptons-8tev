@@ -141,7 +141,7 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--parallel",   default=True,   action="store_const",
                         const=False, help="disables running in parallel")
     parser.add_argument("-n", "--nWorkers",   default=0,
-                        type=int,   help="number of workers" )
+                        type=int,   help="number of workers for multi-threading" )
     parser.add_argument("-a", "--algorithmMLVar",     default="tot",
                          type=str,   help="name of the set of variables \
                          to be used in the ML algorithm (tot, part, higgs)")

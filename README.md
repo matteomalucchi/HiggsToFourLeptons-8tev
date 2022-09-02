@@ -37,8 +37,9 @@ which also downloads the locally the input datasets. The several options may be 
 
 The options include:
 
->     -d [DOWNLOAD], --download [DOWNLOAD]     enables the download of input data
->     -c [CLEAROUTPUT], --clearOutput [CLEAROUTPUT]       name of output folder to be deleted
+>     -d [DOWNLOAD], --download [DOWNLOAD]     enables the download of input data. If not specified otherwise the files are saved in the 'Input/' directory
+>     -e, --typeOfParallel  parallel type for the downloads: default is multi-thread, if activated is multi-process
+>     -c [CLEAROUTPUT], --clearOutput [CLEAROUTPUT]       name of output folder to be deleted. If not specified otherwise the 'Output/' directory is deleted
 >     -r [RANGE], --range [RANGE]      number of events on which the analysis is ran over (does not work in parallel)
 >     -p, --parallel        disables running in parallel
 >     -n NWORKERS, --nWorkers NWORKERS        number of workers
@@ -50,13 +51,31 @@ The options include:
 >     -t TYPEDISTRIBUTION, --typeDistribution TYPEDISTRIBUTION        comma separated list of the type of distributions to plot: data, background, signal, sig_bkg_normalized, total
 >     -s SAMPLE, --sample SAMPLE       string with comma separated list of samples to analyse: Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu
 >     -v VARIABLEDISTRIBUTION, --variableDistribution VARIABLEDISTRIBUTION       string with comma separated list of the variables to plot. The complete list is defined in 'variables_def.py'
->     -b [BASEPATH], --basePath [BASEPATH]      base path where to find the input data. If enabled it automatically gets the input data from EOS
+>     -b [BASEPATH], --basePath [BASEPATH]      base path where to find the input data. If enabled it automatically gets the input data from EOS unless a local directory is specified
 >     -o OUTPUT, --output OUTPUT     name of the output directory
 
+### Download of the input datasets
+
+The datasets can be downloaded locally by running 
+
+>       python download.py -d DirectoryName
+
+If not specified otherwise they are saved in the directory `Input/`.
 
 ### Skimming
 
+The skimming process consists in reducing the initial samples to a dataset 
+specific for this analysis. The skimming removes all events
+which are not of interest for the reconstruction of Z bosons
+from combinations of leptons, which may originate from the
+decay of a Higgs boson. Furthermore, all the variables used
+later on are defined. This includes mass and Pt of Z and Higgs
+bosons, as well as five dacay angles defined in `[Phys.Rev.D86:095031,2012]
+<https://journals.aps.org/prd/abstract/10.1103/PhysRevD.86.095031>`_
+which are later used for a machine learning algorithm.
 
+The skimming step can be performed by running 
 
+>       python skim.py 
 
 

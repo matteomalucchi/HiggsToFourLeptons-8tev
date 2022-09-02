@@ -26,7 +26,7 @@ applied in order to obtain a "cleaner" sample. Finally, the invariant mass of th
 is fitted in order to obtain an estimate of the Higgs mass.
 
 Check out the :doc:`usage` section for further information, including how to
-:ref:`install <installation>` the project.
+:ref:`install <installation>` the project and how to :ref:`run the whole analysis <run_analysis>`.
 
 
 

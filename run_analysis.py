@@ -28,10 +28,16 @@ def run_analysis (argv):
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
     
     parser.add_argument("-d", "--download",  nargs="?", default="",  const="Input",
-                            type=str, help="enables the download of input data")
-        
+                            type=str, help="enables the download of input data. \
+                            If not specified otherwise the files are saved in the 'Input/' directory")
+
+    parser.add_argument("-e", "--typeOfParallel", default="thread",   action="store_const",
+                         const="process",  help="parallel type for the downloads: \
+                         default is multi-thread, if activated is multi-process" )        
+
     parser.add_argument("-c", "--clearOutput",  nargs="?", default="", const="Output", type=str,
-                            help="name of output folder to be deleted")
+                            help="name of output folder to be deleted. \
+                            If not specified otherwise the 'Output/' directory is deleted")
     
     parser.add_argument("-r", "--range",  nargs="?", default=0, const=10000000, type=int,
                             help="number of events on which the analysis \
@@ -40,7 +46,8 @@ def run_analysis (argv):
     parser.add_argument("-p", "--parallel",   default=True,   action="store_const",
                             const=False, help="disables running in parallel")
     
-    parser.add_argument("-n", "--nWorkers",   default=0, type=int,   help="number of workers" )
+    parser.add_argument("-n", "--nWorkers",   default=0, type=int,   
+                                help="number of workers for multi-threading" )
     
     parser.add_argument("-l", "--logLevel",   default=20, type=int,   
                             help="integer representing the level of the logger:\
@@ -80,7 +87,8 @@ def run_analysis (argv):
      
     parser.add_argument("-b", "--basePath",  nargs="?", default="Input",  const=EOS_LINK,
                             type=str, help="base path where to find the input data. \
-                            If enabled it automatically gets the input data from EOS")
+                            If enabled it automatically gets the input data from EOS \
+                            unless a local directory is specified")
     
     parser.add_argument("-o", "--output",     default="Output", type=str,
                             help="name of the output directory")
