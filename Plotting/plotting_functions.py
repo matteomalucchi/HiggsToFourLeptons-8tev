@@ -130,8 +130,8 @@ def add_title(histo, variable_specs=None):
     else:
         histo.GetXaxis().SetTitle(f"{variable_specs[3]}{variable_specs[4]}")
         bin_width=(variable_specs[2]-variable_specs[1])/variable_specs[0]
-        histo.GetYaxis().SetTitle(f"N_{{Events}} /\
-                                  {float(f'{bin_width:.1g}'):g}{variable_specs[4]}")
+        histo.GetYaxis().SetTitle(f"N_{{Events}} / {float(f'{bin_width:.1g}'):g}\
+            {variable_specs[4]}")
 
 def add_legend(legend, input_type, histo):
     """Add the legend to the plot.
