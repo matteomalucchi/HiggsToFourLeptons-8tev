@@ -20,7 +20,7 @@ copyright = "2022, matteomalucchi"
 author = "matteomalucchi"
 release = "0.1"
 
-master_doc = 'index'
+#master_doc = 'index'
 
 
 # -- General configuration ---------------------------------------------------
