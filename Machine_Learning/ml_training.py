@@ -2,6 +2,7 @@
 of signal and background. The training is done thanks to
 keras API.
 """
+
 import time
 import argparse
 
@@ -115,7 +116,7 @@ def ml_training(args, logger):
     model.add(Dense(64, activation="relu", input_dim=len(variables)))
     model.add(Dense(12, activation="relu"))
     model.add(Dense(12, activation="relu"))
-    #model.add(Dense(12, activation="relu"))
+    model.add(Dense(12, activation="relu"))
     #model.add(Dense(12, activation="relu"))
     model.add(Dense(2, activation="sigmoid"))
 
@@ -132,7 +133,7 @@ def ml_training(args, logger):
 
     # Book methods
     factory.BookMethod(dataloader, ROOT.TMVA.Types.kPyKeras, "PyKeras",
-                    f"H:!V:VarTransform=D,G:FilenameModel={mod_path}:NumEpochs=10:BatchSize=128")
+                    f"H:!V:VarTransform=D,G:FilenameModel={mod_path}:NumEpochs=30:BatchSize=128")
 
     # Run training, test and evaluation
     factory.TrainAllMethods()

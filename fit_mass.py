@@ -29,7 +29,6 @@ def fit_mass (args, logger):
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
     
     #plotting_functions.set_style()
-    #plotting_functions.add_latex()
 
     start_time = time.time()
 
@@ -115,7 +114,8 @@ def fit_mass (args, logger):
 
             # Parameters and model for data fit
             meanHiggs_data = ROOT.RooRealVar("m_{H}", "The mean of the Higgs CB for the data", 125, 115, 135, "GeV")
-            CBHiggs_data = ROOT.RooCBShape("CBHiggs_data","The Higgs Crystall Ball for the data",m4l,meanHiggs_data,sigmaHiggs,alphaHiggs,nHiggs)
+            CBHiggs_data = ROOT.RooCBShape("CBHiggs_data","The Higgs Crystall Ball for the data",
+                                            m4l,meanHiggs_data,sigmaHiggs,alphaHiggs,nHiggs)
             
             # Signal and background fractions
             sig_frac= ROOT.RooRealVar("sigfrac", "signal fraction", sig_frac_count)
@@ -140,20 +140,19 @@ def fit_mass (args, logger):
             # Plot mass fit
             m4l.setBins(10)
             xframe = m4l.frame()
+            xframe.SetTitle("")
             data.plotOn(xframe)
             totPDF.plotOn(xframe, ROOT.RooFit.Components("bkg_kde"), ROOT.RooFit.LineStyle(ROOT.kDashed), ROOT.RooFit.LineColor(ROOT.kRed))
             totPDF.plotOn(xframe, ROOT.RooFit.Components("CBHiggs_data"), ROOT.RooFit.LineStyle(ROOT.kDashed), ROOT.RooFit.LineColor(ROOT.kBlue))
             totPDF.plotOn(xframe, ROOT.RooFit.LineColor(ROOT.kGreen))
 
             #CBHiggs_data.plotOn(xframe)
-            canvas = ROOT.TCanvas("", "", 600, 600)
-        
-
-
+            canvas = ROOT.TCanvas()
             xframe.Draw()
             #input()
+            plotting_functions.add_latex()
             
-            output_name = os.path.join(dir_name, f"fit_mass_{selection}.png")
+            output_name = os.path.join(dir_name, f"fit_mass_{selection}.pdf")
             canvas.SaveAs(output_name)
 
             #Now save the data and the PDF into a Workspace
