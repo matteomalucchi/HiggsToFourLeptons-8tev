@@ -1,7 +1,7 @@
 """ Definitions of the functions used in the histogramming step of the analysis.
 """
 
-import ROOT
+import ROOT 
 
 def book_histogram_1d(rdf, variable, range_):
     """Book a 1D histogram for a specific variable.
