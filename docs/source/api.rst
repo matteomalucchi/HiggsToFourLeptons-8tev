@@ -8,7 +8,7 @@ API
 
    set_up
 
-   download
+   download_dataset
    
    Skimming.skim
    Skimming.skim_tools

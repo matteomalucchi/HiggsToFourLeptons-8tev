@@ -13,7 +13,7 @@ from Skimming import skim
 from Machine_Learning import  ml_training, ml_application, ml_selection
 from Plotting import make_plot, ml_plot
 from Histogramming import make_histo, ml_histo
-import download
+import download_dataset
 import fit_mass
 
 def run_analysis (argv):
@@ -101,7 +101,7 @@ def run_analysis (argv):
     logger_global=set_up.set_up(args_global)
     
     if args_global.download != "":
-        download.download(args_global, logger_global)
+        download_dataset.download(args_global, logger_global)
 
     if args_global.skim:
         skim.skim(args_global, logger_global)

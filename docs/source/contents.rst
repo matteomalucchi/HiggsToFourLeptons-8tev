@@ -38,7 +38,7 @@ Check out the :doc:`usage` section for further information, including how to
    usage
    run_analysis
    set_up
-   download
+   download_dataset
    skimming
    machine_learning
    histogramming
