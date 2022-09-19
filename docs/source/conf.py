@@ -20,7 +20,7 @@ copyright = "2022, matteomalucchi"
 author = "matteomalucchi"
 release = "0.1"
 
-master_doc = 'contents'
+master_doc = 'index'
 
 
 # -- General configuration ---------------------------------------------------
@@ -45,6 +45,9 @@ extensions = [
 
 templates_path = ["_templates"]
 exclude_patterns = []
+
+# List of modules unavailable to RTD build.
+autodoc_mock_imports = ["ROOT"]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
