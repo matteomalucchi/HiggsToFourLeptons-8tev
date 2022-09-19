@@ -30,7 +30,7 @@ from Analysis.Skimming import skim_tools
 import Analysis.set_up as set_up
 
 
-def skim(args, logger, path_sf="Analysis.Skimming"):
+def skim(args, logger, path_sf="Analysis/Skimming"):
     """ Main function of the skimming step.
     The function loops over the datasets and distinguishes the possible
     final states. It creates for each one of them a RDataFrame which allows

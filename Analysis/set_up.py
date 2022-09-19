@@ -33,7 +33,7 @@ def check_val(log, input, correct_list, name):
             list_str=', '.join(correct_list)
             raise argparse.ArgumentTypeError(f"{name} {input} is invalid: it must be either {list_str}")
     except argparse.ArgumentTypeError as arg_err:
-        log.exception("%s \n %s is set to %s \n", arg_err, name, correct_list[0], stack_info=True)
+        log.exception("%s \n>>>%s is set to %s \n", arg_err, name, correct_list[0], stack_info=True)
         return correct_list[0]     
     else:
         return input
@@ -98,31 +98,31 @@ def set_up (args):
     
     # Check if typeDistribution is valid
     try:
-        check_val(logger, args.typeDistribution, ["all", "data", "background", "signal", "sig_bkg_normalized", "total"], "typeDistribution")
+        args.typeDistribution = check_val(logger, args.typeDistribution, ["all", "data", "background", "signal", "sig_bkg_normalized", "total"], "typeDistribution")
     except AttributeError:
         pass    
     
     # Check if finalState is valid
     try:
-        check_val(logger, args.finalState, ["all"] + SAMPLES["SMHiggsToZZTo4L"], "finalState")
+        args.finalState = check_val(logger, args.finalState, ["all"] + SAMPLES["SMHiggsToZZTo4L"], "finalState")
     except AttributeError:
         pass        
     
     # Check if variablesML is valid
     try:
-        check_val(logger, args.algorithmMLVar, list(VARIABLES_ML_DICT.keys()), "algorithmMLVar") 
+        args.algorithmMLVar = check_val(logger, args.algorithmMLVar, list(VARIABLES_ML_DICT.keys()), "algorithmMLVar") 
     except AttributeError:
         pass
     
     # Check if sample is valid
     try:
-        check_val(logger, args.sample, ["all"] + list(SAMPLES.keys()), "sample") 
+        args.sample = check_val(logger, args.sample, ["all"] + list(SAMPLES.keys()), "sample") 
     except AttributeError:
         pass     
     
     # Check if variable is valid
     try:
-        check_val(logger, args.variableDistribution, ["all"] + list(VARIABLES_COMPLETE.keys()), "variableDistribution")    
+        args.variableDistribution = check_val(logger, args.variableDistribution, ["all"] + list(VARIABLES_COMPLETE.keys()), "variableDistribution")    
     except AttributeError:
         pass       
        

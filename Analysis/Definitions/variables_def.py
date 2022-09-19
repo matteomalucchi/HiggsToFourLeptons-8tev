@@ -24,11 +24,11 @@ VARIABLES = {
         "Z_close_pt": (36, 0, 100, "Pt Z_{close}", " [GeV]"),
         "Z_far_pt": (36, 0, 100, "Pt Z_{far}", " [GeV]"),
         
-        "Higgs_eta": (36, -4, 4, "#Eta 4 leptons", ""),
-        "Z1_eta": (36, -4, 4, "#Eta Z_{1}", ""),
-        "Z2_eta": (36, -4, 4, "#Eta Z_{2}", ""),
-        "Z_close_eta": (36, -4, 4, "#Eta Z_{close}", ""),
-        "Z_far_eta": (36, -4, 4, "#Eta Z_{far}", ""),
+        "Higgs_eta": (36, -4, 4, "#eta 4 leptons", ""),
+        "Z1_eta": (36, -4, 4, "#eta Z_{1}", ""),
+        "Z2_eta": (36, -4, 4, "#eta Z_{2}", ""),
+        "Z_close_eta": (36, -4, 4, "#eta Z_{close}", ""),
+        "Z_far_eta": (36, -4, 4, "#eta Z_{far}", ""),
         
         "Higgs_phi": (36, -math.pi, math.pi, "#phi 4 leptons", ""),
         "Z1_phi": (36, -math.pi, math.pi, "#phi Z_{1}", ""),

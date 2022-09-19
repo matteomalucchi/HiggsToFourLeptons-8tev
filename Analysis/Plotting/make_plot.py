@@ -238,7 +238,7 @@ def make_plot (args, logger):
                         plotting_functions.add_latex()
 
                         # Save the plots
-                        file_name = f"{input_type}_{final_state}_{variable}_{selection}.pdf"
+                        file_name = f"{input_type}_{final_state}_{variable}_{selection}.png"
                         complete_name = os.path.join(dir_name, file_name)
                         canvas.SaveAs(complete_name)
                         

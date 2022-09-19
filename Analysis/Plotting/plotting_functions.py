@@ -49,7 +49,7 @@ def set_style():
     ROOT.gStyle.SetPadTopMargin(0.08)
     ROOT.gStyle.SetPadBottomMargin(0.13)
     ROOT.gStyle.SetPadLeftMargin(0.13)
-    ROOT.gStyle.SetPadRightMargin(0.13)
+    ROOT.gStyle.SetPadRightMargin(0.05)
 
     ROOT.gStyle.SetHistLineColor(1)
     ROOT.gStyle.SetHistLineStyle(0)
@@ -68,7 +68,7 @@ def set_style():
     ROOT.gStyle.SetTitleFont(42, "XYZ")
     ROOT.gStyle.SetTitleSize(0.05, "XYZ")
     ROOT.gStyle.SetTitleXOffset(1.00)
-    ROOT.gStyle.SetTitleYOffset(1.60)
+    ROOT.gStyle.SetTitleYOffset(1.00)
 
     ROOT.gStyle.SetLabelColor(1, "XYZ")
     ROOT.gStyle.SetLabelFont(42, "XYZ")
@@ -87,6 +87,8 @@ def set_style():
     ROOT.gStyle.SetHatchesSpacing(0.05)
 
     ROOT.TGaxis.SetExponentOffset(-0.08, 0.01, "Y")
+
+    ROOT.gROOT.ForceStyle()
 
 def input_style(input_type, histo):
     """Set style of the histograms for each type of dataset.
@@ -130,8 +132,7 @@ def add_title(histo, variable_specs=None):
     else:
         histo.GetXaxis().SetTitle(f"{variable_specs[3]}{variable_specs[4]}")
         bin_width=(variable_specs[2]-variable_specs[1])/variable_specs[0]
-        histo.GetYaxis().SetTitle(f"N_{{Events}} / {float(f'{bin_width:.1g}'):g}\
-            {variable_specs[4]}")
+        histo.GetYaxis().SetTitle(f"N_{{Events}} / {float(f'{bin_width:.1g}'):g}{variable_specs[4]}")
 
 def add_legend(legend, input_type, histo=None):
     """Add the legend to the plot.
