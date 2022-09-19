@@ -1,5 +1,5 @@
-API
-===
+List of modules
+===============
 
 .. autosummary::
    :toctree: generated

@@ -45,7 +45,7 @@ Check out the :doc:`usage` section for further information, including how to
    plotting
    fit_mass
    test_skim
-   api
+   Modules
    :caption: Contents:
 
 

@@ -49,7 +49,8 @@ The options include:
 >     -p, --parallel        disables running in parallel
 >     -n NWORKERS, --nWorkers NWORKERS        number of workers
 >     -l LOGLEVEL, --logLevel LOGLEVEL        integer representing the level of the logger: DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40
->     -f FINALSTATE, --finalState FINALSTATE     comma separated list of the final states to analyse: FourMuons,FourElectrons,Two disables machine learning algorithm
+>     -f FINALSTATE, --finalState FINALSTATE      comma separated list of the final states to analyse: FourMuons,FourElectrons,TwoMuonsTwoElectrons
+>     -m, --ml              disables machine learning algorithm
 >     -a ALGORITHMMLVAR, --algorithmMLVar ALGORITHMMLVAR      name of the set of variables to be used in the ML algorithm defined 'variables_ml_def.py': tot, part, higgs
 >     -i, --invariantMassFit       disables fit of the Higgs mass
 >     -g, --graphPlots      disables the graphing of the distribution plots
@@ -59,7 +60,11 @@ The options include:
 >     -b [BASEPATH], --basePath [BASEPATH]      base path where to find the input data. If enabled it automatically gets the input data from EOS unless a local directory is specified
 >     -o OUTPUT, --output OUTPUT     name of the output directory
 
-Some of the options above are applicable even to the single steps shown below.
+Some of the options above are applicable even to the single steps shown in the sections below.
+
+The analysis can be performed even on just a specific sample and/or final state by running
+
+>       python run_analysis.py -s SMHiggsToZZTo4L -f FourElectrons
 
 ### Download of the input datasets
 
