@@ -1,7 +1,7 @@
-﻿Plotting.plotting\_functions
-============================
+﻿Analysis.Plotting.plotting\_functions
+=====================================
 
-.. automodule:: Plotting.plotting_functions
+.. automodule:: Analysis.Plotting.plotting_functions
 
    
    

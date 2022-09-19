@@ -1,7 +1,7 @@
-﻿download\_dataset
-=================
+﻿Analysis.download\_dataset
+==========================
 
-.. automodule:: download_dataset
+.. automodule:: Analysis.download_dataset
 
    
    

@@ -1,7 +1,7 @@
-﻿Histogramming.make\_histo
-=========================
+﻿Analysis.Histogramming.make\_histo
+==================================
 
-.. automodule:: Histogramming.make_histo
+.. automodule:: Analysis.Histogramming.make_histo
 
    
    

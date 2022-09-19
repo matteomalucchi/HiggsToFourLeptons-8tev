@@ -1,6 +1,9 @@
 """ In this step the DNN is trained on the Monte Carlo samples
 of signal and background. The training is done thanks to
-keras API.
+keras API. To take a look at the output of the training run 
+``$ TMVA::TMVAGui("TMVA.root")`` from the ROOT prompt.
+
+
 """
 
 import time
@@ -14,12 +17,12 @@ from tensorflow.keras.layers import Dense
 
 import ROOT
 
-sys.path.append("../")
+sys.path.append("../../")
 
-from Definitions.samples_def import SAMPLES
-from Definitions.variables_ml_def import VARIABLES_ML_DICT
+from Analysis.Definitions.samples_def import SAMPLES
+from Analysis.Definitions.variables_ml_def import VARIABLES_ML_DICT
 
-import set_up
+import Analysis.set_up as set_up
 
 
 def ml_training(args, logger):
@@ -154,7 +157,7 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--algorithmMLVar",     default="tot"  , type=str,
                         help="name of the set of variables to be used \
                             in the ML algorithm (tot, part, higgs)")
-    parser.add_argument("-o", "--output",     default=os.path.join("..", "Output"), type=str,
+    parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
                         help="name of the output directory")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,   
                             help="integer representing the level of the logger:\
@@ -173,4 +176,3 @@ if __name__ == "__main__":
                 
     ml_training(args_main, logger_main)
 
-#root[] TMVA::TMVAGui("TMVA.root")

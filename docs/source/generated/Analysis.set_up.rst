@@ -1,7 +1,7 @@
-﻿set\_up
-=======
+﻿Analysis.set\_up
+================
 
-.. automodule:: set_up
+.. automodule:: Analysis.set_up
 
    
    

@@ -7,9 +7,9 @@ import os
 import shutil
 import logging
 
-from Definitions.variables_def import  VARIABLES_COMPLETE
-from Definitions.variables_ml_def import  VARIABLES_ML_DICT
-from Definitions.samples_def import  SAMPLES
+from Analysis.Definitions.variables_def import  VARIABLES_COMPLETE
+from Analysis.Definitions.variables_ml_def import  VARIABLES_ML_DICT
+from Analysis.Definitions.samples_def import  SAMPLES
 
 
 def check_val(log, input, correct_list, name):

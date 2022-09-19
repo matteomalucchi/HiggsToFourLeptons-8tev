@@ -12,10 +12,10 @@ import sys
 
 import ROOT
 
-sys.path.append("../")
-from Plotting import plotting_functions
+sys.path.append("../../")
+from Analysis.Plotting import plotting_functions
 
-import set_up
+import Analysis.set_up as set_up
 
 #ROOT.gROOT.SetBatch(True)
 
@@ -115,7 +115,7 @@ if __name__ == "__main__":
 
     # General configuration
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
-    parser.add_argument("-o", "--output",     default=os.path.join("..", "Output"), type=str,
+    parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
                         help="name of the output directory")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,   
                             help="integer representing the level of the logger:\

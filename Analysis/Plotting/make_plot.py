@@ -9,13 +9,13 @@ import argparse
 
 import ROOT
 
-sys.path.append("../")
+sys.path.append("../../")
 
-from Definitions.variables_def import VARIABLES_DICT
-from Definitions.selections_def import  SELECTIONS
-from Plotting import plotting_functions
+from Analysis.Definitions.variables_def import VARIABLES_DICT
+from Analysis.Definitions.selections_def import  SELECTIONS
+from Analysis.Plotting import plotting_functions
 
-import set_up
+import Analysis.set_up as set_up
 
 ROOT.gROOT.SetBatch(True)
 
@@ -251,7 +251,7 @@ if __name__ == "__main__":
 
     # General configuration
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
-    parser.add_argument("-o", "--output",     default=os.path.join("..", "Output"), type=str,
+    parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
                         help="name of the output directory")
     parser.add_argument("-m", "--ml", default=True,   action="store_const", const=False,
                         help="disables machine learning algorithm")

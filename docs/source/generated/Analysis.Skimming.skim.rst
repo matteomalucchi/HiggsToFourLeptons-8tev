@@ -1,7 +1,7 @@
-﻿Plotting.make\_plot
-===================
+﻿Analysis.Skimming.skim
+======================
 
-.. automodule:: Plotting.make_plot
+.. automodule:: Analysis.Skimming.skim
 
    
    
@@ -13,7 +13,7 @@
 
    .. autosummary::
    
-      make_plot
+      skim
    
    
 

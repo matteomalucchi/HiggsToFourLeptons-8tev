@@ -12,14 +12,14 @@ import argparse
 
 import ROOT
 
-sys.path.append("../")
-from Definitions.variables_def import VARIABLES_DICT
-from Definitions.samples_def import  SAMPLES
-from Definitions.selections_def import  SELECTIONS
+sys.path.append("../../")
+from Analysis.Definitions.variables_def import VARIABLES_DICT
+from Analysis.Definitions.samples_def import  SAMPLES
+from Analysis.Definitions.selections_def import  SELECTIONS
 
-from Histogramming import histogramming_functions
+from Analysis.Histogramming import histogramming_functions
 
-import set_up
+import Analysis.set_up as set_up
 
 def make_histo(args, logger):
     """ Main function of the histogramming step.
@@ -123,7 +123,7 @@ if __name__ == "__main__":
                         type=int,   help="number of workers for multi-threading" )
     parser.add_argument("-m", "--ml", default=True,   action="store_const", const=False,
                         help="disables machine learning algorithm")
-    parser.add_argument("-o", "--output",     default=os.path.join("..", "Output"), type=str,
+    parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
                         help="name of the output directory")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,   
                             help="integer representing the level of the logger:\

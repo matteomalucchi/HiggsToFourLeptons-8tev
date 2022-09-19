@@ -11,7 +11,7 @@ from time import perf_counter
 from functools import wraps
 import multiprocessing as mp
 
-import set_up
+import Analysis.set_up as set_up
 
 
             

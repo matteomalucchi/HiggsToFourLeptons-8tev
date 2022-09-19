@@ -18,19 +18,19 @@ import sys
 
 import ROOT
 
-sys.path.append("../")
+sys.path.append("../../")
 
-from Definitions.eos_link_def import  EOS_LINK
-from Definitions.samples_def import  SAMPLES
-from Definitions.variables_def import  VARIABLES
-from Definitions.weights_def import  WEIGHTS
+from Analysis.Definitions.eos_link_def import  EOS_LINK
+from Analysis.Definitions.samples_def import  SAMPLES
+from Analysis.Definitions.variables_def import  VARIABLES
+from Analysis.Definitions.weights_def import  WEIGHTS
 
-from Skimming import skim_tools
+from Analysis.Skimming import skim_tools
 
-import set_up
+import Analysis.set_up as set_up
 
 
-def skim(args, logger, path_sf="Skimming"):
+def skim(args, logger, path_sf="Analysis.Skimming"):
     """ Main function of the skimming step.
     The function loops over the datasets and distinguishes the possible
     final states. It creates for each one of them a RDataFrame which allows
@@ -137,7 +137,7 @@ if __name__ == "__main__":
                             const=False, help="disables running in parallel")
     parser.add_argument("-n", "--nWorkers",   default=0,
                             type=int,   help="number of workers for multi-threading" )
-    parser.add_argument("-o", "--output",     default=os.path.join("..", "Output"), type=str,
+    parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
                             help="name of the output directory")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,   
                             help="integer representing the level of the logger:\
@@ -149,7 +149,7 @@ if __name__ == "__main__":
                         help="string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
                         Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
-    parser.add_argument("-b", "--basePath",  nargs="?", default="../Input",  const=EOS_LINK,
+    parser.add_argument("-b", "--basePath",  nargs="?", default=os.path.join("..", "..", "Input"),  const=EOS_LINK,
                             type=str, help="base path where to find the input data. \
                             If enabled it automatically gets the input data from EOS")
     args_main = parser.parse_args()

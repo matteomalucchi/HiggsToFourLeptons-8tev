@@ -10,7 +10,7 @@ class TestSkim(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        ROOT.gInterpreter.ProcessLine('#include "Skimming/skim_functions.h"' )
+        ROOT.gInterpreter.ProcessLine('#include "Analysis.Analysis.Skimming/skim_functions.h"' )
         ROOT.gInterpreter.ProcessLine('#include "Test/test_variables.h"' )
 
     def test_sip(self):

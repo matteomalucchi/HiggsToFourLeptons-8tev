@@ -6,26 +6,26 @@ List of modules
 
    run_analysis
 
-   set_up
+   Analysis.set_up
 
-   download_dataset
+   Analysis.download_dataset
    
-   Skimming.skim
-   Skimming.skim_tools
+   Analysis.Skimming.skim
+   Analysis.Skimming.skim_tools
 
-   Machine_Learning.ml_training
-   Machine_Learning.ml_application
-   Machine_Learning.ml_selection
+   Analysis.Machine_Learning.ml_training
+   Analysis.Machine_Learning.ml_application
+   Analysis.Machine_Learning.ml_selection
 
-   Histogramming.make_histo
-   Histogramming.ml_histo
-   Histogramming.histogramming_functions
+   Analysis.Histogramming.make_histo
+   Analysis.Histogramming.ml_histo
+   Analysis.Histogramming.histogramming_functions
 
-   Plotting.make_plot
-   Plotting.ml_plot
-   Plotting.plotting_functions
+   Analysis.Plotting.make_plot
+   Analysis.Plotting.ml_plot
+   Analysis.Plotting.plotting_functions
 
-   fit_mass
+   Analysis.fit_mass
 
    Test.test_skim
 

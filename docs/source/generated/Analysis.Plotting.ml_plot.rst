@@ -1,7 +1,7 @@
-﻿Plotting.ml\_plot
-=================
+﻿Analysis.Plotting.ml\_plot
+==========================
 
-.. automodule:: Plotting.ml_plot
+.. automodule:: Analysis.Plotting.ml_plot
 
    
    

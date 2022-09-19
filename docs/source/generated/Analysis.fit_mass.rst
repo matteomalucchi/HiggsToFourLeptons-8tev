@@ -1,7 +1,7 @@
-﻿Skimming.skim
-=============
+﻿Analysis.fit\_mass
+==================
 
-.. automodule:: Skimming.skim
+.. automodule:: Analysis.fit_mass
 
    
    
@@ -13,7 +13,7 @@
 
    .. autosummary::
    
-      skim
+      fit_mass
    
    
 
