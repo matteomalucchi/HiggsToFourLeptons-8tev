@@ -31,7 +31,11 @@ The complete analysis can be performed the first time by simply running
 
 >       python run_analysis.py -d
 
-which also downloads the locally the input datasets. The several options may be displayed by typing
+which also downloads the locally the input datasets. 
+Some general purpose functions to set up the analysis are defined in 
+the `set_up.py` file.
+
+The several options for running the analysis may be displayed by typing
 
 >       python run_analysis.py --help
 
@@ -55,7 +59,7 @@ The options include:
 >     -b [BASEPATH], --basePath [BASEPATH]      base path where to find the input data. If enabled it automatically gets the input data from EOS unless a local directory is specified
 >     -o OUTPUT, --output OUTPUT     name of the output directory
 
-Some of the options above are applicable even to the single processes.
+Some of the options above are applicable even to the single steps shown below.
 
 ### Download of the input datasets
 
@@ -83,9 +87,72 @@ The skimming step can be performed by running
 
 >       python skim.py 
 
+The option `-r` lets the user select the number of events on which the analysis is run.
+The functions used in the skimming step of the analysis are defined
+in the `skim_tools.py` file.
+The basic functions used on the data are defined in `skim_functions.h`.
+
 ### Machine learning
 
-In this step the DNN is trained on the Monte Carlo samples
+In this step a Deep Neaural Network (DNN) is trained on the Monte Carlo samples
 of signal and background. The training is done thanks to the ROOT.TMVA library
 with keras API. The trained DNN is evaluated on the various datasets and the events
 with discriminant above the 0.5 threshold are saved in a new TTree.
+
+The training, application and selection steps can be performed by running 
+
+>       python ml_training.py 
+>       python ml_application.py 
+>       python ml_selection.py 
+
+......................
+
+
+### Histogramming
+The histogramming step produces histograms for each variable in each dataset by running
+
+>       python make_histo.py
+
+The option `-v` lets the user select which variables are going to be plotted. 
+
+By running 
+
+>       python ml_histo.py
+
+2D histograms of Higgs_mass vs DNN Discriminant
+are created, one for the combination of all the simulated background,
+one for all the simulated signal and one for each possible final state
+of the data.
+
+The functions used in the histogramming step are defined in `histogramming_functions.py`.
+
+### Plotting
+The plotting combines the histograms to plots which allow to study the
+inital dataset based on observables motivated through physics. 
+The plots for each variable are created by running 
+
+>       python make_plot.py
+
+The option `-v` lets the user select which variables to plot. 
+
+By running 
+
+>       python ml_plot.py
+
+2D histograms of Higgs_mass vs DNN Discriminant
+are created, one for the simulated background and one for the
+simulated signal. Each plot contains both the combination
+of all background/signal datasets and the real data
+separated in the three possible final states.
+
+The functions used in the plotting step are defined in `plotting_functions.py`.
+
+
+### Higgs mass fit
+The mass of the Higgs candidate is fitted with a Crystal Ball. 
+A fit on the simulated samples and a fit on the data 
+(estimating the background from the MC) are performed.
+
+The fit is performed by running
+
+>       python fit_mass.py

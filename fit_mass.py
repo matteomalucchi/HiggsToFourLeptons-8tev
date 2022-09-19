@@ -1,4 +1,6 @@
-""" The mass of the Higgs candidate is fitted with a Crystal Ball.
+""" The mass of the Higgs candidate is fitted with a Crystal Ball. 
+A fit on the simulated samples and a fit on the data 
+(estimating the background from the MC) are performed.
 """
 
 import time
@@ -106,7 +108,8 @@ def fit_mass (args, logger):
             sigmaHiggs = ROOT.RooRealVar("sigmaHiggs_sig", "The width of Higgs CB for the signal", 5, 0., 20, "GeV")
             alphaHiggs = ROOT.RooRealVar("alphaHiggs_sig", "The tail of Higgs CB for the signal", 1.5, -5, 5)
             nHiggs = ROOT.RooRealVar("nHiggs_sig", "The normalization of Higgs CB for the signal", 1.5, 0, 10)
-            CBHiggs_sig = ROOT.RooCBShape("CBHiggs_sig","The Higgs Crystall Ball for the signal",m4l,meanHiggs_sig,sigmaHiggs,alphaHiggs,nHiggs)
+            CBHiggs_sig = ROOT.RooCBShape("CBHiggs_sig","The Higgs Crystall Ball for the signal",
+                                            m4l, meanHiggs_sig, sigmaHiggs, alphaHiggs, nHiggs)
             
             # Unbinned ML fit to signal
             fitHiggs = CBHiggs_sig.fitTo(sig, ROOT.RooFit.Save(True), ROOT.RooFit.AsymptoticError(True))
@@ -115,7 +118,7 @@ def fit_mass (args, logger):
             # Parameters and model for data fit
             meanHiggs_data = ROOT.RooRealVar("m_{H}", "The mean of the Higgs CB for the data", 125, 115, 135, "GeV")
             CBHiggs_data = ROOT.RooCBShape("CBHiggs_data","The Higgs Crystall Ball for the data",
-                                            m4l,meanHiggs_data,sigmaHiggs,alphaHiggs,nHiggs)
+                                            m4l, meanHiggs_data, sigmaHiggs, alphaHiggs, nHiggs)
             
             # Signal and background fractions
             sig_frac= ROOT.RooRealVar("sigfrac", "signal fraction", sig_frac_count)
@@ -141,17 +144,20 @@ def fit_mass (args, logger):
             m4l.setBins(10)
             xframe = m4l.frame()
             xframe.SetTitle("")
-            data.plotOn(xframe)
-            totPDF.plotOn(xframe, ROOT.RooFit.Components("bkg_kde"), ROOT.RooFit.LineStyle(ROOT.kDashed), ROOT.RooFit.LineColor(ROOT.kRed))
-            totPDF.plotOn(xframe, ROOT.RooFit.Components("CBHiggs_data"), ROOT.RooFit.LineStyle(ROOT.kDashed), ROOT.RooFit.LineColor(ROOT.kBlue))
-            totPDF.plotOn(xframe, ROOT.RooFit.LineColor(ROOT.kGreen))
+            data.plotOn(xframe, ROOT.RooFit.Name("data"))
+            totPDF.plotOn(xframe, ROOT.RooFit.Name("bkg_kde"), ROOT.RooFit.Components("bkg_kde"), ROOT.RooFit.LineStyle(ROOT.kDashed), ROOT.RooFit.LineColor(ROOT.kRed))
+            totPDF.plotOn(xframe, ROOT.RooFit.Name("CBHiggs_data"), ROOT.RooFit.Components("CBHiggs_data"), ROOT.RooFit.LineStyle(ROOT.kDashed), ROOT.RooFit.LineColor(ROOT.kBlue))
+            totPDF.plotOn(xframe, ROOT.RooFit.Name("totPDF"), ROOT.RooFit.LineColor(ROOT.kGreen))
 
-            #CBHiggs_data.plotOn(xframe)
             canvas = ROOT.TCanvas()
             xframe.Draw()
-            #input()
             plotting_functions.add_latex()
+
+            legend = ROOT.TLegend(0.6, 0.7, 0.9, 0.9)
+            plotting_functions.add_legend(legend, "fit")
+            legend.Draw()
             
+            #input()
             output_name = os.path.join(dir_name, f"fit_mass_{selection}.pdf")
             canvas.SaveAs(output_name)
 
@@ -163,7 +169,6 @@ def fit_mass (args, logger):
             getattr(ws,"import")(data)
             ws.writeToFile(out_file_name)
             del ws
-            #ws.Write()
             fOutput.Write()
             fOutput.Close()
 

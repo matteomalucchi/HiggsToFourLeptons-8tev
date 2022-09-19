@@ -1,4 +1,4 @@
-""" Definitions of the functions used in the histogramming step of the analysis.
+""" Definitions of the functions used in the plotting step of the analysis.
 """
 
 import ROOT
@@ -133,7 +133,7 @@ def add_title(histo, variable_specs=None):
         histo.GetYaxis().SetTitle(f"N_{{Events}} / {float(f'{bin_width:.1g}'):g}\
             {variable_specs[4]}")
 
-def add_legend(legend, input_type, histo):
+def add_legend(legend, input_type, histo=None):
     """Add the legend to the plot.
 
     :param legend: Legend to be added
@@ -169,6 +169,12 @@ def add_legend(legend, input_type, histo):
         
     elif input_type == "signal":
         legend.AddEntry(histo, "m_{H} = 125 GeV", "l")
+
+    elif input_type == "fit":
+        legend.AddEntry("bkg_kde","Background KDE", "l")
+        legend.AddEntry("CBHiggs_data","Data CB", "l")
+        legend.AddEntry("totPDF","Data CB + Background KDE", "l")
+        legend.AddEntry("data","Data", "lep")
 
     return legend
 

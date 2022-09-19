@@ -28,19 +28,9 @@ def ml_application(args, logger):
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
-    ROOT.gErrorIgnoreLevel = ROOT.kError
     
     start_time_tot = time.time()
     
-    #if args.logLevel >= 20:
-    #    ROOT.gErrorIgnoreLevel = ROOT.kError
-
-    """# Enamble multi-threading
-    if args.parallel:
-        ROOT.ROOT.EnableImplicitMT()
-        thread_size = ROOT.ROOT.GetThreadPoolSize()
-        logger.info(">>> Thread pool size for parallel processing: %s", thread_size)
-"""
     # Setup TMVA
     ROOT.TMVA.Tools.Instance()
     ROOT.TMVA.PyMethodBase.PyInitialize()
@@ -138,10 +128,6 @@ if __name__ == "__main__":
     
     # General configuration
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
-    parser.add_argument("-p", "--parallel",   default=True,   action="store_const",
-                        const=False, help="disables running in parallel")
-    parser.add_argument("-n", "--nWorkers",   default=0,
-                        type=int,   help="number of workers for multi-threading" )
     parser.add_argument("-a", "--algorithmMLVar",     default="tot",
                          type=str,   help="name of the set of variables \
                          to be used in the ML algorithm (tot, part, higgs)")

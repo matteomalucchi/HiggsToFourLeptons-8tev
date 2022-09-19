@@ -1,5 +1,5 @@
 """ Definitions of the functions used in the skimming step of the analysis.
-The basic functions used on the rdf are defined in ``skim_functions.h``.
+The basic functions used on the data are defined in ``skim_functions.h``.
 """
 
 
