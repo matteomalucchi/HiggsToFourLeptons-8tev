@@ -5,7 +5,7 @@
 # Analysis of Higgs boson decays to four leptons
 
 ## Introduction
-This repository contains an analysis of the decay <img src="https://latex.codecogs.com/gif.latex?H \rightarrow Z Z \rightarrow 4l" />
+This repository contains an analysis of the decay of a Higgs boson into two Z bosons which in turn decay in four leptons
 using reduced NanoAOD files created from CMS Open Data. The analysis follows loosely 
 [the official CMS analysis published in 2012](https://www.sciencedirect.com/science/article/pii/S0370269312008581) and
 consists in two main parts: the reconstruction of the Higgs boson mass and 
@@ -29,9 +29,7 @@ is fitted in order to obtain an estimate of the Higgs mass.
 
 ### Run the analysis
 The complete analysis can be performed the first time by simply running 
-
 >       python run_analysis.py -d
-
 which also downloads the locally the input datasets. 
 Some general purpose functions to set up the analysis are defined in 
 the `set_up.py` file.
