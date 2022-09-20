@@ -2,8 +2,9 @@
 of signal and background. The training is done thanks to
 keras API. To take a look at the output of the training run 
 ``$ TMVA::TMVAGui("TMVA.root")`` from the ROOT prompt.
-
-
+The training is done using as variables the masses of the Z bosons
+and the five angles described in detail in `[Phys.Rev.D86:095031,2012]
+<https://journals.aps.org/prd/abstract/10.1103/PhysRevD.86.095031>`_.
 """
 
 import time

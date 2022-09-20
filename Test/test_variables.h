@@ -1,3 +1,7 @@
+/* 
+ * Definitions of the variables used in test_skim.py
+*/
+
 #ifndef TestVariablesHfile_
 #define TestVariablesHfile_
 

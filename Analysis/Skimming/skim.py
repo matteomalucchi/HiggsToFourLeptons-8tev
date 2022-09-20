@@ -5,8 +5,8 @@ specific for this analysis. The skimming removes all events
 which are not of interest for the reconstruction of Z bosons
 from combinations of leptons, which may originate from the
 decay of a Higgs boson. Furthermore, all the variables used
-later on are defined. This includes mass and Pt of Z and Higgs
-bosons, as well as five dacay angles defined in `[Phys.Rev.D86:095031,2012]
+later on are defined in this step. This includes mass, Pt, eta and phi of Z and Higgs
+bosons, as well as five decay angles defined in `[Phys.Rev.D86:095031,2012]
 <https://journals.aps.org/prd/abstract/10.1103/PhysRevD.86.095031>`_
 which are later used for a machine learning algorithm.
 """

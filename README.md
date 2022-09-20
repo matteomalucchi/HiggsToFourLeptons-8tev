@@ -7,7 +7,7 @@
 ## Introduction
 This repository contains an analysis of the decay of a
 Higgs boson into two Z bosons which in turn decay in four leptons
-using reduced NanoAOD files created from CMS Open Data. The analysis follows loosely 
+using reduced NanoAOD files created from [CMS Open Data](http://opendata.cern.ch/record/12360). The analysis follows loosely 
 [the official CMS analysis published in 2012](https://www.sciencedirect.com/science/article/pii/S0370269312008581) 
 and consists in two main parts. The first consists in the "skimming" of 
 the dataset, i.e. by removing all events which are not of interest for the reconstruction
@@ -75,7 +75,7 @@ The datasets can be downloaded locally by running
 
 If not specified otherwise, datasets are saved in the directory `Input/`. The option `-p`
 disables parallel running, while the option `-e` lets the users choose between 
-multi-threading (default) or multi-processing.
+multithreading (default) or multiprocessing.
 
 ### Skimming
 
@@ -84,9 +84,8 @@ specific for this analysis. The skimming removes all events
 which are not of interest for the reconstruction of Z bosons
 from combinations of leptons, which may originate from the
 decay of a Higgs boson. Furthermore, all the variables used
-later on are defined. This includes mass and Pt of Z and Higgs
-bosons, as well as five dacay angles defined in `[Phys.Rev.D86:095031,2012]
-<https://journals.aps.org/prd/abstract/10.1103/PhysRevD.86.095031>`_
+later on are defined in this step. This includes mass, Pt, eta and phi of Z and Higgs
+bosons, as well as the five decay angles mentioned above
 which are later used for a machine learning algorithm.
 
 The skimming step can be performed by running 

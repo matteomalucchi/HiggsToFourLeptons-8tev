@@ -33,8 +33,8 @@ The full list of modules can be found :ref:`here <modules>`.
    This project is under active development.
 
 .. toctree::
-   Modules
    usage
+   Modules
    run_analysis
    set_up
    download_dataset

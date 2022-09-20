@@ -31,7 +31,7 @@ RVec<float> sipDef(VecF dxy, VecF dz, VecF sigma_dxy, VecF sigma_dz){
 };
 
 /* 
- * Require that in at least one of the lepton couples the higher 
+ * Require that in at least one of the lepton couples the highest 
  * energy particle has Pt > 20 GeV while the other one Pt > 10 GeV.  
 */
 bool ptCuts(VecF mu_pt, VecF el_pt){
@@ -62,7 +62,6 @@ RVec<RVec<int>> zIdxSamekind(FourVec fourvec, VecI charge){
     idx[0].reserve(2); 
     idx[1].reserve(2);
 
-    //    idx[0]=ArgMin(std::abs((fourvec[idx_cmb[0]]+fourvec[idx_cmb[1]]).M()-Z_MASS))
     // Find first lepton pair with invariant mass closest to Z mass
     auto idx_cmb = Combinations(fourvec, 2);
     auto best_mass = -1;
@@ -127,7 +126,6 @@ RVec<TLorentzVector> zFourvec2mu2el(FourVec mu_fourvec, FourVec el_fourvec) {
 
 /*
  * Angular separation of particles building the Z systems.
- * DeltaR(eta1, eta2, phi1, phi2)= sqrt((eta1-eta2)^2+(phi1-phi2)^2)
 */
 bool filterDeltaR(Idx idx, VecF eta, VecF phi) {
     for (size_t i = 0; i < 2; i++) {
@@ -140,7 +138,7 @@ bool filterDeltaR(Idx idx, VecF eta, VecF phi) {
 };
 
 /*
- * Order idx so that the first Z is the heavier one.
+ * Order idx so that the first Z is the heaviest one.
 */
 RVec<RVec<int>> order_idx_Z(Idx idx, FourVec fourvec) {
     if (fourvec[0].M()>fourvec[1].M()) return idx;
@@ -156,7 +154,7 @@ TLorentzVector splitLepSamekind(VecI idx_pair, FourVec fourvec, VecI charge) {
 };
 
 /*
- * Select the lepton/anti-lepton belonging to the heavier boson Z1
+ * Select the lepton/anti-lepton belonging to the heaviest boson Z1
  * in case of leptons of different kinds.
 */
 TLorentzVector lep1(FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI charge_el) {
@@ -170,7 +168,7 @@ TLorentzVector lep1(FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI
 };
 
 /*
- * Select the lepton/anti-lepton belonging to the lighter boson Z2
+ * Select the lepton/anti-lepton belonging to the lightest boson Z2
  * in case of leptons of different kinds.
 */
 TLorentzVector lep2(FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI charge_el) {
@@ -215,7 +213,7 @@ TVector3 crossNorm(TVector3 vec1, TVector3 vec2) {
 };
 
 /*
- * Definition of angles Phi and Phi1 as explained in [Phys.Rev.D86:095031,2012].
+ * Definition of angles Phi and Phi1.
 */
 float defPhi(TVector3 momentum, TVector3 vec1, TVector3 vec2) {
     return momentum.Dot(vec1.Cross(vec2)) *
@@ -223,7 +221,7 @@ float defPhi(TVector3 momentum, TVector3 vec1, TVector3 vec2) {
 }; 
 
 /*
- * Definition of angles theta_star, theta1 and theta2 as explained in [Phys.Rev.D86:095031,2012].
+ * Definition of angles theta_star, theta1 and theta2.
 */
 float defTheta(TVector3 vec1, TVector3 vec2) {
     return acos(-vec1.Dot(vec2) * pow(vec1.Mag()*vec2.Mag(),-1));
