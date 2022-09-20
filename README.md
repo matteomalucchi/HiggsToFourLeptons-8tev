@@ -5,16 +5,16 @@
 # Analysis of Higgs boson decays to four leptons
 
 ## Introduction
-This repository contains an analysis of the decay of a Higgs boson into two Z bosons which in turn decay in four leptons
+This repository contains an analysis of the decay of a
+Higgs boson into two Z bosons which in turn decay in four leptons
 using reduced NanoAOD files created from CMS Open Data. The analysis follows loosely 
-[the official CMS analysis published in 2012](https://www.sciencedirect.com/science/article/pii/S0370269312008581) and
-consists in two main parts: the reconstruction of the Higgs boson mass and 
-the development of a machine learning algorithm which allows for a better 
-discrimination between signal and background. The first is obtained by "skimming" 
+[the official CMS analysis published in 2012](https://www.sciencedirect.com/science/article/pii/S0370269312008581) 
+and consists in two main parts. The first consists in the "skimming" of 
 the dataset, i.e. by removing all events which are not of interest for the reconstruction
 of Higgs bosons, and by computing the various observables necessary for the analysis.
-The remaining variables are finally plotted distinguishing the data from the simulated 
-signal and background. The second part consists in training a machine learning algorithm
+The remaining variables are finally plotted and the invariant mass of the four leptons
+is fitted in order to measure the Higgs mass.
+The second part consists in the training and the application of a Deep Neural Network
 using as input the simulated signal and background Monte Carlo samples and as discriminant
 variables the invariant masses of the two reconstructed Z bosons and the five angles 
 formed by the leptons in the final state as described in detail in the article 
@@ -22,8 +22,8 @@ formed by the leptons in the final state as described in detail in the article
 Then, the algorithm is applied to the whole dataset in order to obtain a graph in which the 
 distribution of the kinematic discriminant versus the invariant mass of the four leptons is plotted.
 This shows a clear separation between signal and background, hence a further cut on the data can be 
-applied in order to obtain a "cleaner" sample. Finally, the invariant mass of the four leptons 
-is fitted in order to obtain an estimate of the Higgs mass.
+applied in order to obtain a "cleaner" sample and better discriminate the signal from the background.
+
 
 ## How to run this
 

@@ -1,3 +1,5 @@
+.. _modules:
+
 List of modules
 ===============
 
@@ -29,10 +31,9 @@ List of modules
 
    Test.test_skim
 
-..
-   Definitions.eos_link_def
-   Definitions.samples_def
-   Definitions.selections_def
-   Definitions.variables_def
-   Definitions.variables_ml_def
-   Definitions.weights_def
+   Analysis.Definitions.eos_link_def
+   Analysis.Definitions.samples_def
+   Analysis.Definitions.selections_def
+   Analysis.Definitions.variables_def
+   Analysis.Definitions.variables_ml_def
+   Analysis.Definitions.weights_def
