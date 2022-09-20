@@ -35,6 +35,7 @@ Check out the :doc:`usage` section for further information, including how to
    This project is under active development.
 
 .. toctree::
+   Modules
    usage
    run_analysis
    set_up
@@ -45,7 +46,6 @@ Check out the :doc:`usage` section for further information, including how to
    plotting
    fit_mass
    test_skim
-   Modules
    :caption: Contents:
 
 

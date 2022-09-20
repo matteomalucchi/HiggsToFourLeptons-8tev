@@ -29,7 +29,9 @@ is fitted in order to obtain an estimate of the Higgs mass.
 
 ### Run the analysis
 The complete analysis can be performed the first time by simply running 
+
 >       python run_analysis.py -d
+
 which also downloads the locally the input datasets. 
 Some general purpose functions to set up the analysis are defined in 
 the `set_up.py` file.
