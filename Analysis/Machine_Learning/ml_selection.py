@@ -11,11 +11,11 @@ import argparse
 
 import ROOT
 
-sys.path.append("../../")
+sys.path.append(os.path.join("..","..", ""))
 from Analysis.Definitions.samples_def import  SAMPLES
 from Analysis.Definitions.variables_def import VARIABLES_COMPLETE
 
-import Analysis.set_up as set_up
+from Analysis import set_up
 
 def ml_selection(args, logger):
     """Main function for the selection of the events for which

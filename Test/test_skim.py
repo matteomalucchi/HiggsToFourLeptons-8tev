@@ -3,6 +3,8 @@ the skimming process defined in the header file ``skim_functions.h``.
 """
 
 import unittest
+import os
+
 import ROOT
 
 
@@ -12,8 +14,12 @@ class TestSkim(unittest.TestCase):
         """ Include the header files where the functions and the variables are defined.
         """
         super().__init__(*args, **kwargs)
-        ROOT.gInterpreter.ProcessLine('#include "Analysis/Skimming/skim_functions.h"' )
-        ROOT.gInterpreter.ProcessLine('#include "Test/test_variables.h"' )
+        
+        func_path = os.path.join("Analysis", "Skimming", "skim_functions.h")
+        var_path = os.path.join("Test", "test_variables.h")
+        
+        ROOT.gInterpreter.ProcessLine(f'#include "{func_path}"' )
+        ROOT.gInterpreter.ProcessLine(f'#include "{var_path}"' )
 
     def test_sip(self):
         """ Test the definition of the significance of the impact parameter sip

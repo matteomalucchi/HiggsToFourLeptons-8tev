@@ -9,21 +9,19 @@ and the five angles described in detail in `[Phys.Rev.D86:095031,2012]
 
 import time
 import argparse
-
 import sys
 import os
-
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
 import ROOT
 
-sys.path.append("../../")
+sys.path.append(os.path.join("..","..", ""))
 
 from Analysis.Definitions.samples_def import SAMPLES
 from Analysis.Definitions.variables_ml_def import VARIABLES_ML_DICT
 
-import Analysis.set_up as set_up
+from Analysis import set_up
 
 
 def ml_training(args, logger):

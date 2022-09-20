@@ -1,4 +1,4 @@
-"""Implementation of the plotting step of the analysis
+"""Implementation of the plotting step of the analysis.
 
 The plotting combines the histograms to plots which allow to study the
 inital dataset based on observables motivated through physics.
@@ -9,13 +9,13 @@ import argparse
 
 import ROOT
 
-sys.path.append("../../")
+sys.path.append(os.path.join("..","..", ""))
 
 from Analysis.Definitions.variables_def import VARIABLES_DICT
 from Analysis.Definitions.selections_def import  SELECTIONS
 from Analysis.Plotting import plotting_functions
 
-import Analysis.set_up as set_up
+from Analysis import set_up
 
 ROOT.gROOT.SetBatch(True)
 

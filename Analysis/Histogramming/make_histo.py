@@ -1,4 +1,4 @@
-""" Implementation of the histogramming step of the analysis
+""" Implementation of the histogramming step of the analysis.
 
 The histogramming step produces histograms for each variable in each dataset.
 Then, the resulting histograms are passed to the plotting
@@ -12,14 +12,15 @@ import argparse
 
 import ROOT
 
-sys.path.append("../../")
+sys.path.append(os.path.join("..","..", ""))
+
 from Analysis.Definitions.variables_def import VARIABLES_DICT
 from Analysis.Definitions.samples_def import  SAMPLES
 from Analysis.Definitions.selections_def import  SELECTIONS
 
 from Analysis.Histogramming import histogramming_functions
 
-import Analysis.set_up as set_up
+from Analysis import set_up
 
 def make_histo(args, logger):
     """ Main function of the histogramming step.

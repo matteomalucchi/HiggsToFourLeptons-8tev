@@ -12,10 +12,11 @@ import sys
 
 import ROOT
 
-sys.path.append("../../")
+sys.path.append(os.path.join("..","..", ""))
+
 from Analysis.Plotting import plotting_functions
 
-import Analysis.set_up as set_up
+from Analysis import set_up
 
 #ROOT.gROOT.SetBatch(True)
 

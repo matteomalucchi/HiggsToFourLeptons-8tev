@@ -99,7 +99,7 @@ The basic functions used on the data are defined in `skim_functions.h`.
 
 ### Machine learning
 
-In this step a Deep Neaural Network (DNN) is trained on the Monte Carlo samples
+In this step a Deep Neural Network (DNN) is trained on the Monte Carlo samples
 of signal and background. The training is done thanks to the ROOT.TMVA library
 with keras API. The trained DNN is evaluated on the various datasets and the events
 with discriminant above the 0.5 threshold are saved in a new TTree.
@@ -144,7 +144,7 @@ By running
 
 >       python ml_plot.py
 
-2D histograms of Higgs_mass vs DNN Discriminant
+2D scatter plots of Higgs_mass vs DNN Discriminant
 are created, one for the simulated background and one for the
 simulated signal. Each plot contains both the combination
 of all background/signal datasets and the real data

@@ -7,14 +7,13 @@ import sys
 import time
 
 from Analysis.Definitions.eos_link_def import  EOS_LINK
-
-import Analysis.set_up as set_up
+from Analysis import set_up
 from Analysis.Skimming import skim
 from Analysis.Machine_Learning import  ml_training, ml_application, ml_selection
 from Analysis.Plotting import make_plot, ml_plot
 from Analysis.Histogramming import make_histo, ml_histo
-import Analysis.download_dataset as download_dataset
-import Analysis.fit_mass as fit_mass
+from Analysis import download_dataset
+from Analysis import fit_mass
 
 def run_analysis (argv):
     """ Main function that runs the whole analysis.

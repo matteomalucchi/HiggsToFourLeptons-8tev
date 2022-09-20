@@ -14,7 +14,7 @@ from Analysis.Definitions.samples_def import SAMPLES
 from Analysis.Definitions.selections_def import  SELECTIONS
 from Analysis.Plotting import plotting_functions
 
-import Analysis.set_up as set_up
+from Analysis import set_up
 
 def fit_mass (args, logger):
     """ Main function for the mass fit of the Higgs candidate

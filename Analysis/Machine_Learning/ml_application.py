@@ -12,11 +12,11 @@ import argparse
 
 import ROOT
 
-sys.path.append("../../")
+sys.path.append(os.path.join("..","..", ""))
 from Analysis.Definitions.samples_def import SAMPLES
 from Analysis.Definitions.variables_ml_def import VARIABLES_ML_DICT
 
-import Analysis.set_up as set_up
+from Analysis import set_up
 
 def ml_application(args, logger):
     """ Main function that avaluates the DNN on the whole dataset.

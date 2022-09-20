@@ -18,7 +18,7 @@ import sys
 
 import ROOT
 
-sys.path.append("../../")
+sys.path.append(os.path.join("..","..", ""))
 
 from Analysis.Definitions.eos_link_def import  EOS_LINK
 from Analysis.Definitions.samples_def import  SAMPLES
@@ -27,7 +27,7 @@ from Analysis.Definitions.weights_def import  WEIGHTS
 
 from Analysis.Skimming import skim_tools
 
-import Analysis.set_up as set_up
+from Analysis import set_up
 
 
 def skim(args, logger, path_sf="Analysis/Skimming"):
@@ -46,7 +46,7 @@ def skim(args, logger, path_sf="Analysis/Skimming"):
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
-    
+
     start_time_tot = time.time()
 
     ROOT.gInterpreter.ProcessLine(f'#include "{os.path.join(path_sf, "skim_functions.h")}"' )
@@ -64,16 +64,16 @@ def skim(args, logger, path_sf="Analysis/Skimming"):
         logger.debug("Directory %s/ Created", dir_name)
     except FileExistsError:
         logger.debug("The directory %s/ already exists", dir_name)
-        
+
     #Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
         file_name=os.path.join(args.basePath, f"{sample_name}.root")
-        
+
         # Check if the sample is one of those requested by the user
         if sample_name not in args.sample and args.sample != "all":
             continue
 
-        # Check if file exists or not 
+        # Check if file exists or not
         try:
             if not os.path.exists(file_name):
                 raise FileNotFoundError
@@ -92,11 +92,11 @@ def skim(args, logger, path_sf="Analysis/Skimming"):
 
         # Loop over the possible final states
         for final_state in final_states:
-            
+
             # Check if the final state is one of those requested by the user
             if final_state not in args.finalState and args.finalState != "all":
                 continue
-            
+
             logger.info(">>> Process sample: %s and final state %s \n", sample_name, final_state)
 
             start_time = time.time()
@@ -113,21 +113,21 @@ def skim(args, logger, path_sf="Analysis/Skimming"):
             rdf6 = skim_tools.four_vec_boost(rdf5)
             rdf7 = skim_tools.def_angles(rdf6)
             rdf_final = skim_tools.add_event_weight(rdf7, WEIGHTS[sample_name])
-            
+
             if args.logLevel <= 10:
                 rdf_final.Report().Print()
             logger.debug("%s\n", rdf_final.GetColumnNames())
-            
+
             # Save the skimmed samples
             complete_name = os.path.join(dir_name, f"{sample_name}{final_state}Skim.root")
             rdf_final.Snapshot("Events", complete_name, VARIABLES.keys())
 
             logger.info(">>> Execution time for %s %s: %s s \n", sample_name, final_state, (time.time() - start_time))
-    
+
     logger.info(">>> Total Execution time: %s s \n",(time.time() - start_time_tot))
 
-if __name__ == "__main__":    
-    
+if __name__ == "__main__":
+
     # General configuration
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
     parser.add_argument("-r", "--range",  nargs="?", default=0, const=10000000, type=int,
@@ -139,12 +139,12 @@ if __name__ == "__main__":
                             type=int,   help="number of workers for multi-threading" )
     parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
                             help="name of the output directory")
-    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,
                             help="integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
-    parser.add_argument("-f", "--finalState",   default="all", type=str,   
+    parser.add_argument("-f", "--finalState",   default="all", type=str,
                             help="comma separated list of the final states to analyse: \
-                            FourMuons, FourElectrons, TwoMuonsTwoElectrons" )     
+                            FourMuons, FourElectrons, TwoMuonsTwoElectrons" )
     parser.add_argument("-s", "--sample",    default="all", type=str,
                         help="string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
@@ -156,6 +156,6 @@ if __name__ == "__main__":
 
 
     logger_main=set_up.set_up(args_main)
-    
+
 
     skim(args_main, logger_main, "")
