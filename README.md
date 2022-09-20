@@ -5,7 +5,8 @@
 # Analysis of Higgs boson decays to four leptons
 
 ## Introduction
-This repository contains an analysis of the decay of a Higgs boson into two Z bosons which in turn decay in four leptons using reduced NanoAOD files created from CMS Open Data. The analysis follows loosely 
+This repository contains an analysis of the decay <img src="https://latex.codecogs.com/gif.latex?H \rightarrow Z Z \rightarrow 4l" />
+using reduced NanoAOD files created from CMS Open Data. The analysis follows loosely 
 [the official CMS analysis published in 2012](https://www.sciencedirect.com/science/article/pii/S0370269312008581) and
 consists in two main parts: the reconstruction of the Higgs boson mass and 
 the development of a machine learning algorithm which allows for a better 
