@@ -1,13 +1,13 @@
-Machine learning 
+Machine learning
 ================
 
 Machine_Learning/ml_training.py
 -------------------------------
 .. autofunction:: Analysis.Machine_Learning.ml_training.ml_training
 
-Machine_Learning/ml_application.py
+Machine_Learning/ml_evaluation.py
 ----------------------------------
-.. autofunction:: Analysis.Machine_Learning.ml_application.ml_application
+.. autofunction:: Analysis.Machine_Learning.ml_evaluation.ml_evaluation
 
 Machine_Learning/ml_selection.py
 --------------------------------

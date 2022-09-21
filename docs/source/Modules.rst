@@ -11,12 +11,12 @@ List of modules
    Analysis.set_up
 
    Analysis.download_dataset
-   
+
    Analysis.Skimming.skim
    Analysis.Skimming.skim_tools
 
    Analysis.Machine_Learning.ml_training
-   Analysis.Machine_Learning.ml_application
+   Analysis.Machine_Learning.ml_evaluation
    Analysis.Machine_Learning.ml_selection
 
    Analysis.Histogramming.make_histo

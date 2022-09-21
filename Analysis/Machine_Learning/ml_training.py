@@ -1,6 +1,6 @@
 """ In this step the DNN is trained on the Monte Carlo samples
 of signal and background. The training is done thanks to
-keras API. To take a look at the output of the training run 
+keras API. To take a look at the output of the training run
 ``$ TMVA::TMVAGui("TMVA.root")`` from the ROOT prompt.
 The training is done using as variables the masses of the Z bosons
 and the five angles described in detail in `[Phys.Rev.D86:095031,2012]
@@ -24,7 +24,7 @@ from Analysis.Definitions.variables_ml_def import VARIABLES_ML_DICT
 from Analysis import set_up
 
 
-def ml_training(args, logger):
+def ml_training(args, logger, base_path=""):
     """Main function for the training of the DNN. The DNN is
     trained on the simulated Monte Carlo samples.
 
@@ -43,7 +43,7 @@ def ml_training(args, logger):
     ROOT.TMVA.PyMethodBase.PyInitialize()
 
     # Create the directory to save the outputs of the ml algorithm if doesn't already exist
-    dir_name = os.path.join(args.output, "ML_output")
+    dir_name = os.path.join(base_path, "Analysis", "Machine_Learning")
     try:
         os.makedirs(dir_name)
         logger.debug("Directory %s/ Created", dir_name)
@@ -52,18 +52,17 @@ def ml_training(args, logger):
 
     # Create file to save the results
     tmva_path=os.path.join(dir_name, "TMVA.root")
-    output = ROOT.TFile.Open(tmva_path, "RECREATE")
-    logger.debug("File %s Created", tmva_path)
-    
+    output = ROOT.TFile.Open("TMVA.root", "RECREATE")
+
     factory = ROOT.TMVA.Factory("TMVAClassification", output,
                         "!V:!Silent:Color:DrawProgressBar:Transformations=D,G:AnalysisType=Classification")
 
     # Variables used in the ML algorithm
-    variables=VARIABLES_ML_DICT[args.algorithmMLVar]
-    
+    variables=VARIABLES_ML_DICT[args.MLVariables]
+
     # Directory where the weights are saved
     dataset_path=os.path.join(dir_name, "dataset")
-    dataloader = ROOT.TMVA.DataLoader(dataset_path)
+    dataloader = ROOT.TMVA.DataLoader("dataset")
     for variable in variables:
         dataloader.AddVariable(variable)
         logger.debug(variable)
@@ -84,7 +83,7 @@ def ml_training(args, logger):
                 continue
             logger.debug(">>> Process sample %s and final state %s", sample_name, final_state)
             # Check if file exists or not
-            try: 
+            try:
                 file_name=os.path.join(args.output, "Skim_data",
                                    f"{sample_name}{final_state}Skim.root")
                 if not os.path.exists(file_name):
@@ -93,22 +92,22 @@ def ml_training(args, logger):
                 logger.debug("Sample %s final state %s: File %s can't be found %s",
                                 sample_name, final_state, file_name, not_found_err,  stack_info=True)
                 continue
-            
+
             if sample_name == "SMHiggsToZZTo4L":
                 signal_chain.Add(file_name)
             else:
                 bkg_chain.Add(file_name)
-    
+
     try:
         dataloader.AddSignalTree(signal_chain, 1.0)
         dataloader.AddBackgroundTree(bkg_chain, 1.0)
     except TypeError as type_err:
-        logger.exception("Unable to train the DNN on the simulated samples %s", 
+        logger.exception("Unable to train the DNN on the simulated samples %s",
                         type_err, stack_info=True)
-        logger.exception("Exit the program")                        
+        logger.exception("Exit the program")
         return
 
-    
+
     dataloader.PrepareTrainingAndTestTree(ROOT.TCut(""),"SplitMode=Random:NormMode=NumEvents:!V")
 
     # Generate model
@@ -118,7 +117,7 @@ def ml_training(args, logger):
     model.add(Dense(64, activation="relu", input_dim=len(variables)))
     model.add(Dense(12, activation="relu"))
     model.add(Dense(12, activation="relu"))
-    model.add(Dense(12, activation="relu"))
+    #model.add(Dense(12, activation="relu"))
     #model.add(Dense(12, activation="relu"))
     model.add(Dense(2, activation="sigmoid"))
 
@@ -135,7 +134,7 @@ def ml_training(args, logger):
 
     # Book methods
     factory.BookMethod(dataloader, ROOT.TMVA.Types.kPyKeras, "PyKeras",
-                    f"H:!V:VarTransform=D,G:FilenameModel={mod_path}:NumEpochs=30:BatchSize=128")
+                    f"H:!V:VarTransform=D,G:FilenameModel={mod_path}:NumEpochs=10:BatchSize=128")
 
     # Run training, test and evaluation
     factory.TrainAllMethods()
@@ -150,28 +149,27 @@ def ml_training(args, logger):
     logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
 
 if __name__ == "__main__":
-    
+
     # General configuration
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
-    parser.add_argument("-a", "--algorithmMLVar",     default="tot"  , type=str,
-                        help="name of the set of variables to be used \
-                            in the ML algorithm (tot, part, higgs)")
+    parser.add_argument("-a", "--MLVariables",     default="tot"  , type=str,
+                        help="name of the set of variables to be used in the ML \
+                            algorithm defined 'variables_ml_def.py': tot, higgs")
     parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
                         help="name of the output directory")
-    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,
                             help="integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
-    parser.add_argument("-f", "--finalState",   default="all", type=str,   
+    parser.add_argument("-f", "--finalState",   default="all", type=str,
                             help="comma separated list of the final states to analyse: \
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons" )
     parser.add_argument("-s", "--sample",    default="all", type=str,
                         help="string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
-                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")    
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
     args_main = parser.parse_args()
 
     logger_main=set_up.set_up(args_main)
-    
-                
-    ml_training(args_main, logger_main)
 
+
+    ml_training(args_main, logger_main, "../..")

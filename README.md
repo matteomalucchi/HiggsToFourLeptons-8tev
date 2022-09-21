@@ -7,33 +7,33 @@
 ## Introduction
 This repository contains an analysis of the decay of a
 Higgs boson into two Z bosons which in turn decay in four leptons
-using reduced NanoAOD files created from [CMS Open Data](http://opendata.cern.ch/record/12360). The analysis follows loosely 
-[the official CMS analysis published in 2012](https://www.sciencedirect.com/science/article/pii/S0370269312008581) 
-and consists in two main parts. The first consists in the "skimming" of 
+using reduced NanoAOD files created from [CMS Open Data](http://opendata.cern.ch/record/12360). The analysis follows loosely
+[the official CMS analysis published in 2012](https://www.sciencedirect.com/science/article/pii/S0370269312008581)
+and consists in two main parts. The first consists in the "skimming" of
 the dataset, i.e. by removing all events which are not of interest for the reconstruction
 of Higgs bosons, and by computing the various observables necessary for the analysis.
 The remaining variables are finally plotted and the invariant mass of the four leptons
 is fitted in order to measure the Higgs mass.
 The second part consists in the training and the application of a Deep Neural Network
 using as input the simulated signal and background Monte Carlo samples and as discriminant
-variables the invariant masses of the two reconstructed Z bosons and the five angles 
-formed by the leptons in the final state as described in detail in the article 
-[[Phys.Rev.D86:095031,2012]](https://journals.aps.org/prd/abstract/10.1103/PhysRevD.86.095031). 
-Then, the algorithm is applied to the whole dataset in order to obtain a graph in which the 
+variables the invariant masses of the two reconstructed Z bosons and the five angles
+formed by the leptons in the final state as described in detail in the article
+[[Phys.Rev.D86:095031,2012]](https://journals.aps.org/prd/abstract/10.1103/PhysRevD.86.095031).
+Then, the algorithm is applied to the whole dataset in order to obtain a graph in which the
 distribution of the kinematic discriminant versus the invariant mass of the four leptons is plotted.
-This shows a clear separation between signal and background, hence a further cut on the data can be 
+This shows a clear separation between signal and background, hence a further cut on the data can be
 applied in order to obtain a "cleaner" sample and better discriminate the signal from the background.
 
 
 ## How to run this
 
 ### Run the analysis
-The complete analysis can be performed the first time by simply running 
+The complete analysis can be performed the first time by simply running
 
 >       python run_analysis.py -d
 
-which also downloads the locally the input datasets. 
-Some general purpose functions to set up the analysis are defined in 
+which also downloads the locally the input datasets.
+Some general purpose functions to set up the analysis are defined in
 the `set_up.py` file.
 
 The several options for running the analysis may be displayed by typing
@@ -52,7 +52,7 @@ The options include:
 >     -l LOGLEVEL, --logLevel LOGLEVEL        integer representing the level of the logger: DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40
 >     -f FINALSTATE, --finalState FINALSTATE      comma separated list of the final states to analyse: FourMuons,FourElectrons,TwoMuonsTwoElectrons
 >     -m, --ml              disables machine learning algorithm
->     -a ALGORITHMMLVAR, --algorithmMLVar ALGORITHMMLVAR      name of the set of variables to be used in the ML algorithm defined 'variables_ml_def.py': tot, part, higgs
+>     -a MLVARIABLES, --MLVariables MLVARIABLES      name of the set of variables to be used in the ML algorithm defined 'variables_ml_def.py': tot, higgs
 >     -i, --invariantMassFit       disables fit of the Higgs mass
 >     -g, --graphPlots      disables the graphing of the distribution plots
 >     -t TYPEDISTRIBUTION, --typeDistribution TYPEDISTRIBUTION        comma separated list of the type of distributions to plot: data, background, signal, sig_bkg_normalized, total
@@ -69,17 +69,17 @@ The analysis can be performed even on just a specific sample and/or final state 
 
 ### Download of the input datasets
 
-The datasets can be downloaded locally by running 
+The datasets can be downloaded locally by running
 
 >       python download.py -d DirectoryName
 
 If not specified otherwise, datasets are saved in the directory `Input/`. The option `-p`
-disables parallel running, while the option `-e` lets the users choose between 
+disables parallel running, while the option `-e` lets the users choose between
 multithreading (default) or multiprocessing.
 
 ### Skimming
 
-The skimming process consists in reducing the initial samples to a dataset 
+The skimming process consists in reducing the initial samples to a dataset
 specific for this analysis. The skimming removes all events
 which are not of interest for the reconstruction of Z bosons
 from combinations of leptons, which may originate from the
@@ -88,9 +88,9 @@ later on are defined in this step. This includes mass, Pt, eta and phi of Z and 
 bosons, as well as the five decay angles mentioned above
 which are later used for a machine learning algorithm.
 
-The skimming step can be performed by running 
+The skimming step can be performed by running
 
->       python skim.py 
+>       python skim.py
 
 The option `-r` lets the user select the number of events on which the analysis is run.
 The functions used in the skimming step of the analysis are defined
@@ -104,11 +104,11 @@ of signal and background. The training is done thanks to the ROOT.TMVA library
 with keras API. The trained DNN is evaluated on the various datasets and the events
 with discriminant above the 0.5 threshold are saved in a new TTree.
 
-The training, application and selection steps can be performed by running 
+The training, application and selection steps can be performed by running
 
->       python ml_training.py 
->       python ml_application.py 
->       python ml_selection.py 
+>       python ml_training.py
+>       python ml_evaluation.py
+>       python ml_selection.py
 
 ......................
 
@@ -118,9 +118,9 @@ The histogramming step produces histograms for each variable in each dataset by 
 
 >       python make_histo.py
 
-The option `-v` lets the user select which variables are going to be plotted. 
+The option `-v` lets the user select which variables are going to be plotted.
 
-By running 
+By running
 
 >       python ml_histo.py
 
@@ -133,14 +133,14 @@ The functions used in the histogramming step are defined in `histogramming_funct
 
 ### Plotting
 The plotting combines the histograms to plots which allow to study the
-inital dataset based on observables motivated through physics. 
-The plots for each variable are created by running 
+inital dataset based on observables motivated through physics.
+The plots for each variable are created by running
 
 >       python make_plot.py
 
-The option `-v` lets the user select which variables to plot. 
+The option `-v` lets the user select which variables to plot.
 
-By running 
+By running
 
 >       python ml_plot.py
 
@@ -154,8 +154,8 @@ The functions used in the plotting step are defined in `plotting_functions.py`.
 
 
 ### Higgs mass fit
-The mass of the Higgs candidate is fitted with a Crystal Ball. 
-A fit on the simulated samples and a fit on the data 
+The mass of the Higgs candidate is fitted with a Crystal Ball.
+A fit on the simulated samples and a fit on the data
 (estimating the background from the MC) are performed.
 
 The fit is performed by running

@@ -127,7 +127,7 @@ def add_title(histo, variable_specs=None):
     :type variable_specs: str
     """
     if variable_specs is None:
-        histo.GetYaxis().SetTitle("K_{D}")
+        histo.GetYaxis().SetTitle("DNN Discriminant")
         histo.GetXaxis().SetTitle("m_{4l} [GeV]")
     else:
         histo.GetXaxis().SetTitle(f"{variable_specs[3]}{variable_specs[4]}")
@@ -167,7 +167,7 @@ def add_legend(legend, input_type, histo=None):
 
     elif input_type == "background":
         legend.AddEntry(histo, "Z#gamma*, ZZ", "f")
-        
+
     elif input_type == "signal":
         legend.AddEntry(histo, "m_{H} = 125 GeV", "l")
 
