@@ -24,7 +24,7 @@ from Analysis.Definitions.variables_ml_def import VARIABLES_ML_DICT
 from Analysis import set_up
 
 
-def ml_training(args, logger, base_path=""):
+def ml_training(args, logger):
     """Main function for the training of the DNN. The DNN is
     trained on the simulated Monte Carlo samples.
 
@@ -42,16 +42,7 @@ def ml_training(args, logger, base_path=""):
     ROOT.TMVA.Tools.Instance()
     ROOT.TMVA.PyMethodBase.PyInitialize()
 
-    # Create the directory to save the outputs of the ml algorithm if doesn't already exist
-    dir_name = os.path.join(base_path, "Analysis", "Machine_Learning")
-    try:
-        os.makedirs(dir_name)
-        logger.debug("Directory %s/ Created", dir_name)
-    except FileExistsError:
-        logger.debug("The directory %s/ already exists", dir_name)
-
     # Create file to save the results
-    tmva_path=os.path.join(dir_name, "TMVA.root")
     output = ROOT.TFile.Open("TMVA.root", "RECREATE")
 
     factory = ROOT.TMVA.Factory("TMVAClassification", output,
@@ -61,7 +52,6 @@ def ml_training(args, logger, base_path=""):
     variables=VARIABLES_ML_DICT[args.MLVariables]
 
     # Directory where the weights are saved
-    dataset_path=os.path.join(dir_name, "dataset")
     dataloader = ROOT.TMVA.DataLoader("dataset")
     for variable in variables:
         dataloader.AddVariable(variable)
@@ -127,14 +117,13 @@ def ml_training(args, logger, base_path=""):
                 optimizer="adam", metrics=["accuracy", ], weighted_metrics=[])
 
     # Store model to file
-    mod_path=os.path.join(dir_name, "model.h5")
-    model.save(mod_path)
+    model.save("model.h5")
     model.summary()
 
 
     # Book methods
     factory.BookMethod(dataloader, ROOT.TMVA.Types.kPyKeras, "PyKeras",
-                    f"H:!V:VarTransform=D,G:FilenameModel={mod_path}:NumEpochs=10:BatchSize=128")
+                    "H:!V:VarTransform=D,G:FilenameModel=model.h5:NumEpochs=20:BatchSize=128")
 
     # Run training, test and evaluation
     factory.TrainAllMethods()
@@ -144,7 +133,7 @@ def ml_training(args, logger, base_path=""):
     # Print ROC curve
     c_roc=factory.GetROCCurve(dataloader)
     c_roc.Draw()
-    c_roc.Print(os.path.join(dir_name, "ml_roc.png"))
+    c_roc.Print("ml_roc.png")
 
     logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
 
@@ -172,4 +161,4 @@ if __name__ == "__main__":
     logger_main=set_up.set_up(args_main)
 
 
-    ml_training(args_main, logger_main, "../..")
+    ml_training(args_main, logger_main)

@@ -110,8 +110,10 @@ The training, application and selection steps can be performed by running
 >       python ml_evaluation.py
 >       python ml_selection.py
 
-......................
-
+The option `-a` gives the user the possibility to train the DNN using as discriminant variables
+Z1_mass, Z2_mass, cos_theta_star, Phi, Phi1, cos_theta1, cos_theta2 (`-a tot`) or Higgs_mass (`-a higgs`).
+The latter is not really a useful option, since the discrimination is based entirely on the mass of the
+Higgs candidate, but it's more of an extra.
 
 ### Histogramming
 The histogramming step produces histograms for each variable in each dataset by running

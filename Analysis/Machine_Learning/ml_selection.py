@@ -30,7 +30,7 @@ def ml_selection(args, logger):
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
 
     start_time_tot = time.time()
-    
+
     # Enamble multi-threading
     if args.parallel:
         ROOT.ROOT.EnableImplicitMT()
@@ -48,11 +48,11 @@ def ml_selection(args, logger):
                 continue
             logger.info(">>> Process sample: %s and final state %s", sample_name, final_state)
             start_time = time.time()
-            
+
             file_name=os.path.join(args.output, "Skim_data",
                                 f"{sample_name}{final_state}Skim.root")
-            
-            # Check if file exists or not 
+
+            # Check if file exists or not
             try:
                 if not os.path.exists(file_name):
                     raise FileNotFoundError
@@ -61,16 +61,16 @@ def ml_selection(args, logger):
                 logger.debug("Sample %s final state %s: File %s can't be found %s",
                                     sample_name, final_state, file_name, not_fund_err,  stack_info=True)
                 continue
-                
+
             file = ROOT.TFile(file_name,"READ")
             tree= file.Get("Events")
             branch = tree.GetListOfBranches().FindObject("Discriminant")
             if not branch:
                 return
 
-            rdf_final = rdf.Filter("Discriminant>0.5",
+            rdf_final = rdf.Filter("Discriminant>0.11",
                                     "Select only events with above threshold discriminat")
-            
+
             if args.logLevel <= 10:
                 rdf_final.Report().Print()
             logger.debug("%s\n", rdf_final.GetColumnNames())
@@ -97,19 +97,19 @@ if __name__ == "__main__":
                         type=int,   help="number of workers for multi-threading" )
     parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
                         help="name of the output directory")
-    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,
                             help="integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
-    parser.add_argument("-f", "--finalState",   default="all", type=str,   
+    parser.add_argument("-f", "--finalState",   default="all", type=str,
                             help="comma separated list of the final states to analyse: \
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons" )
     parser.add_argument("-s", "--sample",    default="all", type=str,
                         help="string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
-                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")    
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
     args_main = parser.parse_args()
-    
+
     logger_main=set_up.set_up(args_main)
-    
+
 
     ml_selection(args_main, logger_main)

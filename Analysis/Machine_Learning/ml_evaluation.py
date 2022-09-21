@@ -9,17 +9,18 @@ import time
 import os
 import argparse
 
-
 import ROOT
 
 sys.path.append(os.path.join("..","..", ""))
+
 from Analysis.Definitions.samples_def import SAMPLES
 from Analysis.Definitions.variables_ml_def import VARIABLES_ML_DICT
 
 from Analysis import set_up
 
-def ml_evaluation(args, logger, base_path=""):
-    """ Main function that avaluates the DNN on the whole dataset.
+
+def ml_evaluation(args, logger):
+    """ Main function that evaluates the DNN on the whole dataset.
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
@@ -47,8 +48,7 @@ def ml_evaluation(args, logger, base_path=""):
 
     try:
         # Book methods
-        dataset_path=os.path.join(base_path, "Analysis", "Machine_Learning",
-                                 "dataset", "weights", "TMVAClassification_PyKeras.weights.xml")
+        dataset_path=os.path.join("dataset", "weights", "TMVAClassification_PyKeras.weights.xml")
         reader.BookMVA("PyKeras", ROOT.TString(dataset_path))
     except TypeError as type_err:
         logger.exception("Unable too open weights %s",
@@ -111,6 +111,8 @@ def ml_evaluation(args, logger, base_path=""):
 
                 #discr_array[0]= rand.Rndm()
                 branch.Fill()
+                if i % 100 == 0:
+                    logger.info(f"Processed {i} events in sample {sample_name} and final state {final_state}\n")
 
             new_tree.Write("", ROOT.TObject.kOverwrite)
 
@@ -143,4 +145,4 @@ if __name__ == "__main__":
     logger_main=set_up.set_up(args_main)
 
 
-    ml_evaluation(args_main, logger_main, "../..")
+    ml_evaluation(args_main, logger_main)
