@@ -6,13 +6,15 @@ import urllib.error
 import urllib.request
 import argparse
 import os
+import sys
 import threading as thr
 from time import perf_counter
 from functools import wraps
 import multiprocessing as mp
 
-from Analysis import set_up
+sys.path.append(os.path.join("..", ""))
 
+from Analysis import set_up
 
 
 SAMPLES_DOWNLOAD={
@@ -211,7 +213,7 @@ if __name__ == "__main__":
                             Run2012B_DoubleElectron, Run2012B_DoubleMuParked, \
                             Run2012C_DoubleElectron,  Run2012C_DoubleMuParked, \
                             SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
-    parser.add_argument("-d", "--download", default="Input",
+    parser.add_argument("-d", "--download", default="../Input",
                             type=str, help="directory where to download the input data")
     args_main = parser.parse_args()
 

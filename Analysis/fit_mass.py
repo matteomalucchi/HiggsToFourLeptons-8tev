@@ -1,14 +1,16 @@
-""" The mass of the Higgs candidate is fitted with a Crystal Ball. 
-A fit on the simulated samples and a fit on the data 
+""" The mass of the Higgs candidate is fitted with a Crystal Ball.
+A fit on the simulated samples and a fit on the data
 (estimating the background from the MC) are performed.
 """
 
 import time
 import os
 import argparse
-
+import sys
 
 import ROOT
+
+sys.path.append(os.path.join("..", ""))
 
 from Analysis.Definitions.samples_def import SAMPLES
 from Analysis.Definitions.selections_def import  SELECTIONS
@@ -16,10 +18,11 @@ from Analysis.Plotting import plotting_functions
 
 from Analysis import set_up
 
+
 def fit_mass (args, logger):
     """ Main function for the mass fit of the Higgs candidate
     using a Crystal Ball.
-    
+
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
     :param logger: Configurated logger for printing messages.
@@ -29,24 +32,22 @@ def fit_mass (args, logger):
     ROOT.gErrorIgnoreLevel = ROOT.kError
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
-    
-    #plotting_functions.set_style()
 
     start_time = time.time()
 
     # Create the directory to save the outputs of the fit if doesn't already exist
-    dir_name = os.path.join(args.output, "Fit_results1")
+    dir_name = os.path.join(args.output, "Fit_results")
     try:
         os.makedirs(dir_name)
         logger.debug("Directory %s/ Created", dir_name)
     except FileExistsError:
         logger.debug("The directory %s/ already exists", dir_name)
-        
+
     # Loop over the possible selections
     for selection, tree_name in SELECTIONS.items():
         try:
             logger.info(">>> Process %s\n", selection)
-            
+
             sig_chain= ROOT.TChain(tree_name)
             bkg_chain= ROOT.TChain(tree_name)
             data_chain= ROOT.TChain(tree_name)
@@ -59,12 +60,12 @@ def fit_mass (args, logger):
                     # Check if the final state is one of those requested by the user
                     if final_state not in args.finalState and args.finalState != "all":
                         continue
-                    logger.info(">>> Process sample %s and final state %s", 
+                    logger.info(">>> Process sample %s and final state %s",
                                 sample_name, final_state)
 
                     # Check if input file exists or not
-                    try: 
-                        infile_path = os.path.join(args.output, "Skim_data", 
+                    try:
+                        infile_path = os.path.join(args.output, "Skim_data",
                                             f"{sample_name}{final_state}Skim.root")
                         if not os.path.exists(infile_path):
                             raise FileNotFoundError
@@ -97,7 +98,7 @@ def fit_mass (args, logger):
             # Calculate signal fraction
             sig_frac_count = sig.sumEntries()/(sig.sumEntries()+bkg.sumEntries())
             bkg_frac_count = bkg.sumEntries()/(sig.sumEntries()+bkg.sumEntries())
-            
+
             # KDE for background. In this configuration the input data
             # is mirrored over the right boundary to minimize edge effects in distribution
             # that do not fall to zero towards the right edge
@@ -105,12 +106,12 @@ def fit_mass (args, logger):
 
             # Parameters and model for the fit of the simulated signal samples
             meanHiggs_sig = ROOT.RooRealVar("meanHiggs_sig", "The mean of the Higgs CB for the signal", 125, 115, 135, "GeV")
-            sigmaHiggs = ROOT.RooRealVar("sigmaHiggs_sig", "The width of Higgs CB for the signal", 5, 0., 20, "GeV")
-            alphaHiggs = ROOT.RooRealVar("alphaHiggs_sig", "The tail of Higgs CB for the signal", 1.5, -5, 5)
-            nHiggs = ROOT.RooRealVar("nHiggs_sig", "The normalization of Higgs CB for the signal", 1.5, 0, 10)
+            sigmaHiggs = ROOT.RooRealVar("sigmaHiggs", "The width of Higgs CB", 5, 0., 20, "GeV")
+            alphaHiggs = ROOT.RooRealVar("alphaHiggs", "The tail of Higgs CB", 1.5, -5, 5)
+            nHiggs = ROOT.RooRealVar("nHiggs", "The normalization of Higgs CB", 1.5, 0, 10)
             CBHiggs_sig = ROOT.RooCBShape("CBHiggs_sig","The Higgs Crystall Ball for the signal",
                                             m4l, meanHiggs_sig, sigmaHiggs, alphaHiggs, nHiggs)
-            
+
             # Unbinned ML fit to signal
             fitHiggs = CBHiggs_sig.fitTo(sig, ROOT.RooFit.Save(True), ROOT.RooFit.AsymptoticError(True))
             fitHiggs.Print("v")
@@ -119,14 +120,14 @@ def fit_mass (args, logger):
             meanHiggs_data = ROOT.RooRealVar("m_{H}", "The mean of the Higgs CB for the data", 125, 115, 135, "GeV")
             CBHiggs_data = ROOT.RooCBShape("CBHiggs_data","The Higgs Crystall Ball for the data",
                                             m4l, meanHiggs_data, sigmaHiggs, alphaHiggs, nHiggs)
-            
+
             # Signal and background fractions
             sig_frac= ROOT.RooRealVar("sigfrac", "signal fraction", sig_frac_count)
             bkg_frac= ROOT.RooRealVar("bkg_coeff", "bkg fraction", bkg_frac_count)
 
             # Total PDF of data and background
             totPDF = ROOT.RooAddPdf("totPDF", "Higgs_data+bkg", ROOT.RooArgList(CBHiggs_data, bkg_kde), ROOT.RooArgList(sig_frac,bkg_frac))
-            
+
             # Unbinned ML fit to data
             fitdata = totPDF.fitTo(data, ROOT.RooFit.Save(True))
             fitdata.Print("v")
@@ -140,14 +141,21 @@ def fit_mass (args, logger):
             alphaHiggs.Print()
             nHiggs.Print()
 
-            # Plot mass fit
+            '''# Plot mass fit
             m4l.setBins(10)
             xframe = m4l.frame()
             xframe.SetTitle("")
             data.plotOn(xframe, ROOT.RooFit.Name("data"))
-            totPDF.plotOn(xframe, ROOT.RooFit.Name("bkg_kde"), ROOT.RooFit.Components("bkg_kde"), ROOT.RooFit.LineStyle(ROOT.kDashed), ROOT.RooFit.LineColor(ROOT.kRed))
-            totPDF.plotOn(xframe, ROOT.RooFit.Name("CBHiggs_data"), ROOT.RooFit.Components("CBHiggs_data"), ROOT.RooFit.LineStyle(ROOT.kDashed), ROOT.RooFit.LineColor(ROOT.kBlue))
-            totPDF.plotOn(xframe, ROOT.RooFit.Name("totPDF"), ROOT.RooFit.LineColor(ROOT.kGreen))
+            totPDF.plotOn(xframe, ROOT.RooFit.Name("bkg_kde"),
+                          ROOT.RooFit.Components("bkg_kde"),
+                          ROOT.RooFit.LineStyle(ROOT.kDashed),
+                          ROOT.RooFit.LineColor(ROOT.kRed))
+            totPDF.plotOn(xframe, ROOT.RooFit.Name("CBHiggs_data"),
+                          ROOT.RooFit.Components("CBHiggs_data"),
+                          ROOT.RooFit.LineStyle(ROOT.kDashed),
+                          ROOT.RooFit.LineColor(ROOT.kBlue))
+            totPDF.plotOn(xframe, ROOT.RooFit.Name("totPDF"),
+                          ROOT.RooFit.LineColor(ROOT.kGreen))
 
             canvas = ROOT.TCanvas()
             xframe.Draw()
@@ -156,15 +164,30 @@ def fit_mass (args, logger):
             legend = ROOT.TLegend(0.6, 0.7, 0.9, 0.9)
             plotting_functions.add_legend(legend, "fit")
             legend.Draw()
-            
+
             #input()
             output_name = os.path.join(dir_name, f"fit_mass_{selection}.pdf")
-            canvas.SaveAs(output_name)
+            canvas.SaveAs(output_name)'''
 
-            #Now save the data and the PDF into a Workspace
+            # Save the fit parameters in a .txt file
+            with open(os.path.join(dir_name, f"fit_parameters_{selection}.txt"), "w") as file:
+                file.write("Fit parameters:\n\n")
+
+                file.write("Higgs mass from MC = {:.3f} +/- {:.3f} [GeV] \n"
+                           .format(meanHiggs_sig.getValV(), meanHiggs_sig.getError()))
+                file.write("Higgs mass from data = {:.3f} +/- {:.3f} [GeV] \n"
+                           .format(meanHiggs_data.getValV(), meanHiggs_data.getError()))
+                file.write("Sigma of Higgs CB from data = {:.3f} +/- {:.3f} \n"
+                           .format(sigmaHiggs.getValV(), sigmaHiggs.getError()))
+                file.write("Tail of Higgs CB from data = {:.3f} +/- {:.3f} \n"
+                           .format(alphaHiggs.getValV(), alphaHiggs.getError()))
+                file.write("Normalization of Higgs CB from data = {:.3f} +/- {:.3f} \n"
+                           .format(nHiggs.getValV(), nHiggs.getError()))
+
+            # Now save the data and the PDF into a Workspace
             out_file_name= os.path.join(dir_name, f"Workspace_mass_fit_{selection}.root")
             fOutput = ROOT.TFile(out_file_name,"RECREATE")
-            ws = ROOT.RooWorkspace("ws") 
+            ws = ROOT.RooWorkspace("ws")
             getattr(ws,"import")(totPDF)
             getattr(ws,"import")(data)
             ws.writeToFile(out_file_name)
@@ -175,27 +198,27 @@ def fit_mass (args, logger):
         except RuntimeError:
             logger.debug("Can't find the TTree %s", tree_name, stack_info=True)
 
-    logger.info(">>> Execution time: %s s \n", (time.time() - start_time))        
+    logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
 
 if __name__ == "__main__":
-    
+
     # General configuration
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
-    parser.add_argument("-o", "--output",     default="Output", type=str,  
+    parser.add_argument("-o", "--output",     default="../Output", type=str,
                         help="name of the output directory")
-    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,
                             help="integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
-    parser.add_argument("-f", "--finalState",   default="all", type=str,   
+    parser.add_argument("-f", "--finalState",   default="all", type=str,
                             help="comma separated list of the final states to analyse: \
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons" )
     parser.add_argument("-s", "--sample",    default="all", type=str,
                         help="string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
-                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")    
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
     args_main = parser.parse_args()
-    
+
     logger_main=set_up.set_up(args_main)
-    
-    
+
+
     fit_mass(args_main, logger_main)

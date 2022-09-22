@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
     # General configuration
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
-    parser.add_argument("-r", "--range",  nargs="?", default=0, const=10000000, type=int,
+    parser.add_argument("-r", "--range",  nargs="?", default=0, const=100000, type=int,
                             help="number of events on which the analysis \
                             is ran over (does not work in parallel)")
     parser.add_argument("-p", "--parallel",   default=True,   action="store_const",

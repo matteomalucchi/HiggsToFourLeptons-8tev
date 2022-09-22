@@ -6,6 +6,9 @@ import argparse
 import os
 import shutil
 import logging
+import sys
+
+sys.path.append(os.path.join("..", ""))
 
 from Analysis.Definitions.variables_def import  VARIABLES_COMPLETE
 from Analysis.Definitions.variables_ml_def import  VARIABLES_ML_DICT

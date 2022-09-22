@@ -98,7 +98,7 @@ def ml_training(args, logger):
         return
 
 
-    dataloader.PrepareTrainingAndTestTree(ROOT.TCut(""),"SplitMode=Random:NormMode=NumEvents:!V")
+    dataloader.PrepareTrainingAndTestTree(ROOT.TCut(""),"SplitMode=Random:SplitSeed=50:NormMode=NumEvents:!V")
 
     # Generate model
 
@@ -134,6 +134,8 @@ def ml_training(args, logger):
     c_roc=factory.GetROCCurve(dataloader)
     c_roc.Draw()
     c_roc.Print("ml_roc.png")
+
+    output.Close()
 
     logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
 

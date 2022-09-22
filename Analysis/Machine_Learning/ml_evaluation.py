@@ -32,6 +32,12 @@ def ml_evaluation(args, logger):
 
     start_time_tot = time.time()
 
+    # Enamble multi-threading
+    if args.parallel:
+        ROOT.ROOT.EnableImplicitMT()
+        thread_size = ROOT.ROOT.GetThreadPoolSize()
+        logger.info(">>> Thread pool size for parallel processing: %s", thread_size)
+
     # Setup TMVA
     ROOT.TMVA.Tools.Instance()
     ROOT.TMVA.PyMethodBase.PyInitialize()
@@ -98,7 +104,8 @@ def ml_evaluation(args, logger):
             logger.debug("Created branch Discriminant")
 
             rand = ROOT.TRandom2()
-            for i in range(tree.GetEntries()):
+            n_entries = tree.GetEntries()
+            for i in range(n_entries):
                 new_tree.GetEntry(i)
 
                 if args.MLVariables == "tot":
@@ -111,8 +118,8 @@ def ml_evaluation(args, logger):
 
                 #discr_array[0]= rand.Rndm()
                 branch.Fill()
-                if i % 100 == 0:
-                    logger.info(f"Processed {i} events in sample {sample_name} and final state {final_state}\n")
+                if i % 500 == 0:
+                    logger.info(f"Processed {i} events out of {n_entries} in sample {sample_name} and final state {final_state}\n")
 
             new_tree.Write("", ROOT.TObject.kOverwrite)
 
@@ -125,6 +132,10 @@ if __name__ == "__main__":
 
     # General configuration
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
+    parser.add_argument("-p", "--parallel",   default=True,   action="store_const",
+                        const=False, help="disables running in parallel")
+    parser.add_argument("-n", "--nWorkers",   default=0,
+                        type=int,   help="number of workers for multi-threading" )
     parser.add_argument("-a", "--MLVariables",     default="tot",
                          type=str,   help="name of the set of variables to be used in the ML \
                             algorithm defined 'variables_ml_def.py': tot, higgs")
