@@ -1,5 +1,5 @@
 """ This step consists in the selection of the events for which
-the discriminant created by the DNN is above the 0.5 threshold.
+the discriminant created by the DNN is above the threshold.
 The events that pass this cut are saved in anew tree called 'EventsDNNSelection'
 """
 
@@ -19,7 +19,7 @@ from Analysis import set_up
 
 def ml_selection(args, logger):
     """Main function for the selection of the events for which
-    the discriminant created by the DNN is above the 0.5 threshold.
+    the discriminant created by the DNN is above the threshold.
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
@@ -36,6 +36,11 @@ def ml_selection(args, logger):
         ROOT.ROOT.EnableImplicitMT()
         thread_size = ROOT.ROOT.GetThreadPoolSize()
         logger.info(">>> Thread pool size for parallel processing: %s", thread_size)
+
+    # Read the optimal threshold
+    with open(os.path.join(args.output, "ML_output", "optimal_cut.txt"), "r") as file:
+        cut = file.readlines()
+
 
     #Loop over the various samples and final states
     for sample_name, final_states in SAMPLES.items():
@@ -68,7 +73,7 @@ def ml_selection(args, logger):
             if not branch:
                 return
 
-            rdf_final = rdf.Filter("Discriminant>0.11",
+            rdf_final = rdf.Filter(f"Discriminant>{cut[0]}",
                                     "Select only events with above threshold discriminat")
 
             if args.logLevel <= 10:

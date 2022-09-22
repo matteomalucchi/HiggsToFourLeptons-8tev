@@ -18,6 +18,32 @@ from Analysis.Definitions.variables_ml_def import VARIABLES_ML_DICT
 
 from Analysis import set_up
 
+def modify_weights_file(output, file_path, log):
+    """ Function that modifies in the file `TMVAClassification_PyKeras.weights.xml`
+        the path to the model according to the directory where the file is executed.
+        This allows the reader to correctly find the needed files containing the model.
+
+    :param output: Path to the output folder
+    :type output: str
+    :param file_path: Path to TMVAClassification_PyKeras.weights.xml
+    :type file_path: str
+    :param log: Configurated logger for printing messages.
+    :type log: logging.RootLogger
+    """
+
+    with open(file_path, "r") as file:
+        # Read the list of lines
+        data = file.readlines()
+
+    # Change the lines
+    data[20] = f'    <Option name="FilenameModel" modified="Yes">{output}/ML_output/DNNmodel.h5</Option>\n'
+    data[21] = f'    <Option name="FilenameTrainedModel" modified="No">{output}/ML_output/dataset/weights/TrainedModel_PyKeras.h5</Option>\n'
+
+    # and write everything back
+    with open(file_path, "w") as file:
+        file.writelines( data )
+
+    log.debug("Path changed correctly")
 
 def ml_evaluation(args, logger):
     """ Main function that evaluates the DNN on the whole dataset.
@@ -52,10 +78,13 @@ def ml_evaluation(args, logger):
         branches[branch_name] = array("f", [-999])
         reader.AddVariable(branch_name, branches[branch_name])
 
+    weights_path=os.path.join(args.output, "ML_output", "dataset", "weights", "TMVAClassification_PyKeras.weights.xml")
+
+    modify_weights_file(args.output, weights_path, logger)
+
     try:
         # Book methods
-        dataset_path=os.path.join("dataset", "weights", "TMVAClassification_PyKeras.weights.xml")
-        reader.BookMVA("PyKeras", ROOT.TString(dataset_path))
+        reader.BookMVA("PyKeras", ROOT.TString(weights_path))
     except TypeError as type_err:
         logger.exception("Unable too open weights %s",
                         type_err, stack_info=True)
@@ -86,6 +115,8 @@ def ml_evaluation(args, logger):
                 logger.debug("Sample %s final state %s: File %s can't be found %s",
                                 sample_name, final_state, in_file_path, not_found_err,  stack_info=True)
                 continue
+
+            j=1
 
             in_file = ROOT.TFile(in_file_path,"UPDATE")
             tree = in_file.Get("Events")
@@ -118,10 +149,12 @@ def ml_evaluation(args, logger):
 
                 #discr_array[0]= rand.Rndm()
                 branch.Fill()
-                if i % 500 == 0:
-                    logger.info(f"Processed {i} events out of {n_entries} in sample {sample_name} and final state {final_state}\n")
+                if i % 300 == 0:
+                    logger.info(f"Processed {i} events out of {n_entries} in sample {sample_name} and final state {final_state} ({j} / 14 in total) \n")
 
             new_tree.Write("", ROOT.TObject.kOverwrite)
+
+            j += 1
 
             #in_file.Close()
             logger.info(">>> Execution time for %s %s: %s s \n", sample_name, final_state, (time.time() - start_time))

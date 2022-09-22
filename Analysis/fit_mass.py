@@ -141,7 +141,7 @@ def fit_mass (args, logger):
             alphaHiggs.Print()
             nHiggs.Print()
 
-            '''# Plot mass fit
+            # Plot mass fit
             m4l.setBins(10)
             xframe = m4l.frame()
             xframe.SetTitle("")
@@ -167,7 +167,7 @@ def fit_mass (args, logger):
 
             #input()
             output_name = os.path.join(dir_name, f"fit_mass_{selection}.pdf")
-            canvas.SaveAs(output_name)'''
+            canvas.SaveAs(output_name)
 
             # Save the fit parameters in a .txt file
             with open(os.path.join(dir_name, f"fit_parameters_{selection}.txt"), "w") as file:

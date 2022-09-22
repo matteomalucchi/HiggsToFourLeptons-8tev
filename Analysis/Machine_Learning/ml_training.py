@@ -1,7 +1,7 @@
 """ In this step the DNN is trained on the Monte Carlo samples
 of signal and background. The training is done thanks to
 keras API. To take a look at the output of the training run
-``$ TMVA::TMVAGui("TMVA.root")`` from the ROOT prompt.
+``$ TMVA::TMVAGui("DNN_Training.root")`` from the ROOT prompt.
 The training is done using as variables the masses of the Z bosons
 and the five angles described in detail in `[Phys.Rev.D86:095031,2012]
 <https://journals.aps.org/prd/abstract/10.1103/PhysRevD.86.095031>`_.
@@ -11,6 +11,8 @@ import time
 import argparse
 import sys
 import os
+import shutil
+import ctypes
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
@@ -38,12 +40,20 @@ def ml_training(args, logger):
 
     start_time = time.time()
 
+    # Create the directory to save the outputs of the ml algorithm if doesn't already exist
+    dir_name = os.path.join(args.output, "ML_output")
+    try:
+        os.makedirs(dir_name)
+        logger.debug("Directory %s/ Created", dir_name)
+    except FileExistsError:
+        logger.debug("The directory %s/ already exists", dir_name)
+
     # Setup TMVA
     ROOT.TMVA.Tools.Instance()
     ROOT.TMVA.PyMethodBase.PyInitialize()
 
     # Create file to save the results
-    output = ROOT.TFile.Open("TMVA.root", "RECREATE")
+    output = ROOT.TFile.Open(os.path.join(dir_name, "DNN_Training.root"), "RECREATE")
 
     factory = ROOT.TMVA.Factory("TMVAClassification", output,
                         "!V:!Silent:Color:DrawProgressBar:Transformations=D,G:AnalysisType=Classification")
@@ -98,7 +108,7 @@ def ml_training(args, logger):
         return
 
 
-    dataloader.PrepareTrainingAndTestTree(ROOT.TCut(""),"SplitMode=Random:SplitSeed=50:NormMode=NumEvents:!V")
+    dataloader.PrepareTrainingAndTestTree(ROOT.TCut(""),"SplitMode=Random:NormMode=NumEvents:!V")
 
     # Generate model
 
@@ -117,13 +127,14 @@ def ml_training(args, logger):
                 optimizer="adam", metrics=["accuracy", ], weighted_metrics=[])
 
     # Store model to file
-    model.save("model.h5")
+    model_path = os.path.join(dir_name,"DNNmodel.h5")
+    model.save(model_path)
     model.summary()
 
 
     # Book methods
-    factory.BookMethod(dataloader, ROOT.TMVA.Types.kPyKeras, "PyKeras",
-                    "H:!V:VarTransform=D,G:FilenameModel=model.h5:NumEpochs=20:BatchSize=128")
+    method = factory.BookMethod(dataloader, ROOT.TMVA.Types.kPyKeras, "PyKeras",
+                    f"H:!V:VarTransform=D,G:FilenameModel={model_path}:NumEpochs=1:BatchSize=128")
 
     # Run training, test and evaluation
     factory.TrainAllMethods()
@@ -133,9 +144,28 @@ def ml_training(args, logger):
     # Print ROC curve
     c_roc=factory.GetROCCurve(dataloader)
     c_roc.Draw()
-    c_roc.Print("ml_roc.png")
+    c_roc.Print(os.path.join(dir_name, "ml_roc.pdf"))
+
+    # Save the optimal cut
+    significance = ctypes.c_double(0.)
+    cut = str(method.GetMaximumSignificance(100000, 100000, significance))
+    cut_path = os.path.join(dir_name, "optimal_cut.txt")
+    if os.path.exists(cut_path):
+        os.remove(cut_path)
+    with open(cut_path, "w") as file:
+        file.write(cut)
 
     output.Close()
+
+    # Move the dataset directory to the output folder
+    datadet_dir= os.path.join(dir_name, "dataset")
+    try:
+        shutil.move("dataset", dir_name)
+    except shutil.Error:
+        logger.debug("Deleting directory that already exists.")
+        shutil.rmtree(datadet_dir)
+        shutil.move("dataset", dir_name)
+
 
     logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
 

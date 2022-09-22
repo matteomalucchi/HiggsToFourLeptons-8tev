@@ -43,7 +43,7 @@ def make_plot (args, logger):
         ROOT.gErrorIgnoreLevel = ROOT.kWarning
 
     infile_path = os.path.join(args.output, "Histograms", "Histograms.root")
-    # Check if file exists or not 
+    # Check if file exists or not
     try:
         if not os.path.exists(infile_path):
             raise FileNotFoundError
@@ -52,7 +52,7 @@ def make_plot (args, logger):
         logger.exception("File %s can't be found %s",
                         infile_path, not_fund_err,  stack_info=True)
         return
-        
+
     plotting_functions.set_style()
 
     if args.ml :
@@ -69,10 +69,10 @@ def make_plot (args, logger):
             # Check if the variable to plot is one of those requested by the user
             if (variable not in args.variableDistribution and args.variableDistribution != "all") or variable == "Weight":
                 continue
-            
+
             # Get histograms for the signal
             signals = {}
-            
+
             # Check if the sample to plot is one of those requested by the user
             if "SMHiggsToZZTo4L" in args.sample or args.sample == "all":
                 for final_state in ["FourMuons", "FourElectrons", "TwoMuonsTwoElectrons"]:
@@ -81,13 +81,13 @@ def make_plot (args, logger):
                         signals[final_state] = plotting_functions.get_histogram(infile, histo_name)
                     except RuntimeError as run_time_err:
                         logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
-                
+
                 try:
                     plotting_functions.combine_final_states(signals)
                 except KeyError:
-                    logger.debug("ERROR: Failed to create the signal histogram of the combined final states", 
+                    logger.debug("ERROR: Failed to create the signal histogram of the combined final states",
                                     stack_info=True)
-                    
+
             # Get the normalized histograms for the signal
             signals_norm = {}
             for final_state, signal_histo in signals.items():
@@ -109,13 +109,13 @@ def make_plot (args, logger):
                                 f"{sample}_{final_state}_{variable}_{selection}")
                 except RuntimeError as run_time_err:
                     logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
-            
+
             try:
                 plotting_functions.combine_final_states(backgrounds)
             except KeyError:
-                logger.debug("ERROR: Failed to create the background histogram of the combined final states", 
+                logger.debug("ERROR: Failed to create the background histogram of the combined final states",
                                 stack_info=True)
-                
+
             # Get the normalized histograms for the background
             backgrounds_norm = {}
             for final_state, background_histo in backgrounds.items():
@@ -139,7 +139,7 @@ def make_plot (args, logger):
                     # Check if the sample to plot is one of those requested by the user
                     if sample not in args.sample and args.sample != "all":
                         continue
-                    try: 
+                    try:
                         histo = plotting_functions.get_histogram(infile,
                                     f"{sample}_{final_state}_{variable}_{selection}")
                         if not final_state in data:
@@ -152,9 +152,9 @@ def make_plot (args, logger):
             try:
                 plotting_functions.combine_final_states(data)
             except KeyError:
-                logger.debug("ERROR: Failed to create the data histogram of the combined final states", 
+                logger.debug("ERROR: Failed to create the data histogram of the combined final states",
                                 stack_info=True)
-                
+
             # Dictionary for the different types of datasets
             inputs_dict = {
                 "data" : data,
@@ -166,7 +166,7 @@ def make_plot (args, logger):
 
             # Loop over the types of datasets and the final states
             for input_type, inputs in inputs_dict.items():
-                
+
                 # Check if the input_type to plot is one of those requested by the user
                 if input_type not in args.typeDistribution and args.typeDistribution != "all":
                     continue
@@ -181,14 +181,14 @@ def make_plot (args, logger):
 
                 for final_state in ["FourMuons", "FourElectrons",
                                     "TwoMuonsTwoElectrons", "Combined"]:
-                    
+
                     if final_state not in args.finalState and args.finalState != "all":
                         continue
-                    
+
                     canvas = ROOT.TCanvas("", "", 600, 600)
                     legend = ROOT.TLegend(0.5, 0.7, 0.8, 0.9)
                     legend.SetBorderSize(0)
-                    
+
                     try:
                         if input_type in ["data", "background", "signal"]:
                             input_histo = inputs[final_state]
@@ -238,12 +238,12 @@ def make_plot (args, logger):
                         plotting_functions.add_latex()
 
                         # Save the plots
-                        file_name = f"{input_type}_{final_state}_{variable}_{selection}.png"
+                        file_name = f"{input_type}_{final_state}_{variable}_{selection}.pdf"
                         complete_name = os.path.join(dir_name, file_name)
                         canvas.SaveAs(complete_name)
-                        
+
                     except KeyError:
-                        logger.debug("ERROR: Failed to create the plot for %s_%s_%s_%s", 
+                        logger.debug("ERROR: Failed to create the plot for %s_%s_%s_%s",
                                 input_type, final_state, variable, selection, stack_info=True)
 
 
@@ -255,13 +255,13 @@ if __name__ == "__main__":
                         help="name of the output directory")
     parser.add_argument("-m", "--ml", default=True,   action="store_const", const=False,
                         help="disables machine learning algorithm")
-    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,
                             help="integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
-    parser.add_argument("-t", "--typeDistribution",   default="all", type=str,   
+    parser.add_argument("-t", "--typeDistribution",   default="all", type=str,
                         help="comma separated list of the type of distributions to plot: \
                         data, background, signal, sig_bkg_normalized, total" )
-    parser.add_argument("-f", "--finalState",   default="all", type=str,   
+    parser.add_argument("-f", "--finalState",   default="all", type=str,
                             help="comma separated list of the final states to analyse: \
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons" )
     parser.add_argument("-s", "--sample",    default="all", type=str,
@@ -270,10 +270,10 @@ if __name__ == "__main__":
                         Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
     parser.add_argument("-v", "--variableDistribution",    default="all", type=str,
                         help="string with comma separated list of the variables to plot. \
-                            The complete list is defined in 'variables_def.py'") 
+                            The complete list is defined in 'variables_def.py'")
     args_main = parser.parse_args()
 
     logger_main=set_up.set_up(args_main)
-    
-    
+
+
     make_plot(args_main, logger_main)
