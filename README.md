@@ -159,7 +159,7 @@ with and without the selection based on the DNN Discriminant.
     <td><img src="Output_complete/Plots/NoSelection/total/total_Combined_Higgs_mass_NoSelection.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="400" height="400"></td>
     <td><img src="Output_complete/Plots/DNNSelection/total/total_Combined_Higgs_mass_DNNSelection.png" alt="Higgs mass with DNN selection" title="Higgs mass with DNN selection" width="400" height="400"></td>
   </tr>
- </table>
+</table>
 
 
 By running
@@ -168,9 +168,21 @@ By running
 
 2D scatter plots of Higgs_mass vs DNN Discriminant
 are created, one for the simulated background and one for the
-simulated signal. Each plot contains both the combination
+simulated signal. Each one of the plots shown below contains both the combination
 of all background/signal datasets and the real data
 separated in the three possible final states.
+
+
+<table align="center" border="0">
+  <tr>
+    <td style="text-align:center">Higgs mass without DNN selection</td>
+     <td style="text-align:center">Higgs mass with DNN selection</td>
+  </tr>
+  <tr>
+    <td><embed src="Output_complete/Discriminant_plots/discriminant_background.pdf" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="400" height="400" type="application/pdf"></td>
+    <td><embed src="Output_complete/Plots/DNNSelection/total/total_Combined_Higgs_mass_DNNSelection.png" alt="Higgs mass with DNN selection" title="Higgs mass with DNN selection" width="400" height="400"></td>
+  </tr>
+</table>
 
 The functions used in the plotting step are defined in `plotting_functions.py`.
 
