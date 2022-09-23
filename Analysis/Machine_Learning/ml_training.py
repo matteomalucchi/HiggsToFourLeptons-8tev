@@ -134,7 +134,7 @@ def ml_training(args, logger):
 
     # Book methods
     method = factory.BookMethod(dataloader, ROOT.TMVA.Types.kPyKeras, "PyKeras",
-                    f"H:!V:VarTransform=D,G:FilenameModel={model_path}:NumEpochs=1:BatchSize=128")
+                    f"H:!V:VarTransform=D,G:FilenameModel={model_path}:NumEpochs=20:BatchSize=128")
 
     # Run training, test and evaluation
     factory.TrainAllMethods()

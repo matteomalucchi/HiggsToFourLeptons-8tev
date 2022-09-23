@@ -5,9 +5,7 @@
 # Analysis of Higgs boson decays to four leptons
 
 ## Introduction
-This repository contains an analysis of the decay of a
-Higgs boson into two Z bosons which in turn decay in four leptons
-using reduced NanoAOD files created from [CMS Open Data](http://opendata.cern.ch/record/12360). The analysis follows loosely
+This repository contains an analysis of the decay $H \rightarrow Z Z \rightarrow 4l$ using reduced NanoAOD files created from [CMS Open Data](http://opendata.cern.ch/record/12360). The analysis follows loosely
 [the official CMS analysis published in 2012](https://www.sciencedirect.com/science/article/pii/S0370269312008581). First, the dataset is "skimmed", i.e. all events which are not of interest for the reconstruction
 of Higgs bosons are removed, and the various observables necessary for the analysis are computed.
 The remaining variables are then plotted and the invariant mass of the four leptons
@@ -101,9 +99,16 @@ The basic functions used on the data are defined in `skim_functions.h`.
 In this step a Deep Neural Network (DNN) is trained on the Monte Carlo samples
 of signal and background. The training is done thanks to the ROOT.TMVA library
 with keras API. The trained DNN is evaluated on the various datasets and the events
-with discriminant above threshold are saved in a new TTree. Such threshold is set to the optimal cut-value with highest $S/\sqrt{S^2+B^2}$ ratio as seen in the figure.
+with discriminant above threshold are saved in a new TTree. Such threshold is set to the optimal cut value with highest $S/\sqrt{S^2+B^2}$ ratio as seen in the figure below.
 
-![Alt text](Output/ML_output/?raw=true "Optimal cut")
+<table align="center" border="0">
+  <tr>
+    <td style="text-align:center">Optima cut</td>
+  </tr>
+  <tr>
+    <td><img src="Images_readme/mvaeffs_PyKeras.png" alt="Optima cut" title="Optima cut" width="400" height="400"></td>
+  </tr>
+</table>
 
 The training, application and selection steps can be performed by running
 
@@ -116,10 +121,16 @@ Z1_mass, Z2_mass, cos_theta_star, Phi, Phi1, cos_theta1, cos_theta2 (`-a tot`) o
 The latter is not really a useful option, since the discrimination is based entirely on the mass of the
 Higgs candidate, but it's more of an extra. The training history and the ROC curve are displayed in the figures below.
 
-![Alt text](Output/ML_output/?raw=true "Training history")
-
-![Alt text](Output/ML_output/ml_roc.pdf?raw=true "ROC curve")
-
+<table align="center" border="0">
+  <tr>
+    <td style="text-align:center">ROC curve</td>
+    <td style="text-align:center">Training history</td>
+  </tr>
+  <tr>
+    <td><img src="Images_readme/rejBvsS.png" alt="ROC curve" title="ROC curve" width="400" height="400"></td>
+    <td><img src="Images_readme/TrainingHistory.png" alt="Training history" title="Training history" width="400" height="400"></td>
+  </tr>
+</table>
 
 ### Histogramming
 The histogramming step produces histograms for each variable in each dataset by running
@@ -156,8 +167,8 @@ with and without the selection based on the DNN Discriminant.
      <td style="text-align:center">Higgs mass with DNN selection</td>
   </tr>
   <tr>
-    <td><img src="Output_complete/Plots/NoSelection/total/total_Combined_Higgs_mass_NoSelection.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="400" height="400"></td>
-    <td><img src="Output_complete/Plots/DNNSelection/total/total_Combined_Higgs_mass_DNNSelection.png" alt="Higgs mass with DNN selection" title="Higgs mass with DNN selection" width="400" height="400"></td>
+    <td><img src="Images_readme/total_Combined_Higgs_mass_NoSelection.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="400" height="400"></td>
+    <td><img src="Images_readme/total_Combined_Higgs_mass_DNNSelection.png" alt="Higgs mass with DNN selection" title="Higgs mass with DNN selection" width="400" height="400"></td>
   </tr>
 </table>
 
@@ -175,12 +186,12 @@ separated in the three possible final states.
 
 <table align="center" border="0">
   <tr>
-    <td style="text-align:center">Higgs mass without DNN selection</td>
-     <td style="text-align:center">Higgs mass with DNN selection</td>
+    <td style="text-align:center">Discriminat plot for background</td>
+     <td style="text-align:center">Discriminat plot for signal</td>
   </tr>
   <tr>
-    <td><embed src="Output_complete/Discriminant_plots/discriminant_background.pdf" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="400" height="400" type="application/pdf"></td>
-    <td><embed src="Output_complete/Plots/DNNSelection/total/total_Combined_Higgs_mass_DNNSelection.png" alt="Higgs mass with DNN selection" title="Higgs mass with DNN selection" width="400" height="400"></td>
+    <td><img src="Images_readme/discriminant_background.png" alt="Discriminat plot for background" title="Discriminat plot for background" width="400" height="400"></td>
+    <td><img src="Images_readme/discriminant_signal.png" alt="Discriminat plot for signal" title="Discriminat plot for signal" width="400" height="400"></td>
   </tr>
 </table>
 
@@ -195,3 +206,36 @@ A fit on the simulated samples and a fit on the data
 The fit is performed by running
 
 >       python fit_mass.py
+
+The resulting plots with and without the DNN selection are shown below.
+
+<table align="center" border="0">
+  <tr>
+    <td style="text-align:center">Higgs mass fit without DNN selection</td>
+     <td style="text-align:center">Higgs mass fit with DNN selection</td>
+  </tr>
+  <tr>
+    <td><img src="Images_readme/fit_mass_NoSelection.png" alt="Higgs mass fit without DNN selection" title="Higgs mass fit without DNN selection" width="400" height="400"></td>
+    <td><img src="Images_readme/fit_mass_DNNSelection.png" alt="Higgs mass fit with DNN selection" title="Higgs mass fit with DNN selection" width="400" height="400"></td>
+  </tr>
+</table>
+
+The mass of the Higgs boson yielded by the fits of the simulated signal samples and of the data  with and without the DNN selection are the following
+
+<table align="center" border="0">
+  <tr>
+    <td style="text-align:center"></td>
+    <td style="text-align:center">Without DNN selection</td>
+     <td style="text-align:center">With DNN selection</td>
+  </tr>
+  <tr>
+    <td style="text-align:center">Higgs mass from MC [GeV]</td>
+    <td style="text-align:center">124.934 +/- 0.016</td>
+    <td style="text-align:center">124.938 +/- 0.015</td>
+  </tr>
+  <tr>
+    <td style="text-align:center">Higgs mass from data [GeV]</td>
+    <td style="text-align:center">125.40 +/- 0.26</td>
+    <td style="text-align:center">125.39 +/- 0.30</td>
+  </tr>
+</table>

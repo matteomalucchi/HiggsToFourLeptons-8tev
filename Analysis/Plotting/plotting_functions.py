@@ -49,7 +49,7 @@ def set_style():
     ROOT.gStyle.SetPadTopMargin(0.08)
     ROOT.gStyle.SetPadBottomMargin(0.13)
     ROOT.gStyle.SetPadLeftMargin(0.13)
-    ROOT.gStyle.SetPadRightMargin(0.05)
+    ROOT.gStyle.SetPadRightMargin(0.12)
 
     ROOT.gStyle.SetHistLineColor(1)
     ROOT.gStyle.SetHistLineStyle(0)

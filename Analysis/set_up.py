@@ -43,7 +43,7 @@ def check_val(log, input, correct_list, name):
 
 
 
-def create_dir(log, dir):
+def create_dir(log, dir, ignore):
     """Create the directory if doesn't
     already exist and create .gitignore.
 
@@ -51,6 +51,8 @@ def create_dir(log, dir):
     :type log: logging.RootLogger
     :param dir: Directory to create.
     :type dir: str
+    :param ignore: Boolean that specifies if .gitignore should be created or not.
+    :type ignore: bool
     """
 
     try:
@@ -59,14 +61,15 @@ def create_dir(log, dir):
     except FileExistsError:
         log.debug("The directory %s/ already exists", dir)
     finally:
-        file_path=os.path.join(dir, ".gitignore")
-        if os.path.exists(file_path):
-            pass
-        else:
-            # create .gitignore
-            with open(file_path, 'w') as fp:
-                fp.write("# Ignore everything in this directory \n*")
-                fp.write("\n# Except this file \n!.gitignore")
+        if ignore == True:
+            file_path=os.path.join(dir, ".gitignore")
+            if os.path.exists(file_path):
+                pass
+            else:
+                # create .gitignore
+                with open(file_path, 'w') as fp:
+                    fp.write("# Ignore everything in this directory \n*")
+                    fp.write("\n# Except this file \n!.gitignore")
 
 
 
@@ -132,7 +135,7 @@ def set_up (args):
     # Create the directory to save the downloaded files if doesn't already exist and create .gitignore
     try:
         if args.download != "":
-            create_dir(logger, args.download)
+            create_dir(logger, args.download, True)
     except AttributeError:
         pass
 
@@ -148,7 +151,7 @@ def set_up (args):
 
     # Create the directory to save the outputs if doesn't already existand create .gitignore
     try:
-        create_dir(logger, args.output)
+        create_dir(logger, args.output, False)
     except AttributeError:
         pass
 

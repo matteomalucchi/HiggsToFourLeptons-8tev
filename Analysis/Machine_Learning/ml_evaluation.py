@@ -19,7 +19,7 @@ from Analysis.Definitions.variables_ml_def import VARIABLES_ML_DICT
 from Analysis import set_up
 
 def modify_weights_file(output, file_path, log):
-    """ Function that modifies in the file `TMVAClassification_PyKeras.weights.xml`
+    """ Function that modifies in the file ``TMVAClassification_PyKeras.weights.xml``
         the path to the model according to the directory where the file is executed.
         This allows the reader to correctly find the needed files containing the model.
 
@@ -91,6 +91,9 @@ def ml_evaluation(args, logger):
         logger.exception("Exit the program")
         return
 
+    # Define a counter
+    j=1
+
     # Loop over the various samples
     for sample_name, final_states in SAMPLES.items():
         # Check if the sample to plot is one of those requested by the user
@@ -115,8 +118,6 @@ def ml_evaluation(args, logger):
                 logger.debug("Sample %s final state %s: File %s can't be found %s",
                                 sample_name, final_state, in_file_path, not_found_err,  stack_info=True)
                 continue
-
-            j=1
 
             in_file = ROOT.TFile(in_file_path,"UPDATE")
             tree = in_file.Get("Events")

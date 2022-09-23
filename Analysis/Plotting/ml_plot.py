@@ -39,7 +39,7 @@ def ml_plot (args, logger):
 
     infile_path = os.path.join(args.output, "Histograms",
                                "Histograms_discriminant.root")
-    # Check if file exists or not     
+    # Check if file exists or not
     try:
         if not os.path.exists(infile_path):
             raise FileNotFoundError
@@ -61,7 +61,7 @@ def ml_plot (args, logger):
             plotting_functions.input_style(dataset, histos[dataset])
         except RuntimeError as run_time_err:
                 logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
-                
+
     # Create the directory to save the plots if doesn't already exist
     dir_name = os.path.join(args.output, "Discriminant_plots")
     try:
@@ -79,26 +79,26 @@ def ml_plot (args, logger):
             histos[type_dataset].Scale(1/histos[type_dataset].GetMaximum())
             histos[type_dataset].Draw("COLZ")
         except KeyError:
-            logger.debug("ERROR: Failed to create the %s histogram", 
-                                    type_dataset, stack_info=True)   
-            continue     
-        
+            logger.debug("ERROR: Failed to create the %s histogram",
+                                    type_dataset, stack_info=True)
+            continue
+
         try:
             histos["data_el"].Draw("SAME P")
         except KeyError:
-            logger.debug("ERROR: Failed to create the data histogram of the FourElectrons final state in the %s TH2D", 
+            logger.debug("ERROR: Failed to create the data histogram of the FourElectrons final state in the %s TH2D",
                                     type_dataset, stack_info=True)
-            
+
         try:
             histos["data_mu"].Draw("SAME P")
         except KeyError:
-            logger.debug("ERROR: Failed to create the data histogram of the FourMuons final state in the %s TH2D", 
+            logger.debug("ERROR: Failed to create the data histogram of the FourMuons final state in the %s TH2D",
                                     type_dataset, stack_info=True)
-            
+
         try:
             histos["data_elmu"].Draw("SAME P")
         except KeyError:
-            logger.debug("ERROR: Failed to create the data histogram of the TwoMuonsTwoElectrons final state in the %s TH2D", 
+            logger.debug("ERROR: Failed to create the data histogram of the TwoMuonsTwoElectrons final state in the %s TH2D",
                                     type_dataset, stack_info=True)
 
         legend=plotting_functions.add_legend(legend, "discriminant", histos)
@@ -118,12 +118,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
     parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
                         help="name of the output directory")
-    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,
                             help="integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
     args_main = parser.parse_args()
 
     logger_main=set_up.set_up(args_main)
-    
+
 
     ml_plot(args_main, logger_main)
