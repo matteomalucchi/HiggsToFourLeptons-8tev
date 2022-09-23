@@ -150,22 +150,17 @@ The option `-v` lets the user select which variables to plot.
 In the figures below it's shown the distribution on the 4 leptons invariant mass
 with and without the selection based on the DNN Discriminant.
 
-<table align="center">
+<table align="center" cellpadding="0" cellspacing="0" border="0">
   <tr>
-    <td>Higgs mass without DNN selection</td>
-     <td>Higgs mass with DNN selection</td>
+    <td style="text-align:center">Higgs mass without DNN selection</td>
+     <td style="text-align:center">Higgs mass with DNN selection</td>
   </tr>
   <tr>
-    <td><img src="Output_complete/Plots/NoSelection/total/total_Combined_Higgs_mass_NoSelection.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="300" height="300"></td>
-    <td><img src="Output_complete/Plots/DNNSelection/total/total_Combined_Higgs_mass_DNNSelection.png" alt="Higgs mass with DNN selection" title="Higgs mass with DNN selection" width="300" height="300"></td>
+    <td><img src="Output_complete/Plots/NoSelection/total/total_Combined_Higgs_mass_NoSelection.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="400" height="400"></td>
+    <td><img src="Output_complete/Plots/DNNSelection/total/total_Combined_Higgs_mass_DNNSelection.png" alt="Higgs mass with DNN selection" title="Higgs mass with DNN selection" width="400" height="400"></td>
   </tr>
  </table>
 
-<figcaption>Higgs mass with DNN selection</figcaption>      <figcaption>Higgs mass with DNN selection</figcaption>
-<p float="left">
-    <img src="Output_complete/Plots/NoSelection/total/total_Combined_Higgs_mass_NoSelection.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="300" height="300"/>
-    <img src="Output_complete/Plots/DNNSelection/total/total_Combined_Higgs_mass_DNNSelection.png" alt="Higgs mass with DNN selection" title="Higgs mass with DNN selection" width="300" height="300"/>
-</p>
 
 By running
 
