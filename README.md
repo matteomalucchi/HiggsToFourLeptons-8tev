@@ -150,7 +150,7 @@ The option `-v` lets the user select which variables to plot.
 In the figures below it's shown the distribution on the 4 leptons invariant mass
 with and without the selection based on the DNN Discriminant.
 
-<table class="centerTable">
+<table align="center">
   <tr>
     <td>Higgs mass without DNN selection</td>
      <td>Higgs mass with DNN selection</td>
