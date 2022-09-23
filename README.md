@@ -121,9 +121,17 @@ Z1_mass, Z2_mass, cos_theta_star, Phi, Phi1, cos_theta1, cos_theta2 (`-a tot`) o
 The latter is not really a useful option, since the discrimination is based entirely on the mass of the
 Higgs candidate, but it's more of an extra. The training history and the ROC curve are displayed in the figures below.
 
-<table align="center" border="0">
+<style>
+    tr, td {
+        border: 0px solid red
+    }
+
+</style>
+
+
+<table align="center" >
   <tr>
-    <td style="text-align:center;">ROC curve</td>
+    <td style="text-align:center;"  >ROC curve</td>
     <td style="text-align:center;">Training history</td>
   </tr>
   <tr>
