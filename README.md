@@ -103,7 +103,7 @@ with discriminant above threshold are saved in a new TTree. Such threshold is se
 
 <table align="center" border="0">
   <tr>
-    <td style="text-align:center">Optima cut</td>
+    <td style="text-align:center;">Optima cut</td>
   </tr>
   <tr>
     <td><img src="Images_readme/mvaeffs_PyKeras.png" alt="Optima cut" title="Optima cut" width="400" height="400"></td>
@@ -123,8 +123,8 @@ Higgs candidate, but it's more of an extra. The training history and the ROC cur
 
 <table align="center" border="0">
   <tr>
-    <td style="text-align:center">ROC curve</td>
-    <td style="text-align:center">Training history</td>
+    <td style="text-align:center;">ROC curve</td>
+    <td style="text-align:center;">Training history</td>
   </tr>
   <tr>
     <td><img src="Images_readme/rejBvsS.png" alt="ROC curve" title="ROC curve" width="400" height="400"></td>
@@ -163,8 +163,8 @@ with and without the selection based on the DNN Discriminant.
 
 <table align="center" border="0">
   <tr>
-    <td style="text-align:center">Higgs mass without DNN selection</td>
-     <td style="text-align:center">Higgs mass with DNN selection</td>
+    <td style="text-align:center;">Higgs mass without DNN selection</td>
+     <td style="text-align:center;">Higgs mass with DNN selection</td>
   </tr>
   <tr>
     <td><img src="Images_readme/total_Combined_Higgs_mass_NoSelection.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="400" height="400"></td>
@@ -183,11 +183,10 @@ simulated signal. Each one of the plots shown below contains both the combinatio
 of all background/signal datasets and the real data
 separated in the three possible final states.
 
-
 <table align="center" border="0">
   <tr>
-    <td style="text-align:center">Discriminat plot for background</td>
-     <td style="text-align:center">Discriminat plot for signal</td>
+    <td style="text-align:center;">Discriminat plot for background</td>
+     <td style="text-align:center;">Discriminat plot for signal</td>
   </tr>
   <tr>
     <td><img src="Images_readme/discriminant_background.png" alt="Discriminat plot for background" title="Discriminat plot for background" width="400" height="400"></td>
@@ -211,8 +210,8 @@ The resulting plots with and without the DNN selection are shown below.
 
 <table align="center" border="0">
   <tr>
-    <td style="text-align:center">Higgs mass fit without DNN selection</td>
-     <td style="text-align:center">Higgs mass fit with DNN selection</td>
+    <td style="text-align:center;">Higgs mass fit without DNN selection</td>
+     <td style="text-align:center;">Higgs mass fit with DNN selection</td>
   </tr>
   <tr>
     <td><img src="Images_readme/fit_mass_NoSelection.png" alt="Higgs mass fit without DNN selection" title="Higgs mass fit without DNN selection" width="400" height="400"></td>
@@ -224,18 +223,18 @@ The mass of the Higgs boson yielded by the fits of the simulated signal samples 
 
 <table align="center" border="0">
   <tr>
-    <td style="text-align:center"></td>
-    <td style="text-align:center">Without DNN selection</td>
-     <td style="text-align:center">With DNN selection</td>
+    <td style="text-align:center;"></td>
+    <td style="text-align:center;">Without DNN selection</td>
+     <td style="text-align:center;">With DNN selection</td>
   </tr>
   <tr>
-    <td style="text-align:center">Higgs mass from MC [GeV]</td>
-    <td style="text-align:center">124.934 +/- 0.016</td>
-    <td style="text-align:center">124.938 +/- 0.015</td>
+    <td style="text-align:center;">Higgs mass from MC [GeV]</td>
+    <td style="text-align:center;">124.934 +/- 0.016</td>
+    <td style="text-align:center;">124.938 +/- 0.015</td>
   </tr>
   <tr>
-    <td style="text-align:center">Higgs mass from data [GeV]</td>
-    <td style="text-align:center">125.40 +/- 0.26</td>
-    <td style="text-align:center">125.39 +/- 0.30</td>
+    <td style="text-align:center;">Higgs mass from data [GeV]</td>
+    <td style="text-align:center;">125.40 +/- 0.26</td>
+    <td style="text-align:center;">125.39 +/- 0.30</td>
   </tr>
 </table>
