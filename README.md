@@ -147,6 +147,15 @@ The plots for each variable are created by running
 >       python make_plot.py
 
 The option `-v` lets the user select which variables to plot.
+In the figures below it's shown the distribution on the 4 leptons invariant mass
+with and without the selection based on the DNN Discriminant.
+
+![Alt](Output_complete/Plots/NoSelection/total/total_Combined_Higgs_mass_NoSelection.png?raw=true "Higgs mass without DNN selection")
+
+<figure>
+  <figcaption>Higgs mass without DNN selection</figcaption>
+  <img src="Output_complete/Plots/NoSelection/total/total_Combined_Higgs_mass_NoSelection.png" alt=".." title="Higgs mass without DNN selection" />
+</figure>
 
 By running
 
