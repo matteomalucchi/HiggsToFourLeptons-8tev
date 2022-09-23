@@ -129,8 +129,9 @@ dmypy.json
 .pyre/
 
 #Directories
-#Input/
 documentation/
+Output_complete/
+images_text/
 
 # workspace
 *.code-workspace
