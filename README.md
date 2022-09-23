@@ -8,21 +8,20 @@
 This repository contains an analysis of the decay of a
 Higgs boson into two Z bosons which in turn decay in four leptons
 using reduced NanoAOD files created from [CMS Open Data](http://opendata.cern.ch/record/12360). The analysis follows loosely
-[the official CMS analysis published in 2012](https://www.sciencedirect.com/science/article/pii/S0370269312008581)
-and consists in two main parts. The first consists in the "skimming" of
-the dataset, i.e. by removing all events which are not of interest for the reconstruction
-of Higgs bosons, and by computing the various observables necessary for the analysis.
-The remaining variables are finally plotted and the invariant mass of the four leptons
+[the official CMS analysis published in 2012](https://www.sciencedirect.com/science/article/pii/S0370269312008581). First, the dataset is "skimmed", i.e. all events which are not of interest for the reconstruction
+of Higgs bosons are removed, and the various observables necessary for the analysis are computed.
+The remaining variables are then plotted and the invariant mass of the four leptons
 is fitted in order to measure the Higgs mass.
-The second part consists in the training and the application of a Deep Neural Network
+Subsequently, a Deep Neural Network is trained
 using as input the simulated signal and background Monte Carlo samples and as discriminant
 variables the invariant masses of the two reconstructed Z bosons and the five angles
 formed by the leptons in the final state as described in detail in the article
 [[Phys.Rev.D86:095031,2012]](https://journals.aps.org/prd/abstract/10.1103/PhysRevD.86.095031).
-Then, the algorithm is applied to the whole dataset in order to obtain a graph in which the
-distribution of the kinematic discriminant versus the invariant mass of the four leptons is plotted.
-This shows a clear separation between signal and background, hence a further cut on the data can be
+Then, the DNN is evaluated on the whole dataset in order to obtain a graph in which the
+distribution of the DNN Discriminant versus the invariant mass of the four leptons is plotted.
+This shows a clear separation between signal and background, hence a further cut on the data based on this discriminant can be
 applied in order to obtain a "cleaner" sample and better discriminate the signal from the background.
+
 
 
 ## How to run this
@@ -102,7 +101,9 @@ The basic functions used on the data are defined in `skim_functions.h`.
 In this step a Deep Neural Network (DNN) is trained on the Monte Carlo samples
 of signal and background. The training is done thanks to the ROOT.TMVA library
 with keras API. The trained DNN is evaluated on the various datasets and the events
-with discriminant above the 0.5 threshold are saved in a new TTree.
+with discriminant above threshold are saved in a new TTree. Such threshold is set to the optimal cut-value with highest $S/\sqrt{S^2+B^2}$ ratio as seen in the figure.
+
+![Alt text](Output/ML_output/?raw=true "Optimal cut")
 
 The training, application and selection steps can be performed by running
 
@@ -113,7 +114,12 @@ The training, application and selection steps can be performed by running
 The option `-a` gives the user the possibility to train the DNN using as discriminant variables
 Z1_mass, Z2_mass, cos_theta_star, Phi, Phi1, cos_theta1, cos_theta2 (`-a tot`) or Higgs_mass (`-a higgs`).
 The latter is not really a useful option, since the discrimination is based entirely on the mass of the
-Higgs candidate, but it's more of an extra.
+Higgs candidate, but it's more of an extra. The training history and the ROC curve are displayed in the figures below.
+
+![Alt text](Output/ML_output/?raw=true "Training history")
+
+![Alt text](Output/ML_output/ml_roc.pdf?raw=true "ROC curve")
+
 
 ### Histogramming
 The histogramming step produces histograms for each variable in each dataset by running
