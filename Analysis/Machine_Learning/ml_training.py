@@ -114,7 +114,7 @@ def ml_training(args, logger):
 
     # Define model
     model = Sequential()
-    model.add(Dense(64, activation="relu", input_dim=len(variables)))
+    model.add(Dense(12, activation="relu", input_dim=len(variables)))
     model.add(Dense(12, activation="relu"))
     model.add(Dense(12, activation="relu"))
     #model.add(Dense(12, activation="relu"))
