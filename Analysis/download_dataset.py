@@ -1,21 +1,21 @@
 """ Download the various sample from the CMS open-data portal.
 """
 
-import progressbar
-import urllib.error
-import urllib.request
 import argparse
+import multiprocessing as mp
 import os
 import sys
 import threading as thr
-from time import perf_counter
+import urllib.error
+import urllib.request
 from functools import wraps
-import multiprocessing as mp
+from time import perf_counter
+
+import progressbar
 
 sys.path.append(os.path.join("..", ""))
 
 from Analysis import set_up
-
 
 SAMPLES_DOWNLOAD={
     "SMHiggsToZZTo4L" : 12361,
@@ -30,16 +30,17 @@ SAMPLES_DOWNLOAD={
 
 
 class MyProgressBar():
-    """ Class that defines a progress bar for the download
+    """ Class that defines a progress bar for the download.
     """
 
     def __init__(self):
         """ Create the attribute pbar
         """
+
         self.pbar = None
 
     def __call__(self, block_num, block_size, total_size):
-        """ Update the progress bar for each downloaded block
+        """ Update the progress bar for each downloaded block.
 
         :param block_num: Number of the downloaded block
         :type block_num: int
@@ -61,11 +62,12 @@ class MyProgressBar():
 
 
 def count(func):
-    """ Function that counts the number of times get_file is called recursevely
+    """ Function that counts the number of times get_file is called recursevely.
 
     :param func: Function to be wrapped
     :type func: function
     """
+
     @wraps(func)
     def counted(*args):
         counted.call_count += 1
@@ -86,6 +88,7 @@ def get_file_parallel(log, num, sample, file):
     :param file: Name of the file to be saved.
     :type file: str
     """
+
     count = 1
     while count <= 4:
         try:
@@ -123,6 +126,7 @@ def get_file(log, num, sample, file):
     :param file: Name of the file to be saved.
     :type file: str
     """
+
     try:
         urllib.request.urlretrieve(f"http://opendata.cern.ch/record/{num}/files/{sample}.root", file, MyProgressBar())
     except urllib.error.HTTPError as http_err:

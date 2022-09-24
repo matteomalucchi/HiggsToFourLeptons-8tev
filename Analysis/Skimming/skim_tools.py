@@ -112,7 +112,6 @@ def four_vec(rdf, final_state):
 
         # With two muons and two electrons, the reconstruction is trivial
         # (each Z is built from two of the same kind).
-
         rdf_fv = rdf.Define("Muon_fourvec",
                             "lepFourVec(Muon_pt, Muon_eta, Muon_phi, Muon_mass)")\
                     .Define("Electron_fourvec",

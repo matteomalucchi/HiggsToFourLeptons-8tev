@@ -45,7 +45,7 @@ def check_val(log, input, correct_list, name):
 
 def create_dir(log, dir, ignore):
     """Create the directory if doesn't
-    already exist and create .gitignore.
+    already exist and create ``.gitignore``.
 
     :param log: Configurated logger for printing messages.
     :type log: logging.RootLogger

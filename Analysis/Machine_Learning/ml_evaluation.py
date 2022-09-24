@@ -3,20 +3,20 @@ and the resulting disciminant is saved in a new branch of the "Events" tree.
 """
 
 
-from array import array
+import argparse
+import os
 import sys
 import time
-import os
-import argparse
+from array import array
 
 import ROOT
 
 sys.path.append(os.path.join("..","..", ""))
 
+from Analysis import set_up
 from Analysis.Definitions.samples_def import SAMPLES
 from Analysis.Definitions.variables_ml_def import VARIABLES_ML_DICT
 
-from Analysis import set_up
 
 def modify_weights_file(output, file_path, log):
     """ Function that modifies in the file ``TMVAClassification_PyKeras.weights.xml``

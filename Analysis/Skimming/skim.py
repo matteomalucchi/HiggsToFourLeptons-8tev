@@ -12,22 +12,20 @@ which are later used for a machine learning algorithm.
 """
 
 import argparse
-import time
 import os
 import sys
+import time
 
 import ROOT
 
 sys.path.append(os.path.join("..","..", ""))
 
-from Analysis.Definitions.eos_link_def import  EOS_LINK
-from Analysis.Definitions.samples_def import  SAMPLES
-from Analysis.Definitions.variables_def import  VARIABLES
-from Analysis.Definitions.weights_def import  WEIGHTS
-
-from Analysis.Skimming import skim_tools
-
 from Analysis import set_up
+from Analysis.Definitions.eos_link_def import EOS_LINK
+from Analysis.Definitions.samples_def import SAMPLES
+from Analysis.Definitions.variables_def import VARIABLES
+from Analysis.Definitions.weights_def import WEIGHTS
+from Analysis.Skimming import skim_tools
 
 
 def skim(args, logger, path_sf="Analysis/Skimming"):

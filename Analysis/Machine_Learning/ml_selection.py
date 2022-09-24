@@ -3,19 +3,18 @@ the discriminant created by the DNN is above the threshold.
 The events that pass this cut are saved in anew tree called 'EventsDNNSelection'
 """
 
-import time
+import argparse
 import os
 import sys
-import argparse
-
+import time
 
 import ROOT
 
 sys.path.append(os.path.join("..","..", ""))
-from Analysis.Definitions.samples_def import  SAMPLES
+from Analysis import set_up
+from Analysis.Definitions.samples_def import SAMPLES
 from Analysis.Definitions.variables_def import VARIABLES_COMPLETE
 
-from Analysis import set_up
 
 def ml_selection(args, logger):
     """Main function for the selection of the events for which
