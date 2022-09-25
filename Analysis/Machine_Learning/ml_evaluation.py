@@ -135,7 +135,6 @@ def ml_evaluation(args, logger):
             branch = new_tree.Branch("Discriminant", discr_array, "Discriminant/F")
             logger.debug("Created branch Discriminant")
 
-            rand = ROOT.TRandom2()
             n_entries = tree.GetEntries()
             for i in range(n_entries):
                 new_tree.GetEntry(i)
@@ -148,7 +147,6 @@ def ml_evaluation(args, logger):
                 elif args.MLVariables == "higgs":
                     discr_array[0] = reader.EvaluateMVA([new_tree.Higgs_mass], "PyKeras")
 
-                #discr_array[0]= rand.Rndm()
                 branch.Fill()
                 if i % 300 == 0:
                     logger.info(f"Processed {i} events out of {n_entries} in sample {sample_name} and final state {final_state} ({j} / 14 in total) \n")
@@ -157,7 +155,6 @@ def ml_evaluation(args, logger):
 
             j += 1
 
-            #in_file.Close()
             logger.info(">>> Execution time for %s %s: %s s \n", sample_name, final_state, (time.time() - start_time))
 
     logger.info(">>> Total Execution time: %s s \n", (time.time() - start_time_tot))

@@ -4,19 +4,19 @@ one for all the simulated signal and one for each possible final state
 of the data.
 """
 
-import sys
-import os
 import argparse
-
+import os
+import sys
+import time
 
 import ROOT
 
 sys.path.append(os.path.join("..","..", ""))
 
+from Analysis import set_up
 from Analysis.Definitions.samples_def import SAMPLES
 from Analysis.Histogramming import histogramming_functions
 
-from Analysis import set_up
 
 def ml_histo(args, logger):
     """Main function of the histogramming step that plots Higgs_mass vs DNN Discriminant.
@@ -29,6 +29,8 @@ def ml_histo(args, logger):
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
+
+    start_time = time.time()
 
     #Enamble multi-threading
     if args.parallel:
@@ -60,14 +62,14 @@ def ml_histo(args, logger):
         for final_state in final_states:
             # Check if the final state is one of those requested by the user
             if final_state not in args.finalState and args.finalState != "all":
-                continue            
+                continue
             logger.info(">>> Process sample %s and final state %s", sample_name, final_state)
 
             # Get the input file name
-            file_name = os.path.join(args.output, "Skim_data", 
+            file_name = os.path.join(args.output, "Skim_data",
                                      f"{sample_name}{final_state}Skim.root")
- 
-            # Check if file exists or not 
+
+            # Check if file exists or not
             try:
                 if not os.path.exists(file_name):
                     raise FileNotFoundError
@@ -75,7 +77,7 @@ def ml_histo(args, logger):
                 logger.debug("Sample %s final state %s: File %s can't be found %s",
                                 sample_name, final_state, file_name, not_fund_err,  stack_info=True)
                 continue
-            
+
             if sample_name.startswith("SM"):
                 sig_chain.Add(file_name)
 
@@ -116,8 +118,10 @@ def ml_histo(args, logger):
             histogramming_functions.write_histogram(histos[dataset], dataset)
         except TypeError:
             logger.debug("Dataset %s is empty", dataset)
-        
+
     outfile.Close()
+
+    logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
 
 
 if __name__ == "__main__":
@@ -130,19 +134,19 @@ if __name__ == "__main__":
                         type=int,   help="number of workers for multi-threading" )
     parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
                         help="name of the output directory")
-    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,
                             help="integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
-    parser.add_argument("-f", "--finalState",   default="all", type=str,   
+    parser.add_argument("-f", "--finalState",   default="all", type=str,
                             help="comma separated list of the final states to analyse: \
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons" )
     parser.add_argument("-s", "--sample",    default="all", type=str,
                         help="string with comma separated list of samples to analyse: \
                         Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
-                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")    
+                        Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
     args_main = parser.parse_args()
-    
+
     logger_main=set_up.set_up(args_main)
-    
+
 
     ml_histo(args_main, logger_main)

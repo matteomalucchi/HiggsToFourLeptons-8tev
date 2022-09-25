@@ -88,7 +88,7 @@ def ml_selection(args, logger):
 
             logger.info(">>> Execution time for %s %s: %s s \n", sample_name, final_state, (time.time() - start_time))
 
-    logger.info(">>> Total Execution time: %s s \n",(time.time() - start_time_tot))
+    logger.info(">>> Total execution time: %s s \n",(time.time() - start_time_tot))
 
 
 if __name__ == "__main__":

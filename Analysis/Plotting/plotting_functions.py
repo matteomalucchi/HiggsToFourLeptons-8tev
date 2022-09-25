@@ -28,6 +28,7 @@ def combine_final_states(dict_comb):
     :param dict_comb: Dictionary in which the values are the histograms to be combined
     :type dict_comb: dict(str, ROOT.TH1D)
     """
+
     dict_comb["Combined"] = dict_comb["FourMuons"].Clone()
     dict_comb["Combined"].Add(dict_comb["FourElectrons"])
     dict_comb["Combined"].Add(dict_comb["TwoMuonsTwoElectrons"])
@@ -126,6 +127,7 @@ def add_title(histo, variable_specs=None):
     :param variable_specs: Specifics of the variable to be plotted
     :type variable_specs: str
     """
+
     if variable_specs is None:
         histo.GetYaxis().SetTitle("DNN Discriminant")
         histo.GetXaxis().SetTitle("m_{4l} [GeV]")

@@ -6,14 +6,13 @@ import argparse
 import sys
 import time
 
-from Analysis.Definitions.eos_link_def import  EOS_LINK
-from Analysis import set_up
-from Analysis.Skimming import skim
-from Analysis.Machine_Learning import  ml_training, ml_evaluation, ml_selection
-from Analysis.Plotting import make_plot, ml_plot
+from Analysis import download_dataset, fit_mass, set_up
+from Analysis.Definitions.eos_link_def import EOS_LINK
 from Analysis.Histogramming import make_histo, ml_histo
-from Analysis import download_dataset
-from Analysis import fit_mass
+from Analysis.Machine_Learning import ml_evaluation, ml_selection, ml_training
+from Analysis.Plotting import make_plot, ml_plot
+from Analysis.Skimming import skim
+
 
 def run_analysis (argv):
     """ Main function that runs the whole analysis.

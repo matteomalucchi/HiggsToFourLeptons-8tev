@@ -3,19 +3,19 @@
 The plotting combines the histograms to plots which allow to study the
 inital dataset based on observables motivated through physics.
 """
+import argparse
 import os
 import sys
-import argparse
+import time
 
 import ROOT
 
 sys.path.append(os.path.join("..","..", ""))
 
-from Analysis.Definitions.variables_def import VARIABLES_DICT
-from Analysis.Definitions.selections_def import  SELECTIONS
-from Analysis.Plotting import plotting_functions
-
 from Analysis import set_up
+from Analysis.Definitions.selections_def import SELECTIONS
+from Analysis.Definitions.variables_def import VARIABLES_DICT
+from Analysis.Plotting import plotting_functions
 
 ROOT.gROOT.SetBatch(True)
 
@@ -38,6 +38,8 @@ def make_plot (args, logger):
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
+
+    start_time = time.time()
 
     if args.logLevel >= 20:
         ROOT.gErrorIgnoreLevel = ROOT.kWarning
@@ -92,7 +94,7 @@ def make_plot (args, logger):
             signals_norm = {}
             for final_state, signal_histo in signals.items():
                 histo = signal_histo.Clone()
-                histo.Scale(1/histo.Integral())
+                histo.Scale(1/histo.Integral()*100)
                 signals_norm[final_state] = histo
 
             # Get histograms for the background
@@ -120,7 +122,7 @@ def make_plot (args, logger):
             backgrounds_norm = {}
             for final_state, background_histo in backgrounds.items():
                 histo = background_histo.Clone()
-                histo.Scale(1/histo.Integral())
+                histo.Scale(1/histo.Integral()*100)
                 backgrounds_norm[final_state] = histo
 
             # Get histograms for the data
@@ -246,6 +248,7 @@ def make_plot (args, logger):
                         logger.debug("ERROR: Failed to create the plot for %s_%s_%s_%s",
                                 input_type, final_state, variable, selection, stack_info=True)
 
+    logger.info(">>> Execution time: %s s \n",(time.time() - start_time))
 
 if __name__ == "__main__":
 

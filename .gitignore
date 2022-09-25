@@ -131,7 +131,6 @@ dmypy.json
 #Directories
 documentation/
 Output_complete/
-images_text&slides/
 
 # workspace
 *.code-workspace

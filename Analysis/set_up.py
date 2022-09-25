@@ -3,16 +3,16 @@ the arguments passed are valid and manage the output directory.
 """
 
 import argparse
+import logging
 import os
 import shutil
-import logging
 import sys
 
 sys.path.append(os.path.join("..", ""))
 
-from Analysis.Definitions.variables_def import  VARIABLES_COMPLETE
-from Analysis.Definitions.variables_ml_def import  VARIABLES_ML_DICT
-from Analysis.Definitions.samples_def import  SAMPLES
+from Analysis.Definitions.samples_def import SAMPLES
+from Analysis.Definitions.variables_def import VARIABLES_COMPLETE
+from Analysis.Definitions.variables_ml_def import VARIABLES_ML_DICT
 
 
 def check_val(log, input, correct_list, name):
@@ -155,7 +155,7 @@ def set_up (args):
     except AttributeError:
         pass
 
-    # Create the directory to save the outputs if doesn't already existand create .gitignore
+    # Create the directory to save the outputs if doesn't already exist
     try:
         create_dir(logger, args.output, False)
     except AttributeError:

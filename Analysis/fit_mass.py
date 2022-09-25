@@ -3,20 +3,19 @@ A fit on the simulated samples and a fit on the data
 (estimating the background from the MC) are performed.
 """
 
-import time
-import os
 import argparse
+import os
 import sys
+import time
 
 import ROOT
 
 sys.path.append(os.path.join("..", ""))
 
-from Analysis.Definitions.samples_def import SAMPLES
-from Analysis.Definitions.selections_def import  SELECTIONS
-from Analysis.Plotting import plotting_functions
-
 from Analysis import set_up
+from Analysis.Definitions.samples_def import SAMPLES
+from Analysis.Definitions.selections_def import SELECTIONS
+from Analysis.Plotting import plotting_functions
 
 
 def fit_mass (args, logger):

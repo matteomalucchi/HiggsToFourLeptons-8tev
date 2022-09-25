@@ -5,22 +5,21 @@ Then, the resulting histograms are passed to the plotting
 step, which combines them so that the physics of the decay can be studied.
 """
 
-import time
+import argparse
 import os
 import sys
-import argparse
+import time
 
 import ROOT
 
 sys.path.append(os.path.join("..","..", ""))
 
+from Analysis import set_up
+from Analysis.Definitions.samples_def import SAMPLES
+from Analysis.Definitions.selections_def import SELECTIONS
 from Analysis.Definitions.variables_def import VARIABLES_DICT
-from Analysis.Definitions.samples_def import  SAMPLES
-from Analysis.Definitions.selections_def import  SELECTIONS
-
 from Analysis.Histogramming import histogramming_functions
 
-from Analysis import set_up
 
 def make_histo(args, logger):
     """ Main function of the histogramming step.
@@ -51,7 +50,7 @@ def make_histo(args, logger):
         logger.debug("Directory %s/ Created", dir_name)
     except FileExistsError:
         logger.debug("The directory %s/ already exists", dir_name)
-        
+
     outfile_path = os.path.join(dir_name, "Histograms.root")
     outfile = ROOT.TFile(outfile_path, "RECREATE")
 
@@ -65,7 +64,7 @@ def make_histo(args, logger):
     # Loop over the possible selections
     for selection, tree_name in SELECTIONS.items():
 
-        # Loop through skimmed datasets and final states 
+        # Loop through skimmed datasets and final states
         # to produce histograms of all variables.
         for sample_name, final_states in SAMPLES.items():
             # Check if the sample to plot is one of those requested by the user
@@ -77,13 +76,13 @@ def make_histo(args, logger):
                     continue
                 logger.info(">>> Process sample %s and final state %s with %s",
                             sample_name, final_state, selection)
-                
+
                 start_time = time.time()
 
                 file_name = os.path.join(args.output, "Skim_data",
                                              f"{sample_name}{final_state}Skim.root")
-                
-                # Check if file exists or not 
+
+                # Check if file exists or not
                 try:
                     if not os.path.exists(file_name):
                         raise FileNotFoundError
@@ -106,11 +105,11 @@ def make_histo(args, logger):
                                                 f"{sample_name}_{final_state}_{variable}_{selection}")
                 except TypeError:
                     logger.debug("Sample %s final state %s is empty", sample_name, final_state)
-                    
+
                 logger.info(">>> Execution time for %s %s %s: %s s \n", selection, sample_name, final_state, (time.time() - start_time))
-    
-    logger.info(">>> Total Execution time: %s s \n",(time.time() - start_time_tot))                
-    
+
+    logger.info(">>> Total Execution time: %s s \n",(time.time() - start_time_tot))
+
     outfile.Close()
 
 
@@ -126,10 +125,10 @@ if __name__ == "__main__":
                         help="disables machine learning algorithm")
     parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
                         help="name of the output directory")
-    parser.add_argument("-l", "--logLevel",   default=20, type=int,   
+    parser.add_argument("-l", "--logLevel",   default=20, type=int,
                             help="integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
-    parser.add_argument("-f", "--finalState",   default="all", type=str,   
+    parser.add_argument("-f", "--finalState",   default="all", type=str,
                             help="comma separated list of the final states to analyse: \
                             FourMuons,FourElectrons,TwoMuonsTwoElectrons" )
     parser.add_argument("-s", "--sample",    default="all", type=str,
@@ -138,10 +137,10 @@ if __name__ == "__main__":
                         Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
     parser.add_argument("-v", "--variableDistribution",    default="all", type=str,
                         help="string with comma separated list of the variables to plot. \
-                            The complete list is defined in 'variables_def.py'") 
+                            The complete list is defined in 'variables_def.py'")
     args_main = parser.parse_args()
 
     logger_main=set_up.set_up(args_main)
-    
+
 
     make_histo(args_main, logger_main)

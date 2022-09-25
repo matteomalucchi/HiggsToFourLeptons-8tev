@@ -5,20 +5,18 @@ of all background/signal datasets and the real data
 separated in the three possible final states.
 """
 
-import os
 import argparse
-
+import os
 import sys
+import time
 
 import ROOT
 
 sys.path.append(os.path.join("..","..", ""))
 
+from Analysis import set_up
 from Analysis.Plotting import plotting_functions
 
-from Analysis import set_up
-
-#ROOT.gROOT.SetBatch(True)
 
 def ml_plot (args, logger):
     """ Main function of the plotting step. The plotting takes
@@ -37,6 +35,8 @@ def ml_plot (args, logger):
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
 
+    start_time = time.time()
+
     infile_path = os.path.join(args.output, "Histograms",
                                "Histograms_discriminant.root")
     # Check if file exists or not
@@ -52,8 +52,8 @@ def ml_plot (args, logger):
     datasets = ["signal", "background", "data_el", "data_mu", "data_elmu"]
 
     plotting_functions.set_style()
-    histos = {}
 
+    histos = {}
     # Get histograms
     for dataset in datasets:
         try:
@@ -109,8 +109,9 @@ def ml_plot (args, logger):
         # Save the plots
         file_name = f"discriminant_{type_dataset}.pdf"
         complete_name = os.path.join(dir_name, file_name)
-        #input()
         canvas.SaveAs(complete_name)
+
+    logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
 
 if __name__ == "__main__":
 
@@ -124,6 +125,5 @@ if __name__ == "__main__":
     args_main = parser.parse_args()
 
     logger_main=set_up.set_up(args_main)
-
 
     ml_plot(args_main, logger_main)
