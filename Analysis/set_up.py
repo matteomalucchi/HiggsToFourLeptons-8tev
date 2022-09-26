@@ -15,61 +15,63 @@ from Analysis.Definitions.variables_def import VARIABLES_COMPLETE
 from Analysis.Definitions.variables_ml_def import VARIABLES_ML_DICT
 
 
-def check_val(log, input, correct_list, name):
-    """ Check if the inputs are valid and sets them to
+def check_val(log, option, correct_list, name):
+    """ Check if the input options are valid and sets them to
     the default value otherwise.
 
     :param log: Configurated logger for printing messages.
     :type log: logging.RootLogger
-    :param input: input string
-    :type input: str
+    :param option: input option string
+    :type option: str
     :param correct_list: list of accepted values
     :type correct_list: list(str)
     :param name: name of the argparse argument
     :type name: str
-    :return: Correct input string
+    :return: Correct input optionstring
     :rtype: str
     """
 
     try:
-        if not any(correct_in in input.split(",") for correct_in in correct_list):
+        if not any(correct_in in option.split(",") for correct_in in correct_list):
             list_str=', '.join(correct_list)
-            raise argparse.ArgumentTypeError(f"{name} {input} is invalid: it must be either {list_str}")
+            raise argparse.ArgumentTypeError(
+                f"{name} {option} is invalid: it must be either {list_str}")
     except argparse.ArgumentTypeError as arg_err:
-        log.exception("%s \n>>>%s is set to %s \n", arg_err, name, correct_list[0], stack_info=True)
+        log.exception(
+            "%s \n>>>   %s is set to %s \n", arg_err, name, correct_list[0])
         return correct_list[0]
     else:
-        return input
+        return option
 
 
 
-def create_dir(log, dir, ignore):
+def create_dir(log, directory, ignore):
     """Create the directory if doesn't
     already exist and create ``.gitignore``.
 
     :param log: Configurated logger for printing messages.
     :type log: logging.RootLogger
-    :param dir: Directory to create.
-    :type dir: str
+    :param directory: Directory to create.
+    :type directory: str
     :param ignore: Boolean that specifies if .gitignore should be created or not.
     :type ignore: bool
     """
 
     try:
-        os.makedirs(dir)
-        log.debug("Directory %s/ Created", dir)
+        os.makedirs(directory)
+        log.debug("Directory %s/ Created", directory)
     except FileExistsError:
-        log.debug("The directory %s/ already exists", dir)
+        log.debug("The directory %s/ already exists", directory)
     finally:
-        if ignore == True:
-            file_path=os.path.join(dir, ".gitignore")
+        if ignore is True:
+            file_path=os.path.join(directory, ".gitignore")
             if os.path.exists(file_path):
                 pass
             else:
                 # create .gitignore
-                with open(file_path, 'w') as fp:
-                    fp.write("# Ignore everything in this directory \n*")
-                    fp.write("\n# Except this file \n!.gitignore")
+                with open(file_path, 'w', encoding="utf8") as file:
+                    file.write("# Ignore everything in this directory \n*")
+                    file.write("\n# Except this file \n!.gitignore")
 
 
 
@@ -102,11 +104,31 @@ def set_up (args):
     # Set the threshold of logger
     logger.setLevel(args.logLevel)
 
+    option_dict = {
+         "typeDistribution" : [args.typeDistribution,
+            ["all", "data", "background", "signal", "sig_bkg_normalized", "total"]],
+        "finalState" : [args.finalState,
+            ["all"] + SAMPLES["SMHiggsToZZTo4L"]],
+        "MLVariables" : [args.MLVariables,
+            list(VARIABLES_ML_DICT.keys())],
+        "sample" : [args.sample,
+            ["all"] + list(SAMPLES.keys())],
+        "variableDistribution" : [args.variableDistribution,
+            ["all"] + list(VARIABLES_COMPLETE.keys())]
+    }
 
-    # Check if typeDistribution is valid
+    for option_type, option_list in option_dict.items():
+        try:
+            option_list[0] = check_val(logger, option_list[0],
+                option_list[1], option_type)
+        except AttributeError:
+            pass
+
+    '''# Check if typeDistribution is valid
     try:
         args.typeDistribution = check_val(logger, args.typeDistribution,
-            ["all", "data", "background", "signal", "sig_bkg_normalized", "total"], "typeDistribution")
+            ["all", "data", "background", "signal", "sig_bkg_normalized", "total"],
+            "typeDistribution")
     except AttributeError:
         pass
 
@@ -136,9 +158,10 @@ def set_up (args):
         args.variableDistribution = check_val(logger, args.variableDistribution,
             ["all"] + list(VARIABLES_COMPLETE.keys()), "variableDistribution")
     except AttributeError:
-        pass
+        pass'''
 
-    # Create the directory to save the downloaded files if doesn't already exist and create .gitignore
+    # Create the directory to save the downloaded files
+    # if doesn't already exist and create .gitignore
     try:
         if args.download != "":
             create_dir(logger, args.download, True)
