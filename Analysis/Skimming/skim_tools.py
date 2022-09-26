@@ -26,7 +26,8 @@ def event_selection(rdf, final_state):
                           "Good muon kinematics")\
                   .Define("Muon_3d_sip",
                           "sipDef(Muon_dxy, Muon_dz, Muon_dxyErr, Muon_dzErr)")\
-                  .Filter("All(Muon_3d_sip<4) && All(abs(Muon_dxy)<0.5) && All(abs(Muon_dz)<1.0)",
+                  .Filter("All(Muon_3d_sip<4) && All(abs(Muon_dxy)<0.5) \
+                          && All(abs(Muon_dz)<1.0)",
                           "Muons originate from the same primary vertex")
 
     if final_state == "FourElectrons":

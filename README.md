@@ -2,7 +2,7 @@
     <img src='https://readthedocs.org/projects/higgstofourleptons-8tev/badge/?version=latest' alt='Documentation Status' />
 </a>
 
-# Analysis of Higgs boson decays to four leptons
+# Analysis of Higgs boson decays to four leptons at 8 TeV
 
 ## Introduction
 This repository contains an analysis of the decay $H \rightarrow Z Z \rightarrow 4l$ using reduced NanoAOD files from [CMS Open Data](http://opendata.cern.ch/record/12360) for a total of 11.6 fb$^{-1}$ at 8 TeV. The analysis follows loosely

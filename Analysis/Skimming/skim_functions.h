@@ -1,4 +1,4 @@
-/* 
+/*
  * Definitions of the basic functions used during the skimming process
 */
 
@@ -13,14 +13,14 @@ using namespace ROOT::VecOps;
 using VecF = const RVec<float>&;
 using VecI = const RVec<int>&;
 using FourVec = const RVec<TLorentzVector>&;
-using Idx = const RVec<RVec<int>>&; 
+using Idx = const RVec<RVec<int>>&;
 
 const auto Z_MASS = 91.2;
 
 
 /*
  * Definition of the significance of the impact parameter sip
- * as the ratio between the impact parameter 
+ * as the ratio between the impact parameter
  * at the point of closest approach to the vertex and its uncertainty.
 */
 RVec<float> sipDef(VecF dxy, VecF dz, VecF sigma_dxy, VecF sigma_dz){
@@ -30,9 +30,9 @@ RVec<float> sipDef(VecF dxy, VecF dz, VecF sigma_dxy, VecF sigma_dz){
     return sip;
 };
 
-/* 
- * Require that in at least one of the lepton couples the highest 
- * energy particle has Pt > 20 GeV while the other one Pt > 10 GeV.  
+/*
+ * Require that in at least one of the lepton couples the highest
+ * energy particle has Pt > 20 GeV while the other one Pt > 10 GeV.
 */
 bool ptCuts(VecF mu_pt, VecF el_pt){
     if (Max(mu_pt)>20 && Min(mu_pt)>10) return true;
@@ -54,18 +54,18 @@ RVec<TLorentzVector> lepFourVec(VecF lep_pt, VecF lep_eta, VecF lep_phi, VecF le
 };
 
 /*
- * Find the pair of leptons of the same kind 
+ * Find the pair of leptons of the same kind
  * whose invariant mass is closest to Z_MASS.
 */
 RVec<RVec<int>> zIdxSamekind(FourVec fourvec, VecI charge){
     RVec<RVec<int>> idx(2);
-    idx[0].reserve(2); 
+    idx[0].reserve(2);
     idx[1].reserve(2);
 
     // Find first lepton pair with invariant mass closest to Z mass
     auto idx_cmb = Combinations(fourvec, 2);
     auto best_mass = -1;
-    size_t best_i1 = 0; 
+    size_t best_i1 = 0;
     size_t best_i2 = 0;
     for (size_t i = 0; i < idx_cmb[0].size(); i++) {
         const auto i1 = idx_cmb[0][i];
@@ -94,8 +94,8 @@ RVec<RVec<int>> zIdxSamekind(FourVec fourvec, VecI charge){
 };
 
 /*
- * Reconstruct the two Z fourvectors in the case of leptons 
- * of the same kind and sort them in ascending distance to Z mass. 
+ * Reconstruct the two Z fourvectors in the case of leptons
+ * of the same kind and sort them in ascending distance to Z mass.
 */
 RVec<TLorentzVector> zFourvecSamekind(Idx idx, FourVec fourvec) {
     RVec<TLorentzVector> z_fourvecs(2);
@@ -112,7 +112,7 @@ RVec<TLorentzVector> zFourvecSamekind(Idx idx, FourVec fourvec) {
 };
 
 /*
- * Reconstruct the two Z fourvectors in the case of leptons 
+ * Reconstruct the two Z fourvectors in the case of leptons
  * of different kind and sort them in ascending distance to Z mass.
 */
 RVec<TLorentzVector> zFourvec2mu2el(FourVec mu_fourvec, FourVec el_fourvec) {
@@ -163,7 +163,7 @@ TLorentzVector lep1(FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI
         else return fourvec_mu[1];
     } else {
         if (charge_el[0] == -1) return fourvec_el[0];
-        else return fourvec_el[1];  
+        else return fourvec_el[1];
     }
 };
 
@@ -177,7 +177,7 @@ TLorentzVector lep2(FourVec fourvec_mu, FourVec fourvec_el, VecI charge_mu, VecI
         else return fourvec_mu[1];
     } else {
         if (charge_el[0] == -1) return fourvec_el[0];
-        else return fourvec_el[1];  
+        else return fourvec_el[1];
     }
 };
 
@@ -218,20 +218,20 @@ TVector3 crossNorm(TVector3 vec1, TVector3 vec2) {
 float defPhi(TVector3 momentum, TVector3 vec1, TVector3 vec2) {
     return momentum.Dot(vec1.Cross(vec2)) *
                             pow(std::abs(momentum.Dot(vec1.Cross(vec2))),-1) * acos(vec1.Dot(vec2));
-}; 
+};
 
 /*
  * Definition of angles theta_star, theta1 and theta2.
 */
 float defTheta(TVector3 vec1, TVector3 vec2) {
     return acos(-vec1.Dot(vec2) * pow(vec1.Mag()*vec2.Mag(),-1));
-}; 
+};
 
 /*
  * Definition of cos(theta_star), cos(theta1) and cos(theta2).
 */
 float defCosTheta(TVector3 vec1, TVector3 vec2) {
     return -vec1.Dot(vec2) * pow(vec1.Mag()*vec2.Mag(),-1);
-};  
+};
 
 #endif
