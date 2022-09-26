@@ -106,7 +106,7 @@ def ml_training(args, logger):
         logger.exception("Exit the program")
         return
 
-    dataloader.PrepareTrainingAndTestTree(ROOT.TCut(""),"SplitMode=Random:NormMode=EqualNumEvents:!V")
+    dataloader.PrepareTrainingAndTestTree(ROOT.TCut(""),"SplitMode=Random:NormMode=NumEvents:!V")
 
     # Generate model
 
@@ -130,7 +130,7 @@ def ml_training(args, logger):
 
     # Book methods
     method = factory.BookMethod(dataloader, ROOT.TMVA.Types.kPyKeras, "PyKeras",
-                    f"H:!V:VarTransform=D,G:FilenameModel={model_path}:NumEpochs=10:BatchSize=30")
+                    f"H:!V:VarTransform=D,G:FilenameModel={model_path}:NumEpochs=20:BatchSize=128")
 
     # Run training, test and evaluation
     factory.TrainAllMethods()

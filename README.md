@@ -94,11 +94,32 @@ The functions used in the skimming step of the analysis are defined
 in the `skim_tools.py` file.
 The basic functions used on the data are defined in `skim_functions.h`.
 
+
 ### Machine learning
 
 In this step a Deep Neural Network (DNN) is trained on the Monte Carlo samples
 of signal and background. The training is done thanks to the ROOT.TMVA library
-with keras API. The trained DNN is evaluated on the various datasets and the events
+with keras API and uses as discriminant variables the ones plot in the figure below.
+
+
+<table align="center" >
+  <tr>
+    <td><img src="Images_readme/sig_bkg_normalized_Combined_Z1_mass_NoSelection.png" alt="sig_bkg_normalized_Combined_Z1_mass_NoSelection" title="sig_bkg_normalized_Combined_Z1_mass_NoSelection" width="250" height="250"></td>
+    <td><img src="Images_readme/sig_bkg_normalized_Combined_Z2_mass_NoSelection.png" alt="sig_bkg_normalized_Combined_Z2_mass_NoSelection" title="sig_bkg_normalized_Combined_Z2_mass_NoSelection" width="250" height="250"></td>
+    <td><img src="Images_readme/sig_bkg_normalized_Combined_Phi_NoSelection.png" alt="sig_bkg_normalized_Combined_Phi_NoSelection" title="sig_bkg_normalized_Combined_Phi_NoSelection" width="250" height="250"></td>
+    <td><img src="Images_readme/sig_bkg_normalized_Combined_Phi1_NoSelection.png" alt="sig_bkg_normalized_Combined_Phi1_NoSelection" title="sig_bkg_normalized_Combined_Phi1_NoSelection" width="250" height="250"></td>
+</table>
+<table>
+
+  </tr>
+    <td><img src="Images_readme/sig_bkg_normalized_Combined_cos_theta_star_NoSelection.png" alt="sig_bkg_normalized_Combined_cos_theta_star_NoSelection" title="sig_bkg_normalized_Combined_cos_theta_star_NoSelection" width="333" height="333"></td>
+    <td><img src="Images_readme/sig_bkg_normalized_Combined_cos_theta1_NoSelection.png" alt="sig_bkg_normalized_Combined_cos_theta1_NoSelection" title="sig_bkg_normalized_Combined_cos_theta1_NoSelection" width="333" height="333"></td>
+    <td><img src="Images_readme/sig_bkg_normalized_Combined_cos_theta2_NoSelection.png" alt="sig_bkg_normalized_Combined_cos_theta2_NoSelection" title="sig_bkg_normalized_Combined_cos_theta2_NoSelection" width="333" height="333"></td>
+
+  </tr>
+</table>
+
+ The trained DNN is evaluated on the various datasets and the events
 with discriminant above threshold are saved in a new TTree. Such threshold is set to the optimal cut value with highest $S/\sqrt{S^2+B^2}$ ratio as seen in the figure below.
 
 <table align="center" border="0">
