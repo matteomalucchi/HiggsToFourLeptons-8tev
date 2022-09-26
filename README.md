@@ -109,8 +109,7 @@ with keras API and uses as discriminant variables the ones plot in the figure be
     <td><img src="Images_readme/sig_bkg_normalized_Combined_Phi_NoSelection.png" alt="sig_bkg_normalized_Combined_Phi_NoSelection" title="sig_bkg_normalized_Combined_Phi_NoSelection" width="175" height="175"></td>
     <td><img src="Images_readme/sig_bkg_normalized_Combined_Phi1_NoSelection.png" alt="sig_bkg_normalized_Combined_Phi1_NoSelection" title="sig_bkg_normalized_Combined_Phi1_NoSelection" width="175" height="175"></td>
 </table>
-<table>
-
+<table align="center" >
   </tr>
     <td><img src="Images_readme/sig_bkg_normalized_Combined_cos_theta_star_NoSelection.png" alt="sig_bkg_normalized_Combined_cos_theta_star_NoSelection" title="sig_bkg_normalized_Combined_cos_theta_star_NoSelection" width="233" height="233"></td>
     <td><img src="Images_readme/sig_bkg_normalized_Combined_cos_theta1_NoSelection.png" alt="sig_bkg_normalized_Combined_cos_theta1_NoSelection" title="sig_bkg_normalized_Combined_cos_theta1_NoSelection" width="233" height="233"></td>
