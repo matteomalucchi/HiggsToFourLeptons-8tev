@@ -3,7 +3,7 @@
     is equal to the expected number of events in data. The expectation is given by
     multiplying the integrated luminosity (11.58 fb^-1) of the data with the cross-section of
     the process in the datasets (expressed in pb) divided by the number of simulated events. The simulated
-    background datasets are further multiplied by a scale factor which acts as a 
+    background datasets are further multiplied by a scale factor which acts as a
     correction of the simulation.
 """
 

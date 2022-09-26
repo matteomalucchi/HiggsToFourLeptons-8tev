@@ -31,7 +31,7 @@ def modify_weights_file(output, file_path, log):
     :type log: logging.RootLogger
     """
 
-    with open(file_path, "r") as file:
+    with open(file_path, "r", encoding="utf8") as file:
         # Read the list of lines
         data = file.readlines()
 
@@ -40,7 +40,7 @@ def modify_weights_file(output, file_path, log):
     data[21] = f'    <Option name="FilenameTrainedModel" modified="No">{output}/ML_output/dataset/weights/TrainedModel_PyKeras.h5</Option>\n'
 
     # and write everything back
-    with open(file_path, "w") as file:
+    with open(file_path, "w", encoding="utf8") as file:
         file.writelines( data )
 
     log.debug("Path changed correctly")
@@ -78,7 +78,8 @@ def ml_evaluation(args, logger):
         branches[branch_name] = array("f", [-999])
         reader.AddVariable(branch_name, branches[branch_name])
 
-    weights_path=os.path.join(args.output, "ML_output", "dataset", "weights", "TMVAClassification_PyKeras.weights.xml")
+    weights_path=os.path.join(args.output, "ML_output", "dataset",
+                "weights", "TMVAClassification_PyKeras.weights.xml")
 
     modify_weights_file(args.output, weights_path, logger)
 
@@ -116,7 +117,8 @@ def ml_evaluation(args, logger):
                     raise FileNotFoundError
             except FileNotFoundError as not_found_err:
                 logger.debug("Sample %s final state %s: File %s can't be found %s",
-                                sample_name, final_state, in_file_path, not_found_err,  stack_info=True)
+                                sample_name, final_state,
+                                in_file_path, not_found_err,  stack_info=True)
                 continue
 
             in_file = ROOT.TFile(in_file_path,"UPDATE")
@@ -155,7 +157,8 @@ def ml_evaluation(args, logger):
 
             j += 1
 
-            logger.info(">>> Execution time for %s %s: %s s \n", sample_name, final_state, (time.time() - start_time))
+            logger.info(">>> Execution time for %s %s: %s s \n",
+                        sample_name, final_state, (time.time() - start_time))
 
     logger.info(">>> Total Execution time: %s s \n", (time.time() - start_time_tot))
 

@@ -55,7 +55,8 @@ def ml_training(args, logger):
     output = ROOT.TFile.Open(os.path.join(dir_name, "DNN_Training.root"), "RECREATE")
 
     factory = ROOT.TMVA.Factory("TMVAClassification", output,
-                        "!V:!Silent:Color:DrawProgressBar:Transformations=D,G:AnalysisType=Classification")
+                        "!V:!Silent:Color:DrawProgressBar:Transformations=D,G\
+                        :AnalysisType=Classification")
 
     # Variables used in the ML algorithm
     variables=VARIABLES_ML_DICT[args.MLVariables]
@@ -89,7 +90,8 @@ def ml_training(args, logger):
                     raise FileNotFoundError
             except FileNotFoundError as not_found_err:
                 logger.debug("Sample %s final state %s: File %s can't be found %s",
-                                sample_name, final_state, file_name, not_found_err,  stack_info=True)
+                                sample_name, final_state, file_name,
+                                not_found_err, stack_info=True)
                 continue
 
             if sample_name == "SMHiggsToZZTo4L":
@@ -148,7 +150,7 @@ def ml_training(args, logger):
     cut_path = os.path.join(dir_name, "optimal_cut.txt")
     if os.path.exists(cut_path):
         os.remove(cut_path)
-    with open(cut_path, "w") as file:
+    with open(cut_path, "w", encoding="utf8") as file:
         file.write(cut)
 
     output.Close()

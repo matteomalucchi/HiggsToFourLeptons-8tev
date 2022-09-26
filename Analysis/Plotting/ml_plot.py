@@ -60,7 +60,7 @@ def ml_plot (args, logger):
             histos[dataset] = plotting_functions.get_histogram(infile, dataset)
             plotting_functions.input_style(dataset, histos[dataset])
         except RuntimeError as run_time_err:
-                logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
+            logger.debug("ERROR:  %s ", run_time_err,  stack_info=True)
 
     # Create the directory to save the plots if doesn't already exist
     dir_name = os.path.join(args.output, "Discriminant_plots")
@@ -86,20 +86,23 @@ def ml_plot (args, logger):
         try:
             histos["data_el"].Draw("SAME P")
         except KeyError:
-            logger.debug("ERROR: Failed to create the data histogram of the FourElectrons final state in the %s TH2D",
-                                    type_dataset, stack_info=True)
+            logger.debug(
+                "ERROR: Failed to create the data histogram of the FourElectrons final state in the %s TH2D",
+                type_dataset, stack_info=True)
 
         try:
             histos["data_mu"].Draw("SAME P")
         except KeyError:
-            logger.debug("ERROR: Failed to create the data histogram of the FourMuons final state in the %s TH2D",
-                                    type_dataset, stack_info=True)
+            logger.debug(
+                "ERROR: Failed to create the data histogram of the FourMuons final state in the %s TH2D",
+                type_dataset, stack_info=True)
 
         try:
             histos["data_elmu"].Draw("SAME P")
         except KeyError:
-            logger.debug("ERROR: Failed to create the data histogram of the TwoMuonsTwoElectrons final state in the %s TH2D",
-                                    type_dataset, stack_info=True)
+            logger.debug(
+                "ERROR: Failed to create the data histogram of the TwoMuonsTwoElectrons final state in the %s TH2D",
+                type_dataset, stack_info=True)
 
         legend=plotting_functions.add_legend(legend, "discriminant", histos)
         legend.Draw()

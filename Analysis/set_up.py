@@ -38,7 +38,7 @@ def check_val(log, option, correct_list, name):
                 f"{name} {option} is invalid: it must be either {list_str}")
     except argparse.ArgumentTypeError as arg_err:
         log.exception(
-            "%s \n>>>   %s is set to %s \n", arg_err, name, correct_list[0])
+            "%s \n>>>%s is set to %s \n", arg_err, name, correct_list[0], stack_info=True)
         return correct_list[0]
     else:
         return option
@@ -104,27 +104,8 @@ def set_up (args):
     # Set the threshold of logger
     logger.setLevel(args.logLevel)
 
-    option_dict = {
-         "typeDistribution" : [args.typeDistribution,
-            ["all", "data", "background", "signal", "sig_bkg_normalized", "total"]],
-        "finalState" : [args.finalState,
-            ["all"] + SAMPLES["SMHiggsToZZTo4L"]],
-        "MLVariables" : [args.MLVariables,
-            list(VARIABLES_ML_DICT.keys())],
-        "sample" : [args.sample,
-            ["all"] + list(SAMPLES.keys())],
-        "variableDistribution" : [args.variableDistribution,
-            ["all"] + list(VARIABLES_COMPLETE.keys())]
-    }
 
-    for option_type, option_list in option_dict.items():
-        try:
-            option_list[0] = check_val(logger, option_list[0],
-                option_list[1], option_type)
-        except AttributeError:
-            pass
-
-    '''# Check if typeDistribution is valid
+    # Check if typeDistribution is valid
     try:
         args.typeDistribution = check_val(logger, args.typeDistribution,
             ["all", "data", "background", "signal", "sig_bkg_normalized", "total"],
@@ -158,7 +139,7 @@ def set_up (args):
         args.variableDistribution = check_val(logger, args.variableDistribution,
             ["all"] + list(VARIABLES_COMPLETE.keys()), "variableDistribution")
     except AttributeError:
-        pass'''
+        pass
 
     # Create the directory to save the downloaded files
     # if doesn't already exist and create .gitignore

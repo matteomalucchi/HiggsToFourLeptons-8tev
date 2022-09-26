@@ -69,7 +69,8 @@ def make_plot (args, logger):
 
         for variable in variables:
             # Check if the variable to plot is one of those requested by the user
-            if (variable not in args.variableDistribution and args.variableDistribution != "all") or variable == "Weight":
+            if (variable not in args.variableDistribution
+                and args.variableDistribution != "all") or variable == "Weight":
                 continue
 
             # Get histograms for the signal
@@ -87,8 +88,9 @@ def make_plot (args, logger):
                 try:
                     plotting_functions.combine_final_states(signals)
                 except KeyError:
-                    logger.debug("ERROR: Failed to create the signal histogram of the combined final states",
-                                    stack_info=True)
+                    logger.debug(
+                       "ERROR: Failed to create the signal histogram of the combined final states",
+                        stack_info=True)
 
             # Get the normalized histograms for the signal
             signals_norm = {}
@@ -115,8 +117,9 @@ def make_plot (args, logger):
             try:
                 plotting_functions.combine_final_states(backgrounds)
             except KeyError:
-                logger.debug("ERROR: Failed to create the background histogram of the combined final states",
-                                stack_info=True)
+                logger.debug(
+                   "ERROR: Failed to create the background histogram of the combined final states",
+                    stack_info=True)
 
             # Get the normalized histograms for the background
             backgrounds_norm = {}
@@ -154,8 +157,9 @@ def make_plot (args, logger):
             try:
                 plotting_functions.combine_final_states(data)
             except KeyError:
-                logger.debug("ERROR: Failed to create the data histogram of the combined final states",
-                                stack_info=True)
+                logger.debug(
+                   "ERROR: Failed to create the data histogram of the combined final states",
+                    stack_info=True)
 
             # Dictionary for the different types of datasets
             inputs_dict = {

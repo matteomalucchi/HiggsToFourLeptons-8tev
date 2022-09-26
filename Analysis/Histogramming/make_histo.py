@@ -89,7 +89,8 @@ def make_histo(args, logger):
                     rdf = ROOT.RDataFrame(tree_name, file_name)
                 except FileNotFoundError as not_fund_err:
                     logger.debug("Sample %s final state %s: File %s can't be found %s",
-                                    sample_name, final_state, file_name, not_fund_err,  stack_info=True)
+                                    sample_name, final_state, file_name,
+                                    not_fund_err,  stack_info=True)
                     continue
 
                 # Book histograms and write them to output file.
@@ -97,16 +98,18 @@ def make_histo(args, logger):
                 try:
                     for variable in variables:
                         # Check if the variable to plot is one of those requested by the user
-                        if (variable not in args.variableDistribution and args.variableDistribution != "all") or variable == "Weight":
+                        if (variable not in args.variableDistribution and
+                            args.variableDistribution != "all") or variable == "Weight":
                             continue
                         histos[variable] = histogramming_functions.book_histogram_1d\
                                                 (rdf, variable, var_dict[variable])
                         histogramming_functions.write_histogram(histos[variable],
-                                                f"{sample_name}_{final_state}_{variable}_{selection}")
+                                            f"{sample_name}_{final_state}_{variable}_{selection}")
                 except TypeError:
                     logger.debug("Sample %s final state %s is empty", sample_name, final_state)
 
-                logger.info(">>> Execution time for %s %s %s: %s s \n", selection, sample_name, final_state, (time.time() - start_time))
+                logger.info(">>> Execution time for %s %s %s: %s s \n",
+                            selection, sample_name, final_state, (time.time() - start_time))
 
     logger.info(">>> Total Execution time: %s s \n",(time.time() - start_time_tot))
 

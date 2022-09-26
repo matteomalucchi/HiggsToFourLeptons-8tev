@@ -1,4 +1,4 @@
-"""List of the possible variables used for the machine learning algorithm
+""" List of the possible variables used for the machine learning algorithm.
 """
 
 VARIABLES_ML_DICT = {

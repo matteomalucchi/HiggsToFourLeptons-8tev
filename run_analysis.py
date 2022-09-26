@@ -27,7 +27,8 @@ def run_analysis (argv):
 
     parser.add_argument("-d", "--download",  nargs="?", default="",  const="Input",
                             type=str, help="enables the download of input data. \
-                            If not specified otherwise the files are saved in the 'Input/' directory")
+                            If not specified otherwise the files are saved \
+                            in the 'Input/' directory")
 
     parser.add_argument("-e", "--typeOfParallel", default="thread",   action="store_const",
                          const="process",  help="parallel type for the downloads: \

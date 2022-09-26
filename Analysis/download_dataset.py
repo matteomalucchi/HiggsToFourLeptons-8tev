@@ -61,7 +61,7 @@ class MyProgressBar():
             self.pbar.finish()
 
 
-def count(func):
+def count_func(func):
     """ Function that counts the number of times get_file is called recursevely.
 
     :param func: Function to be wrapped
@@ -92,13 +92,16 @@ def get_file_parallel(log, num, sample, file):
     count = 1
     while count <= 4:
         try:
-            urllib.request.urlretrieve(f"http://opendata.cern.ch/record/{num}/files/{sample}.root", file)
+            urllib.request.urlretrieve(
+                f"http://opendata.cern.ch/record/{num}/files/{sample}.root", file)
         except urllib.error.HTTPError as http_err:
             log.exception("File %s.root can't be found %s",
                             sample, http_err, stack_info=True)
             return
         except urllib.error.ContentTooShortError:
-            log.exception("Network conditions is not good. Reloading for %d time file %s.root", count, sample)
+            log.exception(
+                "Network conditions is not good. Reloading for %d time file %s.root",
+                count, sample)
             count += 1
         else:
             return
@@ -106,7 +109,7 @@ def get_file_parallel(log, num, sample, file):
     log.exception("Download of %s.root has failed due to bad network conditions!", sample)
 
 
-@count
+@count_func
 def get_file(log, num, sample, file):
     """Function that downloads the various samples not in parallel from the CMS open-data portal.
     This function, unlike parallel one, shows a progress bar (using a specific class created for
@@ -128,7 +131,8 @@ def get_file(log, num, sample, file):
     """
 
     try:
-        urllib.request.urlretrieve(f"http://opendata.cern.ch/record/{num}/files/{sample}.root", file, MyProgressBar())
+        urllib.request.urlretrieve(
+            f"http://opendata.cern.ch/record/{num}/files/{sample}.root", file, MyProgressBar())
     except urllib.error.HTTPError as http_err:
         log.exception("File %s.root can't be found %s",
                         sample, http_err, stack_info=True)
@@ -136,7 +140,8 @@ def get_file(log, num, sample, file):
         log.exception("Network conditions is not good. Reloading for %d time file %s.root",
                         get_file.call_count, sample)
         if get_file.call_count == 4 :
-            log.exception("Download of %s.root has failed due to bad network conditions! \n", sample)
+            log.exception(
+                "Download of %s.root has failed due to bad network conditions! \n", sample)
             get_file.call_count=0
             return
         get_file(log, num, sample, file)
@@ -154,7 +159,7 @@ def download(args, logger):
     """
 
     logger.info(">>> Executing %s \n", os.path.basename(__file__))
-    t= perf_counter()
+    time= perf_counter()
 
     if args.parallel:
         logger.info(">>> Executing in parallel \n")
@@ -171,10 +176,12 @@ def download(args, logger):
 
             if args.typeOfParallel == "thread":
                 logger.info(">>> Executing multi-threading \n")
-                parallel_list.append(thr.Thread(target=get_file_parallel, args=(logger, number, sample_name, file_name)))
+                parallel_list.append(thr.Thread(target=get_file_parallel,
+                                    args=(logger, number, sample_name, file_name)))
             elif args.typeOfParallel == "process":
                 logger.info(">>> Executing multi-processing \n")
-                parallel_list.append(mp.Process(target=get_file_parallel, args=(logger, number, sample_name, file_name)))
+                parallel_list.append(mp.Process(target=get_file_parallel,
+                                    args=(logger, number, sample_name, file_name)))
 
         #start parallel
         for parallel_elem in parallel_list:
@@ -196,7 +203,7 @@ def download(args, logger):
             file_name=os.path.join(args.download, f"{sample_name}.root")
             get_file(logger, number, sample_name, file_name)
 
-    print("Time: "+str(perf_counter()-t))
+    print("Time: "+str(perf_counter()-time))
 
 
 

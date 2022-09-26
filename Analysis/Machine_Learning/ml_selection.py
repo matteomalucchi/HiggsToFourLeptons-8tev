@@ -37,7 +37,8 @@ def ml_selection(args, logger):
         logger.info(">>> Thread pool size for parallel processing: %s", thread_size)
 
     # Read the optimal threshold
-    with open(os.path.join(args.output, "ML_output", "optimal_cut.txt"), "r") as file:
+    with open(os.path.join(args.output, "ML_output", "optimal_cut.txt"),
+                            "r", encoding="utf8") as file:
         cut = file.readlines()
 
 
@@ -63,7 +64,8 @@ def ml_selection(args, logger):
                 rdf = ROOT.RDataFrame("Events", file_name)
             except FileNotFoundError as not_fund_err:
                 logger.debug("Sample %s final state %s: File %s can't be found %s",
-                                    sample_name, final_state, file_name, not_fund_err,  stack_info=True)
+                                    sample_name, final_state, file_name,
+                                    not_fund_err,  stack_info=True)
                 continue
 
             file = ROOT.TFile(file_name,"READ")
@@ -82,11 +84,13 @@ def ml_selection(args, logger):
             # Create another TTree of the selected events inside the preexisting file
             option = ROOT.RDF.RSnapshotOptions("UPDATE", ROOT.kZLIB, 1, 0, 99, False, True)
             try:
-                rdf_final.Snapshot("EventsDNNSelection", file_name, VARIABLES_COMPLETE.keys(), option)
+                rdf_final.Snapshot("EventsDNNSelection", file_name,
+                                    VARIABLES_COMPLETE.keys(), option)
             except TypeError:
                 logger.debug("Sample %s final state %s is empty", sample_name, final_state)
 
-            logger.info(">>> Execution time for %s %s: %s s \n", sample_name, final_state, (time.time() - start_time))
+            logger.info(">>> Execution time for %s %s: %s s \n", sample_name,
+                        final_state, (time.time() - start_time))
 
     logger.info(">>> Total execution time: %s s \n",(time.time() - start_time_tot))
 

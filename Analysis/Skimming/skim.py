@@ -104,7 +104,8 @@ def skim(args, logger, path_sf="Analysis/Skimming"):
                 rdf3 = skim_tools.four_vec(rdf2, final_state)
                 rdf4 = skim_tools.order_four_vec(rdf3, final_state)
             except RuntimeError as run_time_err:
-                logger.exception("Sample %s ERROR: %s ", sample_name, run_time_err,  stack_info=True)
+                logger.exception("Sample %s ERROR: %s ",
+                                sample_name, run_time_err,  stack_info=True)
                 continue
 
             rdf5 = skim_tools.def_mass_pt_eta_phi(rdf4)
@@ -120,7 +121,8 @@ def skim(args, logger, path_sf="Analysis/Skimming"):
             complete_name = os.path.join(dir_name, f"{sample_name}{final_state}Skim.root")
             rdf_final.Snapshot("Events", complete_name, VARIABLES.keys())
 
-            logger.info(">>> Execution time for %s %s: %s s \n", sample_name, final_state, (time.time() - start_time))
+            logger.info(">>> Execution time for %s %s: %s s \n",
+                        sample_name, final_state, (time.time() - start_time))
 
     logger.info(">>> Total Execution time: %s s \n",(time.time() - start_time_tot))
 
@@ -145,10 +147,11 @@ if __name__ == "__main__":
                             FourMuons, FourElectrons, TwoMuonsTwoElectrons" )
     parser.add_argument("-s", "--sample",    default="all", type=str,
                         help="string with comma separated list of samples to analyse: \
-                        Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron, \
+                        Run2012B_DoubleElectron, Run2012B_DoubleMuParked, Run2012C_DoubleElectron,\
                         Run2012C_DoubleMuParked, SMHiggsToZZTo4L, ZZTo2e2mu, ZZTo4e, ZZTo4mu")
-    parser.add_argument("-b", "--basePath",  nargs="?", default=os.path.join("..", "..", "Input"),  const=EOS_LINK,
-                            type=str, help="base path where to find the input data. \
+    parser.add_argument("-b", "--basePath",  nargs="?", default=os.path.join("..", "..", "Input"),
+                            const=EOS_LINK, type=str,
+                            help="base path where to find the input data. \
                             If enabled it automatically gets the input data from EOS")
     args_main = parser.parse_args()
 

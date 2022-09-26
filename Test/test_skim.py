@@ -2,22 +2,25 @@
 the skimming process defined in the header file ``skim_functions.h``.
 """
 
-import unittest
 import os
+import unittest
 
 import ROOT
 
 
 class TestSkim(unittest.TestCase):
+    """ Test class for the functions used in ``skim_tools.py``
+        and defined in the header file ``skim_functions.h``.
+    """
 
     def __init__(self, *args, **kwargs):
         """ Include the header files where the functions and the variables are defined.
         """
         super().__init__(*args, **kwargs)
-        
+
         func_path = os.path.join("Analysis", "Skimming", "skim_functions.h")
         var_path = os.path.join("Test", "test_variables.h")
-        
+
         ROOT.gInterpreter.ProcessLine(f'#include "{func_path}"' )
         ROOT.gInterpreter.ProcessLine(f'#include "{var_path}"' )
 
@@ -30,8 +33,8 @@ class TestSkim(unittest.TestCase):
             ROOT.dxy, ROOT.dz, ROOT.sigma_dxy, ROOT.sigma_dz)[0], ROOT.sip[0], 5)
 
     def test_pt_cuts(self):
-        """ Test the lepton pt cuts that require that in at least one of the lepton couples 
-            the highest energy particle has Pt > 20 GeV while the other one Pt > 10 GeV.  
+        """ Test the lepton pt cuts that require that in at least one of the lepton couples
+            the highest energy particle has Pt > 20 GeV while the other one Pt > 10 GeV.
         """
         self.assertTrue(ROOT.ptCuts(ROOT.mu_pt, ROOT.e_pt))
         self.assertTrue(ROOT.ptCuts(ROOT.mu_pt, ROOT.not_e_pt))
@@ -55,16 +58,16 @@ class TestSkim(unittest.TestCase):
                     ROOT.el_fourvecs_4, ROOT.el_charges)[i][j], ROOT.el_idx[i][j])
 
     def test_z_fourvec_samekind(self):
-        """ Test the reconstruction of the two Z fourvectors in the case of leptons 
-            of the same kind and their ascending distance to Z mass organization. 
+        """ Test the reconstruction of the two Z fourvectors in the case of leptons
+            of the same kind and their ascending distance to Z mass organization.
         """
         for i in range(2):
             self.assertAlmostEqual((ROOT.zFourvecSamekind(
                 ROOT.el_idx, ROOT.el_fourvecs_4)[i] - ROOT.z_fourvecs_4[i]).Mag(), 0)
 
     def test_z_fourvec_2mu2el(self):
-        """ Test the reconstruction of the two Z fourvectors in the case of leptons 
-            of different kind and their ascending distance to Z mass organization. 
+        """ Test the reconstruction of the two Z fourvectors in the case of leptons
+            of different kind and their ascending distance to Z mass organization.
         """
         for i in range(2):
             self.assertAlmostEqual((ROOT.zFourvec2mu2el(
@@ -105,18 +108,22 @@ class TestSkim(unittest.TestCase):
             to the heaviest boson Z1 in case of leptons of different kinds.
         """
         self.assertEqual((ROOT.lep1(
-            ROOT.mu_fourvecs_2, ROOT.el_fourvecs_2, ROOT.mu_charges_2, ROOT.el_charges_2)- ROOT.el3).Mag(), 0)
+            ROOT.mu_fourvecs_2, ROOT.el_fourvecs_2, ROOT.mu_charges_2, ROOT.el_charges_2)
+            - ROOT.el3).Mag(), 0)
         self.assertEqual((ROOT.lep1(
-            ROOT.mu_fourvecs_2, ROOT.el_fourvecs_2, -ROOT.mu_charges_2, -ROOT.el_charges_2)- ROOT.el2).Mag(), 0)
+            ROOT.mu_fourvecs_2, ROOT.el_fourvecs_2, -ROOT.mu_charges_2, -ROOT.el_charges_2)
+            - ROOT.el2).Mag(), 0)
 
     def test_lep2(self):
         """ Test the selection of the lepton/anti-lepton belonging
             to the lighter boson Z2 in case of leptons of different kinds.
         """
         self.assertEqual((ROOT.lep2(
-            ROOT.mu_fourvecs_2, ROOT.el_fourvecs_2, ROOT.mu_charges_2, ROOT.el_charges_2)- ROOT.el0).Mag(), 0)
+            ROOT.mu_fourvecs_2, ROOT.el_fourvecs_2, ROOT.mu_charges_2, ROOT.el_charges_2)
+            - ROOT.el0).Mag(), 0)
         self.assertEqual((ROOT.lep2(
-            ROOT.mu_fourvecs_2, ROOT.el_fourvecs_2, -ROOT.mu_charges_2, -ROOT.el_charges_2)- ROOT.el1).Mag(), 0)
+            ROOT.mu_fourvecs_2, ROOT.el_fourvecs_2, -ROOT.mu_charges_2, -ROOT.el_charges_2)
+            - ROOT.el1).Mag(), 0)
 
     def test_z_heavy(self):
         """ Test the selection of the heavier Z.
