@@ -126,7 +126,7 @@ with discriminant above threshold are saved in a new TTree. Such threshold is se
     <td style="text-align:center;">Optima cut</td>
   </tr>
   <tr>
-    <td><img src="Images_readme/mvaeffs_PyKeras.png" alt="Optima cut" title="Optima cut" width="350" height="350"></td>
+    <td><img src="Images_readme/mvaeffs_PyKeras.png" alt="Optima cut" title="Optima cut" width="340" height="300"></td>
   </tr>
 </table>
 
@@ -149,8 +149,8 @@ Higgs candidate, but it's more of an extra. The training history and the ROC cur
     <td style="text-align:center;">Training history</td>
   </tr>
   <tr>
-    <td><img src="Images_readme/rejBvsS.png" alt="ROC curve" title="ROC curve" width="350" height="350"></td>
-    <td><img src="Images_readme/TrainingHistory.png" alt="Training history" title="Training history" width="350" height="350"></td>
+    <td><img src="Images_readme/rejBvsS.png" alt="ROC curve" title="ROC curve" width="340" height="300"></td>
+    <td><img src="Images_readme/TrainingHistory.png" alt="Training history" title="Training history" width="340" height="300"></td>
   </tr>
 </table>
 
@@ -189,8 +189,8 @@ with and without the selection based on the DNN Discriminant.
      <td style="text-align:center;">Higgs mass with DNN selection</td>
   </tr>
   <tr>
-    <td><img src="Images_readme/total_Combined_Higgs_mass_NoSelection.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="350" height="350"></td>
-    <td><img src="Images_readme/total_Combined_Higgs_mass_DNNSelection.png" alt="Higgs mass with DNN selection" title="Higgs mass with DNN selection" width="350" height="350"></td>
+    <td><img src="Images_readme/total_Combined_Higgs_mass_NoSelection.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="340" height="300"></td>
+    <td><img src="Images_readme/total_Combined_Higgs_mass_DNNSelection.png" alt="Higgs mass with DNN selection" title="Higgs mass with DNN selection" width="340" height="300"></td>
   </tr>
 </table>
 
@@ -211,8 +211,8 @@ separated in the three possible final states.
      <td style="text-align:center;">Discriminat plot for signal</td>
   </tr>
   <tr>
-    <td><img src="Images_readme/discriminant_background.png" alt="Discriminat plot for background" title="Discriminat plot for background" width="350" height="350"></td>
-    <td><img src="Images_readme/discriminant_signal.png" alt="Discriminat plot for signal" title="Discriminat plot for signal" width="350" height="350"></td>
+    <td><img src="Images_readme/discriminant_background.png" alt="Discriminat plot for background" title="Discriminat plot for background" width="340" height="300"></td>
+    <td><img src="Images_readme/discriminant_signal.png" alt="Discriminat plot for signal" title="Discriminat plot for signal" width="340" height="300"></td>
   </tr>
 </table>
 
@@ -236,8 +236,8 @@ The resulting plots with and without the DNN selection are shown below.
      <td style="text-align:center;">Higgs mass fit with DNN selection</td>
   </tr>
   <tr>
-    <td><img src="Images_readme/fit_mass_NoSelection.png" alt="Higgs mass fit without DNN selection" title="Higgs mass fit without DNN selection" width="350" height="350"></td>
-    <td><img src="Images_readme/fit_mass_DNNSelection.png" alt="Higgs mass fit with DNN selection" title="Higgs mass fit with DNN selection" width="350" height="350"></td>
+    <td><img src="Images_readme/fit_mass_NoSelection.png" alt="Higgs mass fit without DNN selection" title="Higgs mass fit without DNN selection" width="340" height="300"></td>
+    <td><img src="Images_readme/fit_mass_DNNSelection.png" alt="Higgs mass fit with DNN selection" title="Higgs mass fit with DNN selection" width="340" height="300"></td>
   </tr>
 </table>
 
