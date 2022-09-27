@@ -132,8 +132,9 @@ dmypy.json
 documentation/
 Output_complete/
 
-# workspace
+# vscode
 *.code-workspace
+.vscode/
 
 #Latex
 *.aux
