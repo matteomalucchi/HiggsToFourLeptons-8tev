@@ -20,8 +20,8 @@ from Analysis.Definitions.variables_ml_def import VARIABLES_ML_DICT
 
 def modify_weights_file(output, file_path, log):
     """ Function that modifies the path to the model according to the directory
-        where the file is executed in the file ``TMVAClassification_PyKeras.weights.xml``.
-        This allows the reader to correctly find the needed files containing the model.
+    where the file is executed in the file ``TMVAClassification_PyKeras.weights.xml``.
+    This allows the reader to correctly find the needed files containing the model.
 
     :param output: Path to the output folder
     :type output: str

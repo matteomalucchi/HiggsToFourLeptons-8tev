@@ -13,7 +13,7 @@
 
    .. autosummary::
    
-      count
+      count_func
       download
       get_file
       get_file_parallel

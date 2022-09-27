@@ -6,7 +6,7 @@ Welcome to HiggsToFourLeptons-8tev's documentation!
 and is interfaced with ROOT, and provides analysis tools for the Higgs decay in
 two Z bosons which subsequently decay in four leptons. The datasets used are
 reduced NanoAOD files created from `CMS Open Data <http://opendata.cern.ch/record/12360>`_
-using data from Run 1 at 8 TeV for a total of 11.6 fb $^{-1}$.
+using data from Run 1 at 8 TeV for a total of 11.6 fb :math:`^{-1}`.
 The analysis follows loosely
 `the official CMS analysis published in 2012 <https://www.sciencedirect.com/science/article/pii/S0370269312008581>`_.
 First, the dataset is "skimmed", i.e. all events which are not of interest for the reconstruction

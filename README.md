@@ -16,7 +16,7 @@
 # Analysis of Higgs boson decays to four leptons at 8 TeV
 
 ## Introduction
-This repository contains an analysis of the decay $H \rightarrow Z Z \rightarrow 4l$ using reduced NanoAOD files from [CMS Open Data](http://opendata.cern.ch/record/12360) using data from Run 1  at 8 TeV for a total of 11.6 fb $^{-1}$. The analysis follows loosely
+This repository contains an analysis of the decay $H \rightarrow Z Z \rightarrow 4l$ using reduced NanoAOD files from [CMS Open Data](http://opendata.cern.ch/record/12360) using data from Run 1 at 8 TeV for a total of 11.6 fb $^{-1}$. The analysis follows loosely
 [the official CMS analysis published in 2012](https://www.sciencedirect.com/science/article/pii/S0370269312008581). First, the dataset is "skimmed", i.e. all events which are not of interest for the reconstruction
 of Higgs bosons are removed, and the various observables necessary for the analysis are computed.
 The remaining variables are then plotted and the invariant mass of the four leptons
