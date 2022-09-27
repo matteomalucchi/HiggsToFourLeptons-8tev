@@ -2,6 +2,16 @@
     <img src='https://readthedocs.org/projects/higgstofourleptons-8tev/badge/?version=latest' alt='Documentation Status' />
 </a>
 
+<a    href='https://www.gnu.org/licenses/gpl-3.0'>
+    <img src='https://img.shields.io/badge/License-GPLv3-blue.svg' alt='License: GPL v3' />
+</a>
+
+<img src='https://github.com/matteomalucchi/HiggsToFourLeptons-8tev/actions/workflows/ci.yalm/badge.svg' alt='Continuous integration' />
+
+
+
+
+
 # Analysis of Higgs boson decays to four leptons at 8 TeV
 
 ## Introduction
