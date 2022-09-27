@@ -6,10 +6,9 @@
     <img src='https://img.shields.io/badge/License-GPLv3-blue.svg' alt='License: GPL v3' />
 </a>
 
-<a >
-  <img src='https://github.com/matteomalucchi/HiggsToFourLeptons-8tev/actions/workflows/ci.yalm/badge.svg' alt='Continuous integration' />
+<a href='https://github.com/matteomalucchi/HiggsToFourLeptons-8tev/actions/workflows/ci.yaml'>
+  <img src='https://github.com/matteomalucchi/HiggsToFourLeptons-8tev/actions/workflows/ci.yaml/badge.svg?branch=main' alt='Continuous integration' />
 </a>
-
 
 
 
