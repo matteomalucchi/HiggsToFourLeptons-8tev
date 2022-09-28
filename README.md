@@ -46,14 +46,13 @@ is fitted in order to measure the Higgs mass.
 </table>
 
 
-## How to run this
 
-### Run the analysis
-The complete analysis can be performed the first time by simply running
+## Run the whole analysis
+The complete analysis can be performed the first time by running
 
 >       python run_analysis.py -d
 
-which also downloads the locally the input datasets.
+which also downloads locally the input datasets.
 Some general purpose functions to set up the analysis are defined in
 the `set_up.py` file.
 
@@ -82,11 +81,14 @@ The options include:
 >     -b [BASEPATH], --basePath [BASEPATH]      base path where to find the input data. If enabled it automatically gets the input data from EOS unless a local directory is specified
 >     -o OUTPUT, --output OUTPUT     name of the output directory
 
-Some of the options above are applicable even to the single steps shown in the sections below.
+Some of the options above are applicable even to the single steps illustrated in the following sections.
 
-The analysis can be performed even on just a specific sample and/or final state by running
+The analysis can be performed even on just a specific sample and/or final state by running for example
 
 >       python run_analysis.py -s SMHiggsToZZTo4L -f FourElectrons
+
+
+## Run the single steps
 
 ### Download of the input datasets
 
@@ -103,11 +105,10 @@ multithreading (default) or multiprocessing.
 The skimming process consists in reducing the initial samples to a dataset
 specific for this analysis. The skimming removes all events
 which are not of interest for the reconstruction of Z bosons
-from combinations of leptons, which may originate from the
+from combinations of leptons (4$e$, 4$\mu$ or 2$e$2$\mu$), which may originate from the
 decay of a Higgs boson. Furthermore, all the variables used
-later on are defined in this step. This includes mass, Pt, eta and phi of Z and Higgs
-bosons, as well as the five decay angles mentioned above
-which are later used for a machine learning algorithm.
+later on are defined in this step. This includes mass, $P_t$, $\eta$ and $\phi$ of Z and Higgs
+bosons, as well as the five decay angles mentioned above.
 
 The skimming step can be performed by running
 
@@ -161,7 +162,7 @@ The training, application and selection steps can be performed by running
 >       python ml_selection.py
 
 The option `-a` gives the user the possibility to train the DNN using as discriminant variables
-Z1_mass, Z2_mass, cos_theta_star, Phi, Phi1, cos_theta1, cos_theta2 (`-a tot`) or Higgs_mass (`-a higgs`).
+Mass $Z_1$, Mass $Z_2$, $\cos \theta^*$, $\Phi$, $\Phi_1$, $\cos \theta_1$, $\cos \theta_2$ (`-a tot`) or Mass 4 leptons (`-a higgs`).
 The latter is not really a useful option, since the discrimination is based entirely on the mass of the
 Higgs candidate, but it's more of an extra. The training history and the ROC curve are displayed in the figures below.
 
@@ -189,7 +190,7 @@ By running
 
 >       python ml_histo.py
 
-2D histograms of Higgs_mass vs DNN Discriminant
+2D histograms of Mass 4 leptons vs DNN Discriminant
 are created, one for the combination of all the simulated background,
 one for all the simulated signal and one for each possible final state
 of the data.
@@ -204,7 +205,7 @@ The plots for each variable are created by running
 >       python make_plot.py
 
 The option `-v` lets the user select which variables to plot.
-In the figures below it's shown the distribution on the 4 leptons invariant mass
+An example are the figures below, which show the distribution on the 4 leptons invariant mass
 with and without the selection based on the DNN Discriminant.
 
 <table align="center" border="0">
@@ -213,8 +214,8 @@ with and without the selection based on the DNN Discriminant.
      <td style="text-align:center;">Higgs mass with DNN selection</td>
   </tr>
   <tr>
-    <td><img src="Images_readme/total_Combined_Higgs_mass_NoSelection.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="340" height="300"></td>
-    <td><img src="Images_readme/total_Combined_Higgs_mass_DNNSelection.png" alt="Higgs mass with DNN selection" title="Higgs mass with DNN selection" width="340" height="300"></td>
+    <td><img src="Images_readme/total_Combined_Higgs_mass_NoSelection.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="340" height="340"></td>
+    <td><img src="Images_readme/total_Combined_Higgs_mass_DNNSelection.png" alt="Higgs mass with DNN selection" title="Higgs mass with DNN selection" width="340" height="340"></td>
   </tr>
 </table>
 
@@ -223,7 +224,7 @@ By running
 
 >       python ml_plot.py
 
-2D scatter plots of Higgs_mass vs DNN Discriminant
+2D plots of Higgs_mass vs DNN Discriminant
 are created, one for the simulated background and one for the
 simulated signal. Each one of the plots shown below contains both the combination
 of all background/signal datasets and the real data
@@ -235,8 +236,8 @@ separated in the three possible final states.
      <td style="text-align:center;">Discriminat plot for signal</td>
   </tr>
   <tr>
-    <td><img src="Images_readme/discriminant_background.png" alt="Discriminat plot for background" title="Discriminat plot for background" width="340" height="300"></td>
-    <td><img src="Images_readme/discriminant_signal.png" alt="Discriminat plot for signal" title="Discriminat plot for signal" width="340" height="300"></td>
+    <td><img src="Images_readme/discriminant_background.png" alt="Discriminat plot for background" title="Discriminat plot for background" width="340" height="340"></td>
+    <td><img src="Images_readme/discriminant_signal.png" alt="Discriminat plot for signal" title="Discriminat plot for signal" width="340" height="340"></td>
   </tr>
 </table>
 
@@ -265,7 +266,7 @@ The resulting plots with and without the DNN selection are shown below.
   </tr>
 </table>
 
-The mass of the Higgs boson yielded by the fits of the simulated signal samples and of the data  with and without the DNN selection are the following
+The mass of the Higgs boson yielded by the fits with and without the DNN selection are the following
 
 <table align="center" border="1">
   <tr>

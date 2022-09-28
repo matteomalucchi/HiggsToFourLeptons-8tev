@@ -5,6 +5,11 @@ The basic functions used on the data are defined in ``skim_functions.h``.
 
 def event_selection(rdf, final_state):
     """ Minimal selection of the events.
+    The various cuts applied consist of the requests that
+    there are exactly 4 high Pt leptons the charge sum of which
+    is equal to zero, that they are isolated in the detector and
+    far form each other. Furthermore, they are requested to originate
+    from the primary vertex and to be produced centrally.
 
     :param rdf: Input RDataFrame
     :type rdf: ROOT.RDataFrame
@@ -133,7 +138,7 @@ def four_vec(rdf, final_state):
                          "Z_fourvecs[0] + Z_fourvecs[1]")
 
 def order_four_vec(rdf, final_state):
-    """ Put the four vectors in order according to the following criteria:
+    """ Order the fourvectors according to the following criteria:
 
             * Z1 = heavier boson candidate
             * Z2 = lighter boson candidate
@@ -200,7 +205,7 @@ def order_four_vec(rdf, final_state):
     raise RuntimeError(f"Unknown final state --> {final_state}")
 
 def def_mass_pt_eta_phi(rdf):
-    """ Define Mass, Pt, Eta and Phi of Higgs boson and Z candidates.
+    """ Define mass, Pt, eta and phi of Higgs boson and Z candidates.
 
     :param rdf: Input RDataFrame
     :type rdf: ROOT.RDataFrame
@@ -280,7 +285,7 @@ def four_vec_boost(rdf):
                       "boostFourvec(Z1_fourvec,Z2_fourvec.BoostVector())")\
 
 def def_angles(rdf):
-    """ Define the five angles that allow discrimination between signal and background.
+    """ Define the five decay angles theta_star, Phi, Phi1, theta_1, theta_2.
 
 
     :param rdf: Input RDataFrame

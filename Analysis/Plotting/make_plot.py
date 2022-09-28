@@ -1,6 +1,4 @@
-"""Implementation of the plotting step of the analysis.
-
-The plotting combines the histograms to plots which allow to study the
+""" The plotting combines the histograms to plots which allow to study the
 inital dataset based on observables motivated through physics.
 """
 import argparse
@@ -21,12 +19,12 @@ ROOT.gROOT.SetBatch(True)
 
 
 def make_plot (args, logger):
-    """Main function of the plotting step. The plotting takes for
+    """ Main function of the plotting step. The plotting takes for
     each variable the histograms for each final state and sample.
-    Then, the histograms are plotted with just the background,
-    just the signal, just the data and finally, by combining all
-    signal and background processes, in a stacked manner overlain by the data points.
-    This procedure is repeated with all final states combined.
+    Later, plots of these variables are produced for various sample
+    combinations: only the signal, only the background, only the data,
+    the combination of all the above (with signal and background stacked
+    on top of each other) and also the combination of normalized signal and background.
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace

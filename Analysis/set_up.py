@@ -1,5 +1,5 @@
 """ Set up the logger for the analysis, check if
-the arguments passed are valid and manage the output directory.
+the arguments passed are valid and manage the input/output directories.
 """
 
 import argparse

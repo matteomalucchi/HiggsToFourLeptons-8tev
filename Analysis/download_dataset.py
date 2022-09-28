@@ -1,4 +1,5 @@
-""" Download the various sample from the CMS open-data portal.
+""" Download the various sample from the `CMS open-data portal
+<http://opendata.cern.ch/record/12360>`_.
 """
 
 import argparse
@@ -34,7 +35,7 @@ class MyProgressBar():
     """
 
     def __init__(self):
-        """ Create the attribute pbar
+        """ Create the attribute for the progress bar.
         """
 
         self.pbar = None
@@ -62,7 +63,7 @@ class MyProgressBar():
 
 
 def count_func(func):
-    """ Function that counts the number of times get_file is called recursevely.
+    """ Function that counts the number of times the input function is called recursevely.
 
     :param func: Function to be wrapped
     :type func: function
@@ -112,10 +113,10 @@ def get_file_parallel(log, num, sample, file):
 @count_func
 def get_file(log, num, sample, file):
     """Function that downloads the various samples not in parallel from the CMS open-data portal.
+
     This function, unlike parallel one, shows a progress bar (using a specific class created for
     this very purpose) and uses a decorator in order to count the number of times that
     is called recursively.
-
     The reason why this needlessly complicated function was defined
     is that it makes use of some tools that, in the rest of the project, weren't employed.
 
@@ -150,7 +151,8 @@ def get_file(log, num, sample, file):
 
 
 def download(args, logger):
-    """ Main function that creates the threads and sets up the multithread process.
+    """ Main function that creates the threads/processes and
+    sets up the multithread/multiprocess operations.
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
@@ -183,16 +185,17 @@ def download(args, logger):
                 parallel_list.append(mp.Process(target=get_file_parallel,
                                     args=(logger, number, sample_name, file_name)))
 
-        #start parallel
+        # Start parallel
         for parallel_elem in parallel_list:
             parallel_elem.start()
-        #join parallel
+
+        # Join parallel
         for parallel_elem in parallel_list:
             parallel_elem.join()
 
     else:
         logger.info(">>> Executing not in parallel \n")
-        #Loop over the various samples
+        # Loop over the various samples
         for sample_name, number in SAMPLES_DOWNLOAD.items():
 
             # Check if the sample is one of those requested by the user

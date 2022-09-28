@@ -164,7 +164,7 @@ class TestSkim(unittest.TestCase):
             ROOT.v4, ROOT.v5), ROOT.theta_angle, 5)
 
     def test_cos_theta(self):
-        """ Test the definition of cos(theta_star), cos(theta1) and cos(theta2).
+        """ Test the definition of cos_theta_star, cos_theta1 and cos_theta2.
         """
         self.assertAlmostEqual(ROOT.defCosTheta(
             ROOT.v4, ROOT.v5), ROOT.cos_theta_angle, 5)

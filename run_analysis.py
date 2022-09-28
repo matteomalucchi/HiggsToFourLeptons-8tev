@@ -1,4 +1,4 @@
-""" Running of the whole analysis. Various possible arguments
+""" Run the whole analysis. Various possible arguments
 can be provided in order to customize the process.
 """
 

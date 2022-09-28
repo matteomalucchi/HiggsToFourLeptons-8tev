@@ -4,7 +4,7 @@
 import ROOT
 
 def get_histogram(tfile, dataset):
-    """Retrieve a histogram from the histo file based on the sample,
+    """Retrieve a histogram from the file given the sample,
     the final state and the variable name.
 
     :param tfile: File containing the histogram

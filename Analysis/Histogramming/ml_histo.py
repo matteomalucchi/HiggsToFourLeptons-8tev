@@ -1,4 +1,4 @@
-""" In this step 2D histograms of Higgs_mass vs Discriminant
+""" In this step 2D histograms of Mass 4 leptons VS DNN Discriminant
 are created, one for the combination of all the simulated background,
 one for all the simulated signal and one for each possible final state
 of the data.
@@ -19,8 +19,7 @@ from Analysis.Histogramming import histogramming_functions
 
 
 def ml_histo(args, logger):
-    """Main function of the histogramming step that plots Higgs_mass vs DNN Discriminant.
-    The function produces the required histogram for the final plotting step.
+    """The function produces the 2D histograms of Mass 4 leptons VS DNN Discriminant.
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace

@@ -1,5 +1,5 @@
 """ In this step the trained DNN is evaluated on the various datasets
-and the resulting disciminant is saved in a new branch of the "Events" tree.
+and the resulting disciminant is saved in a new branch of the TTree.
 """
 
 

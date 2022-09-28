@@ -1,4 +1,4 @@
-"""In this step two 2D scatter plots of Higgs_mass vs Discriminant
+""" In this step two 2D scatter plots of Mass 4 lepton VS Discriminant
 are created, one for the simulated background and one for the
 simulated signal. Each plot contains both the combination
 of all background/signal datasets and the real data
@@ -19,13 +19,10 @@ from Analysis.Plotting import plotting_functions
 
 
 def ml_plot (args, logger):
-    """ Main function of the plotting step. The plotting takes
-    for each variable the histograms for each final state and sample.
-    Then, the histograms are plotted with just the background,
-    just the signal, just the data and finally, by combining all
-    signal and background processes, in a stacked manner overlain
-    by the data points.
-    This procedure is repeated with all final states combined.
+    """ The function produces 2D plots of Mass 4 lepton VS Discriminant
+    for both signal and background. Each plot contains both the combination
+    of all background/signal datasets and the real data
+    separated in the three possible final states.
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace

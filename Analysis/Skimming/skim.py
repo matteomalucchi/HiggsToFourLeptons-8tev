@@ -1,14 +1,11 @@
-""" Implementation of the skimming process
-
-This consists in reducing the initial samples to a dataset
+""" The skimming process consists in reducing the initial samples to a dataset
 specific for this analysis. The skimming removes all events
 which are not of interest for the reconstruction of Z bosons
 from combinations of leptons, which may originate from the
 decay of a Higgs boson. Furthermore, all the variables used
 later on are defined in this step. This includes mass, Pt, eta and phi of Z and Higgs
 bosons, as well as five decay angles defined in `[Phys.Rev.D86:095031,2012]
-<https://journals.aps.org/prd/abstract/10.1103/PhysRevD.86.095031>`_
-which are later used for a machine learning algorithm.
+<https://journals.aps.org/prd/abstract/10.1103/PhysRevD.86.095031>`_.
 """
 
 import argparse

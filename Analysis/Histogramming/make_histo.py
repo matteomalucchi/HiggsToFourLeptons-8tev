@@ -1,8 +1,4 @@
-""" Implementation of the histogramming step of the analysis.
-
-The histogramming step produces histograms for each variable in each dataset.
-Then, the resulting histograms are passed to the plotting
-step, which combines them so that the physics of the decay can be studied.
+""" The histogramming step produces histograms for each variable in each dataset.
 """
 
 import argparse

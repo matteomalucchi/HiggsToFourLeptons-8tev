@@ -1,6 +1,6 @@
 """ This step consists in the selection of the events for which
 the discriminant created by the DNN is above the threshold.
-The events that pass this cut are saved in anew tree called 'EventsDNNSelection'
+The events that pass this cut are saved in a new TTree.
 """
 
 import argparse
