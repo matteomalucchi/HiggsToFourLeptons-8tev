@@ -16,12 +16,9 @@
 # Analysis of Higgs boson decays to four leptons at 8 TeV
 
 ## Introduction
-This repository contains an analysis of the decay $H \rightarrow Z Z \rightarrow 4l$ using reduced NanoAOD files from [CMS Open Data](http://opendata.cern.ch/record/12360) using data from Run 1 at 8 TeV for a total of 11.6 fb $^{-1}$. The analysis follows loosely
+This repository contains an analysis of the decay $H \rightarrow Z Z \rightarrow 4l$ using reduced NanoAOD files created by [CMS Open Data](http://opendata.cern.ch/record/12360) with data from Run 1 at 8 TeV for a total of 11.6 fb $^{-1}$. The analysis follows loosely
 [the official CMS analysis published in 2012](https://www.sciencedirect.com/science/article/pii/S0370269312008581). First, the dataset is "skimmed", i.e. all events which are not of interest for the reconstruction
-of Higgs bosons are removed, and the various observables necessary for the analysis are computed.
-The remaining variables are then plotted and the invariant mass of the four leptons
-is fitted in order to measure the Higgs mass.
-Subsequently, a Deep Neural Network is trained
+of Higgs bosons are removed, and the various observables necessary for the analysis are computed. Subsequently, a Deep Neural Network is trained
 using as input the simulated signal and background Monte Carlo samples and as discriminant
 variables the invariant masses of the two reconstructed Z bosons and the five angles
 formed by the leptons in the final state as described in detail in the article
@@ -29,8 +26,24 @@ formed by the leptons in the final state as described in detail in the article
 Then, the DNN is evaluated on the whole dataset in order to obtain a graph in which the
 distribution of the DNN Discriminant versus the invariant mass of the four leptons is plotted.
 This shows a clear separation between signal and background, hence a further cut on the data based on this discriminant can be
-applied in order to obtain a "cleaner" sample and better discriminate the signal from the background.
+applied in order to obtain a "cleaner" sample and better discriminate the signal from the background (see Figure below). Finally, the remaining variables are plotted and the invariant mass of the four leptons
+is fitted in order to measure the Higgs mass.
 
+
+<table align="center" border="0">
+  <tr>
+    <td style="text-align:center;">Signal</td>
+     <td style="text-align:center;">Background</td>
+     <td style="text-align:center;">Background</td>
+     <td style="text-align:center;">Background</td>
+  </tr>
+  <tr>
+    <td><img src="Images_readme/feynman_ZZproduction_d.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="150" height="100"></td>
+    <td><img src="Images_readme/feynman_ZZproduction_a.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="150" height="100"></td>
+    <td><img src="Images_readme/feynman_ZZproduction_b.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="150" height="100"></td>
+    <td><img src="Images_readme/feynman_ZZproduction_c.png" alt="Higgs mass without DNN selection" title="Higgs mass without DNN selection" width="150" height="100"></td>
+  </tr>
+</table>
 
 
 ## How to run this
