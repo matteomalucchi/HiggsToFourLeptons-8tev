@@ -31,7 +31,7 @@ def ml_training(args, logger):
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
-    :param logger: Configurated logger for printing messages.
+    :param logger: Configured logger for printing messages.
     :type logger: logging.RootLogger
     """
 
@@ -156,12 +156,12 @@ def ml_training(args, logger):
     output.Close()
 
     # Move the dataset directory to the output folder
-    datadet_dir= os.path.join(dir_name, "dataset")
+    dataset_dir= os.path.join(dir_name, "dataset")
     try:
         shutil.move("dataset", dir_name)
     except shutil.Error:
         logger.debug("Deleting directory that already exists.")
-        shutil.rmtree(datadet_dir)
+        shutil.rmtree(dataset_dir)
         shutil.move("dataset", dir_name)
 
 

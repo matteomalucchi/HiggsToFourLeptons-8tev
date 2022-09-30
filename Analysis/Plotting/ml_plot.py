@@ -26,7 +26,7 @@ def ml_plot (args, logger):
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
-    :param logger: Configurated logger for printing messages.
+    :param logger: Configured logger for printing messages.
     :type logger: logging.RootLogger
     """
 

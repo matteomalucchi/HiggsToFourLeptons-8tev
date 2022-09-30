@@ -34,7 +34,7 @@ def skim(args, logger, path_sf="Analysis/Skimming"):
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
-    :param logger: Configurated logger for printing messages.
+    :param logger: Configured logger for printing messages.
     :type logger: logging.RootLogger
     :param path_sf: Optional base path to find the header file ``skim_functions.h``.
     :type path_sf: str
@@ -46,7 +46,7 @@ def skim(args, logger, path_sf="Analysis/Skimming"):
 
     ROOT.gInterpreter.ProcessLine(f'#include "{os.path.join(path_sf, "skim_functions.h")}"' )
 
-    #Enamble multi-threading if range is not active
+    #Enable multi-threading if range is not active
     if args.parallel and args.range == 0:
         ROOT.ROOT.EnableImplicitMT(args.nWorkers)
         thread_size = ROOT.ROOT.GetThreadPoolSize()

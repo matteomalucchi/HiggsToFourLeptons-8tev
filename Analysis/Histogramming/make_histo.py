@@ -24,7 +24,7 @@ def make_histo(args, logger):
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
-    :param logger: Configurated logger for printing messages.
+    :param logger: Configured logger for printing messages.
     :type logger: logging.RootLogger
     """
 
@@ -32,7 +32,7 @@ def make_histo(args, logger):
 
     start_time_tot = time.time()
 
-    #Enamble multi-threading
+    #Enable multi-threading
     if args.parallel:
         ROOT.ROOT.EnableImplicitMT(args.nWorkers)
         thread_size = ROOT.ROOT.GetThreadPoolSize()

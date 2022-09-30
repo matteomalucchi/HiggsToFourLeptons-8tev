@@ -1,5 +1,5 @@
 """ In this step the trained DNN is evaluated on the various datasets
-and the resulting disciminant is saved in a new branch of the TTree.
+and the resulting discriminant is saved in a new branch of the TTree.
 """
 
 
@@ -27,7 +27,7 @@ def modify_weights_file(output, file_path, log):
     :type output: str
     :param file_path: Path to TMVAClassification_PyKeras.weights.xml
     :type file_path: str
-    :param log: Configurated logger for printing messages.
+    :param log: Configured logger for printing messages.
     :type log: logging.RootLogger
     """
 
@@ -50,7 +50,7 @@ def ml_evaluation(args, logger):
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
-    :param logger: Configurated logger for printing messages.
+    :param logger: Configured logger for printing messages.
     :type logger: logging.RootLogger
     """
 
@@ -58,7 +58,7 @@ def ml_evaluation(args, logger):
 
     start_time_tot = time.time()
 
-    # Enamble multi-threading
+    # Enable multi-threading
     if args.parallel:
         ROOT.ROOT.EnableImplicitMT()
         thread_size = ROOT.ROOT.GetThreadPoolSize()
@@ -128,7 +128,7 @@ def ml_evaluation(args, logger):
             if br_discr:
                 logger.debug("Found preexisting branch Discriminant")
                 tree.SetBranchStatus("Discriminant", 0)
-                logger.debug("Preexisting branch Discriminant dactivated")
+                logger.debug("Preexisting branch Discriminant deactivated")
 
 
             new_tree = tree.CloneTree()

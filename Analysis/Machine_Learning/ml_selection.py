@@ -22,7 +22,7 @@ def ml_selection(args, logger):
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
-    :param logger: Configurated logger for printing messages.
+    :param logger: Configured logger for printing messages.
     :type logger: logging.RootLogger
     """
 
@@ -30,7 +30,7 @@ def ml_selection(args, logger):
 
     start_time_tot = time.time()
 
-    # Enamble multi-threading
+    # Enable multi-threading
     if args.parallel:
         ROOT.ROOT.EnableImplicitMT()
         thread_size = ROOT.ROOT.GetThreadPoolSize()
@@ -75,7 +75,7 @@ def ml_selection(args, logger):
                 return
 
             rdf_final = rdf.Filter(f"Discriminant>{cut[0]}",
-                                    "Select only events with above threshold discriminat")
+                                    "Select only events with discriminant above threshold")
 
             if args.logLevel <= 10:
                 rdf_final.Report().Print()

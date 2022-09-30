@@ -38,7 +38,7 @@ class MyProgressBar():
         """ Create the attribute for the progress bar.
         """
 
-        self.pbar = None
+        self.prog_bar = None
 
     def __call__(self, block_num, block_size, total_size):
         """ Update the progress bar for each downloaded block.
@@ -51,19 +51,19 @@ class MyProgressBar():
         :type block_num: int
         """
 
-        if not self.pbar:
-            self.pbar=progressbar.ProgressBar(maxval=total_size)
-            self.pbar.start()
+        if not self.prog_bar:
+            self.prog_bar=progressbar.ProgressBar(maxval=total_size)
+            self.prog_bar.start()
 
         downloaded = block_num * block_size
         if downloaded < total_size:
-            self.pbar.update(downloaded)
+            self.prog_bar.update(downloaded)
         else:
-            self.pbar.finish()
+            self.prog_bar.finish()
 
 
 def count_func(func):
-    """ Function that counts the number of times the input function is called recursevely.
+    """ Function that counts the number of times the input function is called recursively.
 
     :param func: Function to be wrapped
     :type func: function
@@ -80,7 +80,7 @@ def count_func(func):
 def get_file_parallel(log, num, sample, file):
     """Function that downloads the various samples in parallel from the CMS open-data portal.
 
-    :param log: Configurated logger for printing messages.
+    :param log: Configured logger for printing messages.
     :type log: logging.RootLogger
     :param num: Number present in the url
     :type num: int
@@ -121,7 +121,7 @@ def get_file(log, num, sample, file):
     is that it makes use of some tools that, in the rest of the project, weren't employed.
 
 
-    :param log: Configurated logger for printing messages.
+    :param log: Configured logger for printing messages.
     :type log: logging.RootLogger
     :param num: Number present in the url
     :type num: int
@@ -156,7 +156,7 @@ def download(args, logger):
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
-    :param logger: Configurated logger for printing messages.
+    :param logger: Configured logger for printing messages.
     :type logger: logging.RootLogger
     """
 

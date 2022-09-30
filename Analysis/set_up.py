@@ -19,7 +19,7 @@ def check_val(log, option, correct_list, name):
     """ Check if the input options are valid and sets them to
     the default value otherwise.
 
-    :param log: Configurated logger for printing messages.
+    :param log: Configured logger for printing messages.
     :type log: logging.RootLogger
     :param option: input option string
     :type option: str
@@ -49,7 +49,7 @@ def create_dir(log, directory, ignore):
     """Create the directory if doesn't
     already exist and create ``.gitignore``.
 
-    :param log: Configurated logger for printing messages.
+    :param log: Configured logger for printing messages.
     :type log: logging.RootLogger
     :param directory: Directory to create.
     :type directory: str

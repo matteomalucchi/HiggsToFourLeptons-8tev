@@ -24,7 +24,7 @@ def fit_mass (args, logger):
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
-    :param logger: Configurated logger for printing messages.
+    :param logger: Configured logger for printing messages.
     :type logger: logging.RootLogger
 
     """
@@ -111,7 +111,7 @@ def fit_mass (args, logger):
             sigma_higgs = ROOT.RooRealVar("sigmaHiggs", "The width of Higgs CB", 5, 0., 20, "GeV")
             alpha_higgs = ROOT.RooRealVar("alphaHiggs", "The tail of Higgs CB", 1.5, -5, 5)
             n_higgs = ROOT.RooRealVar("nHiggs", "The normalization of Higgs CB", 1.5, 0, 10)
-            cb_higgs_sig = ROOT.RooCBShape("CBHiggs_sig","The Higgs Crystall Ball for the signal",
+            cb_higgs_sig = ROOT.RooCBShape("CBHiggs_sig","The Higgs Crystal Ball for the signal",
                                             m4l, mean_higgs_sig, sigma_higgs, alpha_higgs, n_higgs)
 
             # Unbinned ML fit to signal
@@ -122,7 +122,7 @@ def fit_mass (args, logger):
             # Parameters and model for data fit
             mean_higgs_data = ROOT.RooRealVar("m_{H}", "The mean of the Higgs CB for the data",
                                             125, 115, 135, "GeV")
-            cb_higgs_data = ROOT.RooCBShape("CBHiggs_data","The Higgs Crystall Ball for the data",
+            cb_higgs_data = ROOT.RooCBShape("CBHiggs_data","The Higgs Crystal Ball for the data",
                                             m4l, mean_higgs_data, sigma_higgs, alpha_higgs, n_higgs)
 
             # Signal and background fractions

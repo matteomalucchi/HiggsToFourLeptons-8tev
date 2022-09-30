@@ -232,12 +232,12 @@ separated in the three possible final states.
 
 <table align="center" border="0">
   <tr>
-    <td style="text-align:center;">Discriminat plot for background</td>
-     <td style="text-align:center;">Discriminat plot for signal</td>
+    <td style="text-align:center;">Discriminant plot for background</td>
+     <td style="text-align:center;">Discriminant plot for signal</td>
   </tr>
   <tr>
-    <td><img src="Images_readme/discriminant_background.png" alt="Discriminat plot for background" title="Discriminat plot for background" width="340" height="340"></td>
-    <td><img src="Images_readme/discriminant_signal.png" alt="Discriminat plot for signal" title="Discriminat plot for signal" width="340" height="340"></td>
+    <td><img src="Images_readme/discriminant_background.png" alt="Discriminant plot for background" title="Discriminant plot for background" width="340" height="340"></td>
+    <td><img src="Images_readme/discriminant_signal.png" alt="Discriminant plot for signal" title="Discriminant plot for signal" width="340" height="340"></td>
   </tr>
 </table>
 
