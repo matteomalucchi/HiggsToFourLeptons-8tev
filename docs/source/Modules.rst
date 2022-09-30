@@ -31,7 +31,7 @@ List of modules
 
    Test.test_skim
 
-..
+
    Analysis.Definitions.eos_link_def
    Analysis.Definitions.samples_def
    Analysis.Definitions.selections_def

@@ -1,5 +1,5 @@
 /*
- * Definitions of the basic functions used during the skimming process
+ * Definitions of the basic functions used during the skimming process.
 */
 
 

@@ -7,7 +7,8 @@
     correction of the simulation.
 """
 
-integrated_luminosity = 11.58 * 1000.0 # pb^-1
+# Convert the integrated luminosity in pb^-1
+integrated_luminosity = 11.58 * 1000.0
 scale_factor_ZZ_4l = 1.386
 
 WEIGHTS = {
