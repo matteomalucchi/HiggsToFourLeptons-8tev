@@ -19,6 +19,7 @@ sys.path.append(os.path.join("..","..", ""))
 
 from Analysis import set_up
 from Analysis.Definitions.eos_link_def import EOS_LINK
+from Analysis.Definitions.samples_size_def import SAMPLE_SIZE
 from Analysis.Definitions.samples_def import SAMPLES
 from Analysis.Definitions.variables_def import VARIABLES
 from Analysis.Definitions.weights_def import WEIGHTS
@@ -70,13 +71,13 @@ def skim(args, logger, path_sf="Analysis/Skimming"):
 
         # Check if file exists or not
         try:
-            if not os.path.exists(file_name):
+            if not os.path.exists(file_name) or os.path.getsize(file_name) != SAMPLE_SIZE[sample_name]:
                 raise FileNotFoundError
-        except FileNotFoundError as not_fund_err:
-            logger.debug("File %s.root can't be found locally %s",
-                            sample_name, not_fund_err,  stack_info=True)
+        except FileNotFoundError:
+            logger.debug("File %s.root can't be found locally or wasn't downloaded correctly",
+                            sample_name)
             logger.debug("File %s.root is obtained from the following EOS link: \n %s",
-                            sample_name, EOS_LINK,  stack_info=True)
+                            sample_name, EOS_LINK)
             file_name=os.path.join(EOS_LINK, f"{sample_name}.root")
         finally:
             rdf = ROOT.RDataFrame("Events", file_name)

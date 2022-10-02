@@ -4,11 +4,11 @@
     <Info name="TMVA Release" value="4.2.1 [262657]"/>
     <Info name="ROOT Release" value="6.26/06 [399878]"/>
     <Info name="Creator" value="matteo"/>
-    <Info name="Date" value="Mon Sep 26 12:01:18 2022"/>
+    <Info name="Date" value="Fri Sep 23 10:05:15 2022"/>
     <Info name="Host" value="Linux ee26b33a3953 5.15.0-1014-azure #17~20.04.1-Ubuntu SMP Thu Jun 23 20:01:51 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux"/>
-    <Info name="Dir" value="/mnt/c/Users/matte/OneDrive - University of Pisa/Desktop/Università/CORSI/MAGISTRALE/Computing methods/HiggsToFourLeptons-8tev/Analysis/Machine_Learning"/>
+    <Info name="Dir" value="/mnt/c/Users/matte/OneDrive - University of Pisa/Desktop/Università/CORSI/MAGISTRALE/Computing methods/HiggsToFourLeptons-8tev"/>
     <Info name="Training events" value="109315"/>
-    <Info name="TrainingTime" value="7.93533251e+01"/>
+    <Info name="TrainingTime" value="8.08967772e+01"/>
     <Info name="AnalysisType" value="Classification"/>
   </GeneralInfo>
   <Options>
@@ -18,8 +18,8 @@
     <Option name="H" modified="Yes">True</Option>
     <Option name="CreateMVAPdfs" modified="No">False</Option>
     <Option name="IgnoreNegWeightsInTraining" modified="No">False</Option>
-    <Option name="FilenameModel" modified="Yes">../../Output/ML_output/DNNmodel.h5</Option>
-    <Option name="FilenameTrainedModel" modified="No">dataset/weights/TrainedModel_PyKeras.h5</Option>
+    <Option name="FilenameModel" modified="Yes">Output/ML_output/DNNmodel.h5</Option>
+    <Option name="FilenameTrainedModel" modified="No">Output/ML_output/dataset/weights/TrainedModel_PyKeras.h5</Option>
     <Option name="BatchSize" modified="Yes">128</Option>
     <Option name="NumEpochs" modified="Yes">20</Option>
     <Option name="NumThreads" modified="No">0</Option>

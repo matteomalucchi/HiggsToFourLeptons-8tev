@@ -41,11 +41,11 @@ def ml_selection(args, logger):
         with open(os.path.join(args.output, "ML_output", "optimal_cut.txt"),
                                 "r", encoding="utf8") as file:
             cut = file.readlines()
-    except FileNotFoundError as cut_err:
-        logger.exception("Unable too open optimal cut %s",
-                        cut_err, stack_info=True)
-        logger.exception("Exit the program")
-        return
+            if float(cut[0]) > 1:
+                raise ValueError
+    except (FileNotFoundError, ValueError):
+        logger.exception("Couldn't find the optimal cut value. Set optimal cut to the default value 0.13")
+        cut[0]=0.13
 
 
     #Loop over the various samples and final states

@@ -10,9 +10,9 @@ Method         : PyKeras::PyKeras
 TMVA Release   : 4.2.1         [262657]
 ROOT Release   : 6.26/06       [399878]
 Creator        : matteo
-Date           : Mon Sep 26 12:01:18 2022
+Date           : Fri Sep 23 10:05:15 2022
 Host           : Linux ee26b33a3953 5.15.0-1014-azure #17~20.04.1-Ubuntu SMP Thu Jun 23 20:01:51 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
-Dir            : /mnt/c/Users/matte/OneDrive - University of Pisa/Desktop/Università/CORSI/MAGISTRALE/Computing methods/HiggsToFourLeptons-8tev/Analysis/Machine_Learning
+Dir            : /mnt/c/Users/matte/OneDrive - University of Pisa/Desktop/Università/CORSI/MAGISTRALE/Computing methods/HiggsToFourLeptons-8tev
 Training events: 109315
 Analysis type  : [Classification]
 
@@ -23,7 +23,7 @@ Analysis type  : [Classification]
 V: "False" [Verbose output (short form of "VerbosityLevel" below - overrides the latter one)]
 VarTransform: "D,G" [List of variable transformations performed before training, e.g., "D_Background,P_Signal,G,N_AllClasses" for: "Decorrelation, PCA-transformation, Gaussianisation, Normalisation, each for the given class of events ('AllClasses' denotes all events of all classes, if no class indication is given, 'All' is assumed)"]
 H: "True" [Print method-specific help message]
-FilenameModel: "../../Output/ML_output/DNNmodel.h5" [Filename of the initial Keras model]
+FilenameModel: "Output/ML_output/DNNmodel.h5" [Filename of the initial Keras model]
 BatchSize: "128" [Training batch size]
 NumEpochs: "20" [Number of training epochs]
 # Default:

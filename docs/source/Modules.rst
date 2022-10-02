@@ -34,6 +34,8 @@ List of modules
 
    Analysis.Definitions.eos_link_def
    Analysis.Definitions.samples_def
+   Analysis.Definitions.samples_download_def
+   Analysis.Definitions.samples_size_def
    Analysis.Definitions.selections_def
    Analysis.Definitions.variables_def
    Analysis.Definitions.variables_ml_def

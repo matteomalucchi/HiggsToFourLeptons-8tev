@@ -17,17 +17,7 @@ import progressbar
 sys.path.append(os.path.join("..", ""))
 
 from Analysis import set_up
-
-SAMPLES_DOWNLOAD={
-    "SMHiggsToZZTo4L" : 12361,
-    "ZZTo4mu" : 12362,
-    "ZZTo4e" : 12363,
-    "ZZTo2e2mu" : 12364,
-    "Run2012B_DoubleMuParked" : 12365,
-    "Run2012C_DoubleMuParked" : 12366,
-    "Run2012B_DoubleElectron" : 12367,
-    "Run2012C_DoubleElectron" : 12368
-}
+from Analysis.Definitions.samples_download_def import SAMPLES_DOWNLOAD
 
 
 class MyProgressBar():
@@ -100,14 +90,14 @@ def get_file_parallel(log, num, sample, file):
                             sample, http_err, stack_info=True)
             return
         except urllib.error.ContentTooShortError:
-            log.exception(
+            log.error(
                 "Network conditions is not good. Reloading for %d time file %s.root",
                 count, sample)
             count += 1
         else:
             return
 
-    log.exception("Download of %s.root has failed due to bad network conditions!", sample)
+    log.exception("ERROR: Download of %s.root has failed due to bad network conditions! Try downloading it manually", sample)
 
 
 @count_func
@@ -138,11 +128,11 @@ def get_file(log, num, sample, file):
         log.exception("File %s.root can't be found %s",
                         sample, http_err, stack_info=True)
     except urllib.error.ContentTooShortError:
-        log.exception("Network conditions is not good. Reloading for %d time file %s.root",
+        log.error("Network conditions is not good. Reloading for %d time file %s.root",
                         get_file.call_count, sample)
         if get_file.call_count == 7:
             log.exception(
-                "Download of %s.root has failed due to bad network conditions! \n", sample)
+                "ERROR: Download of %s.root has failed due to bad network conditions! Try downloading it manually\n", sample)
             get_file.call_count=0
             return
         get_file(log, num, sample, file)
