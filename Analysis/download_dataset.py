@@ -73,7 +73,7 @@ def count_func(func):
     def counted(*args):
         counted.call_count += 1
         return func(*args)
-    counted.call_count = 0
+    counted.call_count = 1
     return counted
 
 
@@ -91,7 +91,7 @@ def get_file_parallel(log, num, sample, file):
     """
 
     count = 1
-    while count <= 4:
+    while count <= 6:
         try:
             urllib.request.urlretrieve(
                 f"http://opendata.cern.ch/record/{num}/files/{sample}.root", file)
@@ -140,7 +140,7 @@ def get_file(log, num, sample, file):
     except urllib.error.ContentTooShortError:
         log.exception("Network conditions is not good. Reloading for %d time file %s.root",
                         get_file.call_count, sample)
-        if get_file.call_count == 4 :
+        if get_file.call_count == 7:
             log.exception(
                 "Download of %s.root has failed due to bad network conditions! \n", sample)
             get_file.call_count=0

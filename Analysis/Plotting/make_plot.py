@@ -257,7 +257,7 @@ if __name__ == "__main__":
     # General configuration
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
     parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
-                        help="name of the output directory")
+                        help="path to the output folder w.r.t. the current directory")
     parser.add_argument("-m", "--ml", default=True,   action="store_const", const=False,
                         help="disables machine learning algorithm")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,

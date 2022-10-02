@@ -81,16 +81,17 @@ def ml_evaluation(args, logger):
     weights_path=os.path.join(args.output, "ML_output", "dataset",
                 "weights", "TMVAClassification_PyKeras.weights.xml")
 
-    modify_weights_file(args.output, weights_path, logger)
-
     try:
-        # Book methods
-        reader.BookMVA("PyKeras", ROOT.TString(weights_path))
-    except TypeError as type_err:
+        modify_weights_file(args.output, weights_path, logger)
+    except FileNotFoundError as weights_err:
         logger.exception("Unable too open weights %s",
-                        type_err, stack_info=True)
+                        weights_err, stack_info=True)
         logger.exception("Exit the program")
         return
+    else:
+        # Book methods
+        reader.BookMVA("PyKeras", ROOT.TString(weights_path))
+
 
     # Define a counter
     j=1
@@ -174,7 +175,7 @@ if __name__ == "__main__":
                          type=str,   help="name of the set of variables to be used in the ML \
                             algorithm defined 'variables_ml_def.py': tot, higgs")
     parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
-                        help="name of the output directory")
+                        help="path to the output folder w.r.t. the current directory")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,
                             help="integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )

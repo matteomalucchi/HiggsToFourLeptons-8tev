@@ -87,6 +87,8 @@ The analysis can be performed even on just a specific sample and/or final state 
 
 >       python run_analysis.py -s SMHiggsToZZTo4L -f FourElectrons
 
+> **_NOTE:_**  In order to properly train the DNN, it's necessary to run the analysis on at least a signal sample (SMHiggsToZZTo4L) and a background one (ZZTo2e2mu, ZZTo4e, ZZTo4mu), otherwise the training, evaluation and selection will not be performed correctly.
+
 
 ## Run the single steps
 
@@ -178,6 +180,8 @@ Higgs candidate, but it's more of an extra. The training history and the ROC cur
     <td><img src="Images_readme/TrainingHistory.png" alt="Training history" title="Training history" width="340" height="300"></td>
   </tr>
 </table>
+
+
 
 ### Histogramming
 The histogramming step produces histograms for each variable in each dataset by running

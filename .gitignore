@@ -131,6 +131,8 @@ dmypy.json
 #Directories
 documentation/
 Output_complete/
+output_final/
+
 
 # vscode
 *.code-workspace

@@ -27,7 +27,7 @@ def check_val(log, option, correct_list, name):
     :type correct_list: list(str)
     :param name: name of the argparse argument
     :type name: str
-    :return: Correct input optionstring
+    :return: Correct input option string
     :rtype: str
     """
 
@@ -81,7 +81,7 @@ def set_up (args):
 
     :param args: Global configuration of the analysis.
     :type args: argparse.Namespace
-    :return: Configuarated logger
+    :return: Configured logger
     :rtype: logger
     """
 
@@ -153,7 +153,7 @@ def set_up (args):
     try:
         if args.clearOutput != "":
             shutil.rmtree(args.clearOutput)
-            logger.debug("Directory %s/ has been succesfully deleted", args.clearOutput)
+            logger.debug("Directory %s/ has been successfully deleted", args.clearOutput)
     except OSError as os_err:
         logger.debug("ERROR directory %s/ could not be deleted: \n %s", args.clearOutput, os_err)
     except AttributeError:

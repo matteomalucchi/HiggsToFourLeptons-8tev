@@ -36,10 +36,16 @@ def ml_selection(args, logger):
         thread_size = ROOT.ROOT.GetThreadPoolSize()
         logger.info(">>> Thread pool size for parallel processing: %s", thread_size)
 
-    # Read the optimal threshold
-    with open(os.path.join(args.output, "ML_output", "optimal_cut.txt"),
-                            "r", encoding="utf8") as file:
-        cut = file.readlines()
+    try:
+        # Read the optimal threshold
+        with open(os.path.join(args.output, "ML_output", "optimal_cut.txt"),
+                                "r", encoding="utf8") as file:
+            cut = file.readlines()
+    except FileNotFoundError as cut_err:
+        logger.exception("Unable too open optimal cut %s",
+                        cut_err, stack_info=True)
+        logger.exception("Exit the program")
+        return
 
 
     #Loop over the various samples and final states
@@ -104,7 +110,7 @@ if __name__ == "__main__":
     parser.add_argument("-n", "--nWorkers",   default=0,
                         type=int,   help="number of workers for multi-threading" )
     parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
-                        help="name of the output directory")
+                        help="path to the output folder w.r.t. the current directory")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,
                             help="integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )

@@ -145,13 +145,14 @@ def ml_training(args, logger):
     c_roc.Print(os.path.join(dir_name, "ml_roc.pdf"))
 
     # Save the optimal cut
-    significance = ctypes.c_double(0.)
+    significance = ctypes.c_double()
     cut = str(method.GetMaximumSignificance(100000, 100000, significance))
     cut_path = os.path.join(dir_name, "optimal_cut.txt")
     if os.path.exists(cut_path):
         os.remove(cut_path)
     with open(cut_path, "w", encoding="utf8") as file:
         file.write(cut)
+    logger.debug("Created file optimal_cut.txt")
 
     output.Close()
 
@@ -160,7 +161,7 @@ def ml_training(args, logger):
     try:
         shutil.move("dataset", dir_name)
     except shutil.Error:
-        logger.debug("Deleting directory that already exists.")
+        logger.debug("Deleting directory dataset/ that already exists")
         shutil.rmtree(dataset_dir)
         shutil.move("dataset", dir_name)
 
@@ -175,7 +176,7 @@ if __name__ == "__main__":
                         help="name of the set of variables to be used in the ML \
                             algorithm defined 'variables_ml_def.py': tot, higgs")
     parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
-                        help="name of the output directory")
+                        help="path to the output folder w.r.t. the current directory")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,
                             help="integer representing the level of the logger:\
                              DEBUG=10, INFO = 20, WARNING = 30, ERROR = 40" )
