@@ -97,7 +97,7 @@ def get_file_parallel(log, num, sample, file):
         else:
             return
 
-    log.exception("ERROR: Download of %s.root has failed due to bad network conditions! Try downloading it manually", sample)
+    log.exception("ERROR: Download of %s.root has failed due to bad network conditions!\n", sample)
 
 
 @count_func
@@ -132,7 +132,7 @@ def get_file(log, num, sample, file):
                         get_file.call_count, sample)
         if get_file.call_count == 7:
             log.exception(
-                "ERROR: Download of %s.root has failed due to bad network conditions! Try downloading it manually\n", sample)
+                "ERROR: Download of %s.root has failed due to bad network conditions!\n", sample)
             get_file.call_count=0
             return
         get_file(log, num, sample, file)
