@@ -53,7 +53,7 @@ def make_histo(args, logger):
     if args.ml :
         var_dict = VARIABLES_DICT["tot"]
     else :
-        var_dict = VARIABLES_DICT["part"]
+        var_dict = VARIABLES_DICT["angles"]
 
     variables = var_dict.keys()
 

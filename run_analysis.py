@@ -85,7 +85,7 @@ def run_analysis (argv):
 
     parser.add_argument("-a", "--MLVariables",     default="tot" , type=str,
                             help="name of the set of variables to be used in the ML \
-                            algorithm defined 'Analysis/Definitions/variables_ml_def.py': tot, higgs")
+                            algorithm defined 'Analysis/Definitions/variables_ml_def.py': tot, angles, higgs")
 
     parser.add_argument("-v", "--variableDistribution",    default="all", type=str,
                             help="string with comma separated list of the variables to plot. \

@@ -41,12 +41,19 @@ def ml_selection(args, logger):
         with open(os.path.join(args.output, "ML_output", "optimal_cut.txt"),
                                 "r", encoding="utf8") as file:
             cut = file.readlines()
-            if float(cut[0]) > 1:
-                raise ValueError
-    except (FileNotFoundError, ValueError):
-        logger.exception("Couldn't find the optimal cut value. Set optimal cut to the default value 0.13")
-        cut[0]=0.13
-
+        if cut[0].find("nan") != -1:
+            raise SyntaxError("Not valid optimal cut")
+        if float(cut[0]) > 1:
+            raise ValueError
+    except (FileNotFoundError, SyntaxError):
+        logger.exception("Couldn't find the optimal cut value. Exit program.")
+        return
+    except ValueError:
+        logger.info(f"Couldn't find a valid optimal cut value. Set cut to the reference value {cut[1]}.")
+        final_cut = cut[1]
+    else:
+        logger.info(f" Set cut to the optimal value {cut[0]}.")
+        final_cut = cut[0]
 
     #Loop over the various samples and final states
     for sample_name, final_states in SAMPLES.items():
@@ -80,7 +87,7 @@ def ml_selection(args, logger):
             if not branch:
                 return
 
-            rdf_final = rdf.Filter(f"Discriminant>{cut[0]}",
+            rdf_final = rdf.Filter(f"Discriminant>{final_cut}",
                                     "Select only events with discriminant above threshold")
 
             if args.logLevel <= 10:

@@ -77,7 +77,7 @@ The options include:
 >     -p, --parallel        disables running in parallel
 >     -n NWORKERS, --nWorkers NWORKERS        number of workers
 >     -r [RANGE], --range [RANGE]      number of events on which the analysis is ran over (does not work in parallel)
->     -a MLVARIABLES, --MLVariables MLVARIABLES      name of the set of variables to be used in the ML algorithm defined 'Analysis/Definitions/variables_ml_def.py': tot, higgs
+>     -a MLVARIABLES, --MLVariables MLVARIABLES      name of the set of variables to be used in the ML algorithm defined 'Analysis/Definitions/variables_ml_def.py': tot, angles, higgs
 >     -v VARIABLEDISTRIBUTION, --variableDistribution VARIABLEDISTRIBUTION       string with comma separated list of the variables to plot. The complete list is defined in 'Analysis/Definitions/variables_def.py'
 >     -t TYPEDISTRIBUTION, --typeDistribution TYPEDISTRIBUTION        comma separated list of the type of distributions to plot: data, background, signal, sig_bkg_normalized, total
 
@@ -164,7 +164,7 @@ The training, application and selection steps can be performed by running
 >       python ml_selection.py
 
 The option `-a` gives the user the possibility to train the DNN using as discriminant variables
-Mass $Z_1$, Mass $Z_2$, $\cos \theta^*$, $\Phi$, $\Phi_1$, $\cos \theta_1$, $\cos \theta_2$ (`-a tot`) or Mass 4 leptons (`-a higgs`).
+Mass $Z_1$, Mass $Z_2$, $\cos \theta^*$, $\Phi$, $\Phi_1$, $\cos \theta_1$, $\cos \theta_2$ (`-a tot`), only the five decay angles just mentioned (`-a angles`) or the invariant mass of the 4 leptons system (`-a higgs`).
 The latter is not really a useful option, since the discrimination is based entirely on the mass of the
 Higgs candidate, but it's more of an extra. The training history and the ROC curve are displayed in the figures below.
 

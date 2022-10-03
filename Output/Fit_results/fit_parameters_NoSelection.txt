@@ -1,7 +1,0 @@
-Fit parameters:
-
-Higgs mass from MC = 124.934 +/- 0.016 [GeV] 
-Higgs mass from data = 125.402 +/- 0.262 [GeV] 
-Sigma of Higgs CB from data = 0.812 +/- 0.189 
-Tail of Higgs CB from data = 2.314 +/- 0.294 
-Normalization of Higgs CB from data = 0.000 +/- 0.884 

@@ -94,6 +94,8 @@ def ml_training(args, logger):
                                 not_found_err, stack_info=True)
                 continue
 
+            logger.info(f"Added sample {sample_name} and final state {final_state}")
+
             if sample_name == "SMHiggsToZZTo4L":
                 signal_chain.Add(file_name)
             else:
@@ -146,12 +148,16 @@ def ml_training(args, logger):
 
     # Save the optimal cut
     significance = ctypes.c_double()
-    cut = str(method.GetMaximumSignificance(100000, 100000, significance))
+    cut_sig = str(method.GetMaximumSignificance(100000, 100000, significance))
+    cut_ref = str(method.GetSignalReferenceCut())
+    logger.info(f"Reference cut at {cut_ref}")
     cut_path = os.path.join(dir_name, "optimal_cut.txt")
     if os.path.exists(cut_path):
         os.remove(cut_path)
     with open(cut_path, "w", encoding="utf8") as file:
-        file.write(cut)
+        file.write(cut_sig)
+        file.write("\n")
+        file.write(cut_ref)
     logger.debug("Created file optimal_cut.txt")
 
     output.Close()
@@ -174,7 +180,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser( description = "Analysis Tool" )
     parser.add_argument("-a", "--MLVariables",     default="tot"  , type=str,
                         help="name of the set of variables to be used in the ML \
-                            algorithm defined 'variables_ml_def.py': tot, higgs")
+                            algorithm defined 'variables_ml_def.py': tot, angles, higgs")
     parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
                         help="path to the output folder w.r.t. the current directory")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,

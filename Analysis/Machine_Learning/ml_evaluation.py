@@ -147,6 +147,10 @@ def ml_evaluation(args, logger):
                                         new_tree.Z2_mass, new_tree.cos_theta_star,
                                         new_tree.Phi, new_tree.Phi1, new_tree.cos_theta1,
                                         new_tree.cos_theta2], "PyKeras")
+                if args.MLVariables == "angles":
+                    discr_array[0] = reader.EvaluateMVA([new_tree.cos_theta_star,
+                                        new_tree.Phi, new_tree.Phi1, new_tree.cos_theta1,
+                                        new_tree.cos_theta2], "PyKeras")
                 elif args.MLVariables == "higgs":
                     discr_array[0] = reader.EvaluateMVA([new_tree.Higgs_mass], "PyKeras")
 
@@ -173,7 +177,7 @@ if __name__ == "__main__":
                         type=int,   help="number of workers for multi-threading" )
     parser.add_argument("-a", "--MLVariables",     default="tot",
                          type=str,   help="name of the set of variables to be used in the ML \
-                            algorithm defined 'variables_ml_def.py': tot, higgs")
+                            algorithm defined 'variables_ml_def.py': tot, angles, higgs")
     parser.add_argument("-o", "--output",     default=os.path.join("..", "..", "Output"), type=str,
                         help="path to the output folder w.r.t. the current directory")
     parser.add_argument("-l", "--logLevel",   default=20, type=int,

@@ -128,11 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#Directories
-documentation/
-Output_complete/
-output_final/
-
 
 # vscode
 *.code-workspace
@@ -163,3 +158,10 @@ output_final/
 *.out
 *.synctex.gz
 *.tex
+
+
+#Directories
+documentation/
+Output/
+Output_
+out_part/
