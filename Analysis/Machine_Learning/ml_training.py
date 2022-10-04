@@ -134,7 +134,7 @@ def ml_training(args, logger):
 
     # Book methods
     method = factory.BookMethod(dataloader, ROOT.TMVA.Types.kPyKeras, "PyKeras",
-                    f"H:!V:VarTransform=D,G:FilenameModel={model_path}:NumEpochs=20:BatchSize=128")
+                    f"H:!V:VarTransform=D,G:FilenameModel={model_path}:NumEpochs=2:BatchSize=128")
 
     # Run training, test and evaluation
     factory.TrainAllMethods()
@@ -148,16 +148,24 @@ def ml_training(args, logger):
 
     # Save the optimal cut
     significance = ctypes.c_double()
-    cut_sig = str(method.GetMaximumSignificance(100000, 100000, significance))
-    cut_ref = str(method.GetSignalReferenceCut())
+    cut_ref = method.GetSignalReferenceCut()
+    cut_sig = method.GetMaximumSignificance(100000, 100000, significance)
     logger.info(f"Reference cut at {cut_ref}")
+    logger.info(f"Maximum significance cut at {cut_sig}")
+
+    if not isinstance(cut_ref, float) or not isinstance(cut_sig, float) or cut_ref > 1 or cut_sig > 1:
+        significance = ctypes.c_double()
+        cut_ref = method.GetSignalReferenceCut()
+        cut_sig = method.GetMaximumSignificance(100000, 100000, significance)
+        logger.info(f"Reference cut at {cut_ref}")
+        logger.info(f"Maximum significance cut at {cut_sig}")
     cut_path = os.path.join(dir_name, "optimal_cut.txt")
     if os.path.exists(cut_path):
         os.remove(cut_path)
     with open(cut_path, "w", encoding="utf8") as file:
-        file.write(cut_sig)
+        file.write(str(cut_ref))
         file.write("\n")
-        file.write(cut_ref)
+        file.write(str(cut_sig))
     logger.debug("Created file optimal_cut.txt")
 
     output.Close()
