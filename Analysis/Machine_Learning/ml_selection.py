@@ -41,19 +41,23 @@ def ml_selection(args, logger):
         with open(os.path.join(args.output, "ML_output", "optimal_cut.txt"),
                                 "r", encoding="utf8") as file:
             cut = file.readlines()
-        if cut[0].find("nan") != -1:
+        if cut[0].find("nan") != -1 or cut[1].find("nan") != -1:
             raise SyntaxError("Not valid optimal cut")
-        if float(cut[0]) > 1:
+        if float(cut[1]) > 1:
             raise ValueError
     except (FileNotFoundError, SyntaxError):
-        logger.exception("Couldn't find the optimal cut value. Exit program.")
-        return
+        logger.exception("Couldn't find a valid cut value. Set the cut value to the arbitrary value of 0.12 just for reference.")
+        final_cut = 0.12
     except ValueError:
-        logger.info(f"Couldn't find a valid optimal cut value. Set cut to the reference value {cut[1]}.")
-        final_cut = cut[1]
+        if float(cut[0]) > 1:
+            logger.exception("Couldn't find a valid cut value. Set the cut value to the arbitrary value of 0.12 just for reference.")
+            final_cut = 0.12
+        else:
+            logger.info(f"Couldn't find the optimal cut value. Set cut to the reference cut value {cut[0]}.")
+            final_cut = cut[0]
     else:
-        logger.info(f" Set cut to the optimal value {cut[0]}.")
-        final_cut = cut[0]
+        logger.info(f" Set cut to the optimal value {cut[1]}.")
+        final_cut = cut[1]
 
     #Loop over the various samples and final states
     for sample_name, final_states in SAMPLES.items():
