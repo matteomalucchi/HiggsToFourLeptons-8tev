@@ -12,7 +12,6 @@ import ctypes
 import os
 import shutil
 import sys
-from threading import Thread
 import time
 
 import ROOT
@@ -82,69 +81,66 @@ def ml_training(args, logger):
                 bkg_chain.Add(file_name)
 
 
-    # Setup TMVA
-    ROOT.TMVA.Tools.Instance()
-    ROOT.TMVA.PyMethodBase.PyInitialize()
-
-    # Create file to save the results
-    output = ROOT.TFile.Open(os.path.join(dir_name, "DNN_Training.root"), "RECREATE")
-
-    factory = ROOT.TMVA.Factory("TMVAClassification", output,
-                        "!V:!Silent:Color:DrawProgressBar:Transformations=D,G\
-                        :AnalysisType=Classification")
-
-    # Variables used in the ML algorithm
-    variables=VARIABLES_ML_DICT[args.MLVariables]
-
-    # Directory where the weights are saved
-    dataloader = ROOT.TMVA.DataLoader("dataset")
-    for variable in variables:
-        dataloader.AddVariable(variable)
-        logger.debug(variable)
-
-
-    try:
-        dataloader.AddSignalTree(signal_chain, 1.0)
-        dataloader.AddBackgroundTree(bkg_chain, 1.0)
-    except TypeError as type_err:
-        logger.exception("Unable to train the DNN on the simulated samples %s",
-                        type_err, stack_info=True)
-        logger.exception("Exit the program")
-        return
-
-    dataloader.PrepareTrainingAndTestTree(ROOT.TCut(""),"SplitMode=Random:NormMode=NumEvents:!V")
-
-    # Generate model
-
-    # Define model
-    model = Sequential()
-    model.add(Dense(12, activation="relu", input_dim=len(variables)))
-    model.add(Dense(12, activation="relu"))
-    model.add(Dense(12, activation="relu"))
-    model.add(Dense(2, activation="sigmoid"))
-
-
-    # Set loss and optimizer
-    model.compile(loss="binary_crossentropy",
-                optimizer="adam", metrics=["accuracy", ], weighted_metrics=[])
-
-    # Store model to file
-    model_path = os.path.join(dir_name,"DNNmodel.h5")
-    model.save(model_path)
-    model.summary()
-
     for _ in range(3):
+        # Setup TMVA
+        ROOT.TMVA.Tools.Instance()
+        ROOT.TMVA.PyMethodBase.PyInitialize()
+
+        # Create file to save the results
+        output = ROOT.TFile.Open(os.path.join(dir_name, "DNN_Training.root"), "RECREATE")
+
+        factory = ROOT.TMVA.Factory("TMVAClassification", output,
+                            "!V:!Silent:Color:DrawProgressBar:Transformations=D,G\
+                            :AnalysisType=Classification")
+
+        # Variables used in the ML algorithm
+        variables=VARIABLES_ML_DICT[args.MLVariables]
+
+        # Directory where the weights are saved
+        dataloader = ROOT.TMVA.DataLoader("dataset")
+        for variable in variables:
+            dataloader.AddVariable(variable)
+            logger.debug(variable)
+
+
+        try:
+            dataloader.AddSignalTree(signal_chain, 1.0)
+            dataloader.AddBackgroundTree(bkg_chain, 1.0)
+        except TypeError as type_err:
+            logger.exception("Unable to train the DNN on the simulated samples %s",
+                            type_err, stack_info=True)
+            logger.exception("Exit the program")
+            return
+
+        dataloader.PrepareTrainingAndTestTree(ROOT.TCut(""),"SplitMode=Random:NormMode=NumEvents:!V")
+
+        # Generate model
+
+        # Define model
+        model = Sequential()
+        model.add(Dense(12, activation="relu", input_dim=len(variables)))
+        model.add(Dense(12, activation="relu"))
+        model.add(Dense(12, activation="relu"))
+        model.add(Dense(2, activation="softmax"))
+
+
+        # Set loss and optimizer
+        model.compile(loss="categorical_crossentropy",
+                    optimizer="adam", metrics=["accuracy", ], weighted_metrics=[])
+
+        # Store model to file
+        model_path = os.path.join(dir_name,"DNNmodel.h5")
+        model.save(model_path)
+        model.summary()
 
         # Book methods
         method = factory.BookMethod(dataloader, ROOT.TMVA.Types.kPyKeras, "PyKeras",
-                        f"H:!V:VarTransform=D,G:FilenameModel={model_path}:NumEpochs=2:BatchSize=128")
+                        f"H:!V:VarTransform=D,G:FilenameModel={model_path}:NumEpochs=20:BatchSize=128")
 
         # Run training, test and evaluation
         factory.TrainAllMethods()
         factory.TestAllMethods()
         factory.EvaluateAllMethods()
-
-        memory()
 
         # Print ROC curve
         c_roc=factory.GetROCCurve(dataloader)
@@ -153,9 +149,6 @@ def ml_training(args, logger):
 
         # Save the optimal cut
         significance = ctypes.c_double(0.)
-        Thread(target=memory).start()
-        time.sleep(0.002)
-
         cut_sig = method.GetMaximumSignificance(100000, 100000, significance)
         logger.info(f"Maximum significance cut at {cut_sig}")
 
@@ -163,7 +156,7 @@ def ml_training(args, logger):
             if not isinstance(cut_sig, float) or cut_sig > 1:
                 raise ValueError
         except ValueError:
-            logger.exception("ATTENTION: Maximum significance cut not valid. Performing again the training.")
+            logger.warning("ATTENTION: Maximum significance cut not valid. Performing the training again.")
         else:
             break
 
@@ -187,12 +180,6 @@ def ml_training(args, logger):
 
 
     logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
-
-
-def memory():
-    a = []
-    for i in range(2*10**3):
-        a.append(' ' * 10**6)
 
 
 if __name__ == "__main__":

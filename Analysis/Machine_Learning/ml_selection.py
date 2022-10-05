@@ -44,7 +44,7 @@ def ml_selection(args, logger):
         if cut[0].find("nan") != -1 or float(cut[0]) > 1:
             raise ValueError
     except (FileNotFoundError, ValueError):
-        logger.exception("Couldn't find a valid cut value. Set the cut value to the arbitrary value of 0.12 just for reference.")
+        logger.warning("ATTENTION: Couldn't find a valid cut value. Set the cut value to the arbitrary value of 0.12 just for reference.")
         final_cut = 0.12
     else:
         logger.info(f" Set cut to the optimal value {cut[0]}.")
