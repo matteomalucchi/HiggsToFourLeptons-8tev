@@ -12,6 +12,7 @@ import ctypes
 import os
 import shutil
 import sys
+from threading import Thread
 import time
 
 import ROOT
@@ -47,6 +48,40 @@ def ml_training(args, logger):
     except FileExistsError:
         logger.debug("The directory %s/ already exists", dir_name)
 
+    signal_chain=ROOT.TChain("Events")
+    bkg_chain=ROOT.TChain("Events")
+
+    simulated_samples = {k: v for k, v in SAMPLES.items() if not k.startswith("Run")}
+
+    for sample_name, final_states in simulated_samples.items():
+        # Check if the sample to plot is one of those requested by the user
+        if sample_name not in args.sample and args.sample != "all":
+            continue
+        for final_state in final_states:
+            # Check if the final state is one of those requested by the user
+            if final_state not in args.finalState and args.finalState != "all":
+                continue
+            logger.debug(">>> Process sample %s and final state %s", sample_name, final_state)
+            # Check if file exists or not
+            try:
+                file_name=os.path.join(args.output, "Skim_data",
+                                f"{sample_name}{final_state}Skim.root")
+                if not os.path.exists(file_name):
+                    raise FileNotFoundError
+            except FileNotFoundError as not_found_err:
+                logger.debug("Sample %s final state %s: File %s can't be found %s",
+                                sample_name, final_state, file_name,
+                                not_found_err, stack_info=True)
+                continue
+
+            logger.info(f"Added sample {sample_name} and final state {final_state}")
+
+            if sample_name == "SMHiggsToZZTo4L":
+                signal_chain.Add(file_name)
+            else:
+                bkg_chain.Add(file_name)
+
+
     # Setup TMVA
     ROOT.TMVA.Tools.Instance()
     ROOT.TMVA.PyMethodBase.PyInitialize()
@@ -67,39 +102,6 @@ def ml_training(args, logger):
         dataloader.AddVariable(variable)
         logger.debug(variable)
 
-
-    signal_chain=ROOT.TChain("Events")
-    bkg_chain=ROOT.TChain("Events")
-
-    simulated_samples = {k: v for k, v in SAMPLES.items() if not k.startswith("Run")}
-
-    for sample_name, final_states in simulated_samples.items():
-        # Check if the sample to plot is one of those requested by the user
-        if sample_name not in args.sample and args.sample != "all":
-            continue
-        for final_state in final_states:
-            # Check if the final state is one of those requested by the user
-            if final_state not in args.finalState and args.finalState != "all":
-                continue
-            logger.debug(">>> Process sample %s and final state %s", sample_name, final_state)
-            # Check if file exists or not
-            try:
-                file_name=os.path.join(args.output, "Skim_data",
-                                   f"{sample_name}{final_state}Skim.root")
-                if not os.path.exists(file_name):
-                    raise FileNotFoundError
-            except FileNotFoundError as not_found_err:
-                logger.debug("Sample %s final state %s: File %s can't be found %s",
-                                sample_name, final_state, file_name,
-                                not_found_err, stack_info=True)
-                continue
-
-            logger.info(f"Added sample {sample_name} and final state {final_state}")
-
-            if sample_name == "SMHiggsToZZTo4L":
-                signal_chain.Add(file_name)
-            else:
-                bkg_chain.Add(file_name)
 
     try:
         dataloader.AddSignalTree(signal_chain, 1.0)
@@ -131,34 +133,44 @@ def ml_training(args, logger):
     model.save(model_path)
     model.summary()
 
+    for _ in range(3):
 
-    # Book methods
-    method = factory.BookMethod(dataloader, ROOT.TMVA.Types.kPyKeras, "PyKeras",
-                    f"H:!V:VarTransform=D,G:FilenameModel={model_path}:NumEpochs=20:BatchSize=128")
+        # Book methods
+        method = factory.BookMethod(dataloader, ROOT.TMVA.Types.kPyKeras, "PyKeras",
+                        f"H:!V:VarTransform=D,G:FilenameModel={model_path}:NumEpochs=2:BatchSize=128")
 
-    # Run training, test and evaluation
-    factory.TrainAllMethods()
-    factory.TestAllMethods()
-    factory.EvaluateAllMethods()
+        # Run training, test and evaluation
+        factory.TrainAllMethods()
+        factory.TestAllMethods()
+        factory.EvaluateAllMethods()
 
-    # Print ROC curve
-    c_roc=factory.GetROCCurve(dataloader)
-    c_roc.Draw()
-    c_roc.Print(os.path.join(dir_name, "ml_roc.pdf"))
+        memory()
 
-    # Save the optimal cut
-    cut_ref = method.GetSignalReferenceCut()
-    significance = ctypes.c_double()
-    cut_sig = method.GetMaximumSignificance(100000, 100000, significance)
-    logger.info(f"Reference cut at {cut_ref}")
-    logger.info(f"Maximum significance cut at {cut_sig}")
+        # Print ROC curve
+        c_roc=factory.GetROCCurve(dataloader)
+        c_roc.Draw()
+        c_roc.Print(os.path.join(dir_name, "ml_roc.pdf"))
+
+        # Save the optimal cut
+        significance = ctypes.c_double(0.)
+        Thread(target=memory).start()
+        time.sleep(0.002)
+
+        cut_sig = method.GetMaximumSignificance(100000, 100000, significance)
+        logger.info(f"Maximum significance cut at {cut_sig}")
+
+        try:
+            if not isinstance(cut_sig, float) or cut_sig > 1:
+                raise ValueError
+        except ValueError:
+            logger.exception("ATTENTION: Maximum significance cut not valid. Performing again the training.")
+        else:
+            break
 
     cut_path = os.path.join(dir_name, "optimal_cut.txt")
     if os.path.exists(cut_path):
         os.remove(cut_path)
     with open(cut_path, "w", encoding="utf8") as file:
-        file.write(str(cut_ref))
-        file.write("\n")
         file.write(str(cut_sig))
     logger.debug("Created file optimal_cut.txt")
 
@@ -175,6 +187,13 @@ def ml_training(args, logger):
 
 
     logger.info(">>> Execution time: %s s \n", (time.time() - start_time))
+
+
+def memory():
+    a = []
+    for i in range(2*10**3):
+        a.append(' ' * 10**6)
+
 
 if __name__ == "__main__":
 
